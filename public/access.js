@@ -69,7 +69,7 @@
     const response = await fetch(url, {
       credentials: "same-origin",
       ...options,
-      headers: { ...(options.headers || {}), ...(options.method && options.method !== "GET" ? { "Content-Type": "application/json", "x-csrf-token": window.csrfToken || "" } : {}) }
+      headers: { ...(options.headers || {}), ...(options.method && options.method !== "GET" ? { "Content-Type": "application/json", "x-csrf-token": (typeof csrfToken !== "undefined" ? csrfToken : "") } : {}) }
     });
     const data = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(data.error || "Não foi possível concluir a solicitação.");
@@ -106,7 +106,7 @@
       document.getElementById("cgexPanel").classList.toggle("hidden", !["cgex", "creator"].includes(currentAccess));
       document.getElementById("creatorPanel").classList.toggle("hidden", currentAccess !== "creator");
       const select = document.getElementById("adminRoleSelect");
-      if (window.ebRanks) select.innerHTML = window.ebRanks.map(role => '<option>' + safe(role) + '</option>').join("");
+      if (typeof ranks !== "undefined") select.innerHTML = ranks.map(role => '<option>' + safe(role) + '</option>').join("");
       await loadRequests();
       if (currentAccess === "creator") await loadWhitelist();
     } catch (error) { message.textContent = error.message; }
