@@ -94,7 +94,7 @@ A API de alteração de função foi ligada ao backend usando a operação ofici
 
 Configure no Render (Environment), nunca no GitHub:
 
-- `ROBLOX_OPEN_CLOUD_API_KEY`: chave criada pelo proprietário/responsável autorizado do grupo, com acesso ao grupo correto e escopo `group:write`.
+- `ROBLOX_OPEN_CLOUD_API_KEY`: chave criada pelo proprietário/responsável autorizado do grupo, com acesso ao grupo correto e escopos `group:read` (consultar membros e patentes) e `group:write` (alterar patentes). A mesma chave existente pode receber os dois escopos; não é necessário criar outra.
 - `ROLE_IDS_JSON`: objeto JSON que associa cada nome exato de patente usado no painel ao ID real da função Roblox. Exemplo de formato (substitua os valores de exemplo pelos IDs verdadeiros):
   `{"[ASP] Aspirante a Oficial":"ID_REAL","[REC] Recrutamento":"ID_REAL"}`
 - `ROLE_RANKS_JSON`: objeto JSON com os nomes exatos das patentes e seus níveis/ranks reais para validar a ordem hierárquica.
