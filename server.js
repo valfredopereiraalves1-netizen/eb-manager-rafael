@@ -287,6 +287,90 @@ app.post("/auth/logout", requireLogin, requireCsrf, (req, res) => {
   });
 });
 
+
+let groupMembersCache = { at: 0, members: null };
+async function listCloudGroupRoles() {
+  let pageToken = "";
+  const roles = new Map();
+  for (let page = 0; page < 10; page++) {
+    const url = new URL("https://apis.roblox.com/cloud/v2/groups/" + encodeURIComponent(GROUP_ID) + "/roles");
+    url.searchParams.set("maxPageSize", "20");
+    if (pageToken) url.searchParams.set("pageToken", pageToken);
+    const data = await openCloudJson(url.toString());
+    for (const role of (data.groupRoles || data.roles || [])) {
+      const pathValue = String(role.path || "");
+      const id = String(role.id || pathValue.split("/").pop() || "");
+      if (id) roles.set(id, {
+        id,
+        name: String(role.displayName || role.name || "Patente sem nome"),
+        rank: Number(role.rank || 0)
+      });
+    }
+    pageToken = data.nextPageToken || "";
+    if (!pageToken) break;
+  }
+  return roles;
+}
+async function listGroupMembersFromCloud() {
+  const memberships = [];
+  let pageToken = "";
+  for (let page = 0; page < 100; page++) {
+    const url = new URL("https://apis.roblox.com/cloud/v2/groups/" + encodeURIComponent(GROUP_ID) + "/memberships");
+    url.searchParams.set("maxPageSize", "100");
+    if (pageToken) url.searchParams.set("pageToken", pageToken);
+    const data = await openCloudJson(url.toString());
+    memberships.push(...(data.groupMemberships || data.memberships || []));
+    pageToken = data.nextPageToken || "";
+    if (!pageToken) break;
+  }
+  const roleMap = await listCloudGroupRoles();
+  const ids = [...new Set(memberships.map(item => {
+    const userPath = typeof item.user === "string" ? item.user : "";
+    const nestedId = item.user?.userId || item.user?.id || item.userId || "";
+    return userPath.startsWith("users/") ? userPath.slice(6) : String(nestedId);
+  }).filter(Boolean))];
+  const userMap = new Map();
+  for (let offset = 0; offset < ids.length; offset += 100) {
+    const chunk = ids.slice(offset, offset + 100).map(id => Number(id)).filter(Number.isSafeInteger);
+    if (!chunk.length) continue;
+    const data = await robloxJson("https://users.roblox.com/v1/users", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userIds: chunk, excludeBannedUsers: false })
+    });
+    for (const user of (data.data || [])) userMap.set(String(user.id), user);
+  }
+  return memberships.map(item => {
+    const userPath = typeof item.user === "string" ? item.user : "";
+    const nestedId = item.user?.userId || item.user?.id || item.userId || "";
+    const userId = userPath.startsWith("users/") ? userPath.slice(6) : String(nestedId);
+    const rolePath = typeof item.role === "string" ? item.role : "";
+    const roleId = rolePath.split("/").pop() || String(item.role?.roleId || item.role?.id || "");
+    const role = roleMap.get(roleId);
+    const user = userMap.get(userId);
+    return {
+      userId,
+      username: String(user?.name || "Usuário " + userId),
+      displayName: String(user?.displayName || user?.name || "—"),
+      roleName: role?.name || "Patente não identificada",
+      rank: Number(role?.rank || 0)
+    };
+  }).filter(member => member.userId).sort((a, b) => b.rank - a.rank || a.username.localeCompare(b.username, "pt-BR"));
+}
+app.get("/api/group/members", requireLogin, async (_req, res) => {
+  if (groupMembersCache.members && Date.now() - groupMembersCache.at < 60_000) {
+    return res.json({ groupId: GROUP_ID, updatedAt: new Date(groupMembersCache.at).toISOString(), members: groupMembersCache.members });
+  }
+  try {
+    const members = await listGroupMembersFromCloud();
+    groupMembersCache = { at: Date.now(), members };
+    res.json({ groupId: GROUP_ID, updatedAt: new Date(groupMembersCache.at).toISOString(), members });
+  } catch (err) {
+    console.error("Falha ao consultar membros do grupo Roblox:", err.message);
+    res.status(502).json({ error: "Não foi possível carregar os membros. Verifique se a API Key tem permissão group:read para este grupo." });
+  }
+});
+
 app.get("/api/promotions", requireLogin, async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM promotions ORDER BY id DESC LIMIT 300");
