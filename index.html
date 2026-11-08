@@ -124,6 +124,7 @@ async function loadGroupMembers(showAlert = false) {
 }
 document.getElementById("refreshMembers").onclick = () => loadGroupMembers(true);
 document.getElementById("memberSearch").addEventListener("input", renderGroupMembers);
+setInterval(() => { if (csrfToken) loadGroupMembers(); }, 60_000);
 
 async function loadServerPromotions(){
   if(!csrfToken)return;
