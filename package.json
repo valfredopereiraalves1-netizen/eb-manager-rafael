@@ -1,23 +1,23 @@
 {
   "name": "eb-manager",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
-  "description": "Backend inicial para autenticação Roblox e permissões do EB Manager",
+  "description": "Painel administrativo EB Manager com PostgreSQL e autenticação Roblox",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js"
   },
   "engines": {
-    "node": "22.23.4"
+    "node": "22.x"
   },
   "dependencies": {
-    "better-sqlite3": "^11.8.1",
-    "connect-sqlite3": "^0.9.15",
+    "connect-pg-simple": "^10.0.0",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
     "express-rate-limit": "^7.5.0",
     "express-session": "^1.18.1",
-    "helmet": "^8.0.0"
+    "helmet": "^8.0.0",
+    "pg": "^8.13.1"
   }
 }
