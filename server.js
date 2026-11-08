@@ -90,6 +90,26 @@ async function initializeDatabase() {
     );
     CREATE INDEX IF NOT EXISTS panel_records_type_created_idx
       ON panel_records(record_type, created_at DESC);
+    CREATE TABLE IF NOT EXISTS admin_requests (
+      id BIGSERIAL PRIMARY KEY,
+      action TEXT NOT NULL CHECK (action IN ('set_role', 'demote', 'revoke')),
+      target_user_id TEXT NOT NULL,
+      target_username TEXT NOT NULL,
+      requested_role TEXT,
+      reason TEXT NOT NULL,
+      created_by TEXT NOT NULL,
+      created_by_role TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'pending',
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+    CREATE TABLE IF NOT EXISTS whitelist_entries (
+      id BIGSERIAL PRIMARY KEY,
+      roblox_user_id TEXT NOT NULL UNIQUE,
+      username TEXT NOT NULL,
+      note TEXT NOT NULL DEFAULT '',
+      created_by TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
   `);
 }
 
@@ -310,6 +330,107 @@ app.post("/api/records/:type", requireLogin, requireCsrf, async (req, res) => {
   } catch (err) {
     console.error("Falha ao salvar registro:", err.message);
     res.status(500).json({ error: "Não foi possível salvar no banco de dados." });
+  }
+});
+
+function requireSpecialAccess(...allowed) {
+  return (req, res, next) => {
+    const access = req.session.specialAccess;
+    if (!access || !allowed.includes(access)) {
+      return res.status(403).json({ error: "Este painel exige um código de acesso autorizado." });
+    }
+    next();
+  };
+}
+function safeSecretMatch(supplied, expected) {
+  if (!expected || typeof supplied !== "string") return false;
+  const a = Buffer.from(supplied);
+  const b = Buffer.from(expected);
+  return a.length === b.length && a.length > 0 && crypto.timingSafeEqual(a, b);
+}
+app.get("/api/access", requireLogin, (req, res) => {
+  res.json({ access: req.session.specialAccess || null });
+});
+app.post("/api/access/verify", requireLogin, requireCsrf, (req, res) => {
+  const code = String(req.body?.code || "");
+  if (code.length > 32) return res.status(400).json({ error: "Código inválido." });
+  const choices = [
+    { access: "admin", code: process.env.ADMIN_ACCESS_CODE, label: "Painel ADM", description: "Pode registrar solicitações para definir patentes." },
+    { access: "cgex", code: process.env.CGEX_ACCESS_CODE, label: "Painel CGEx", description: "Pode registrar solicitações de rebaixamento e revogação de patentes do EB." },
+    { access: "creator", code: process.env.CREATOR_ACCESS_CODE, label: "Painel do Criador", description: "Acesso total aos painéis especiais, incluindo gerenciamento da WL." }
+  ];
+  const match = choices.find(item => safeSecretMatch(code, item.code));
+  if (!match) return res.status(401).json({ error: "Código incorreto ou ainda não configurado no servidor." });
+  req.session.specialAccess = match.access;
+  res.json({ access: match.access, label: match.label, description: match.description });
+});
+app.get("/api/admin/requests", requireLogin, requireSpecialAccess("admin", "cgex", "creator"), async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT id, action, target_username, requested_role, status, created_at FROM admin_requests ORDER BY id DESC LIMIT 200"
+    );
+    res.json({ requests: result.rows });
+  } catch (err) {
+    console.error("Falha ao consultar solicitações:", err.message);
+    res.status(500).json({ error: "Não foi possível consultar as solicitações." });
+  }
+});
+app.post("/api/admin/requests", requireLogin, requireCsrf, async (req, res) => {
+  const access = req.session.specialAccess;
+  const body = req.body || {};
+  const action = String(body.action || "");
+  const allowed = (action === "set_role" && ["admin", "creator"].includes(access)) ||
+    (["demote", "revoke"].includes(action) && ["cgex", "creator"].includes(access));
+  if (!allowed) return res.status(403).json({ error: "Seu código não permite esta operação." });
+  const username = String(body.username || "").trim();
+  const reason = String(body.reason || "").trim();
+  const requestedRole = action === "set_role" ? String(body.role || "").trim() : null;
+  if (!username || username.length > 40 || !reason || reason.length > 1000) {
+    return res.status(400).json({ error: "Informe usuário e motivo válidos." });
+  }
+  if (action === "set_role" && (!requestedRole || roleRank(requestedRole) === null)) {
+    return res.status(503).json({ error: "Configure o mapeamento de patentes reais em ROLE_RANKS_JSON antes de usar esta função." });
+  }
+  try {
+    const target = await getRobloxUserId(username);
+    if (!target) return res.status(404).json({ error: "Usuário Roblox não encontrado." });
+    const currentRole = await getGroupRole(target.id);
+    if (!currentRole) return res.status(400).json({ error: "O usuário não pertence ao grupo EB configurado." });
+    await pool.query(
+      `INSERT INTO admin_requests (action, target_user_id, target_username, requested_role, reason, created_by, created_by_role)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [action, target.id, target.name, requestedRole, reason, req.session.user.robloxId, access]
+    );
+    res.status(201).json({ ok: true, status: "pending" });
+  } catch (err) {
+    console.error("Falha ao registrar solicitação administrativa:", err.message);
+    res.status(502).json({ error: "Não foi possível verificar o usuário Roblox ou registrar a solicitação." });
+  }
+});
+app.get("/api/whitelist", requireLogin, requireSpecialAccess("creator"), async (_req, res) => {
+  try {
+    const result = await pool.query("SELECT id, roblox_user_id, username, note, created_at FROM whitelist_entries ORDER BY id DESC LIMIT 500");
+    res.json({ entries: result.rows });
+  } catch (err) {
+    console.error("Falha ao consultar WL:", err.message);
+    res.status(500).json({ error: "Não foi possível consultar a WL." });
+  }
+});
+app.post("/api/whitelist", requireLogin, requireCsrf, requireSpecialAccess("creator"), async (req, res) => {
+  const username = String(req.body?.username || "").trim();
+  const note = String(req.body?.note || "").trim();
+  if (!username || username.length > 40 || note.length > 300) return res.status(400).json({ error: "Informe um usuário válido e uma observação de até 300 caracteres." });
+  try {
+    const target = await getRobloxUserId(username);
+    if (!target) return res.status(404).json({ error: "Usuário Roblox não encontrado." });
+    const result = await pool.query(
+      "INSERT INTO whitelist_entries (roblox_user_id, username, note, created_by) VALUES ($1, $2, $3, $4) ON CONFLICT (roblox_user_id) DO UPDATE SET username = EXCLUDED.username, note = EXCLUDED.note RETURNING id, roblox_user_id, username, note, created_at",
+      [target.id, target.name, note, req.session.user.robloxId]
+    );
+    res.status(201).json({ entry: result.rows[0] });
+  } catch (err) {
+    console.error("Falha ao salvar WL:", err.message);
+    res.status(500).json({ error: "Não foi possível salvar na WL." });
   }
 });
 
