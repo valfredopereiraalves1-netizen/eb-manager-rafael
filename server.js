@@ -1,17 +1,15 @@
 require("dotenv").config();
 
 const crypto = require("node:crypto");
-const fs = require("node:fs");
 const path = require("node:path");
 const express = require("express");
 const session = require("express-session");
-const SQLiteStoreFactory = require("connect-sqlite3");
+const PgSession = require("connect-pg-simple")(session);
+const { Pool } = require("pg");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
-const Database = require("better-sqlite3");
 
 const app = express();
-const SQLiteStore = SQLiteStoreFactory(session);
 const isProduction = process.env.NODE_ENV === "production";
 const PORT = Number(process.env.PORT || 3000);
 const GROUP_ID = process.env.ROBLOX_GROUP_ID || "241982252";
@@ -22,6 +20,7 @@ const CLIENT_SECRET = process.env.ROBLOX_CLIENT_SECRET;
 const SESSION_SECRET = process.env.SESSION_SECRET;
 const MIN_PROMOTER_RANK = Number(process.env.MIN_PROMOTER_RANK || 256);
 
+if (!process.env.DATABASE_URL) throw new Error("Configure DATABASE_URL com a URL do PostgreSQL no Render.");
 if (!SESSION_SECRET || SESSION_SECRET.length < 32) throw new Error("Configure SESSION_SECRET com pelo menos 32 caracteres.");
 if (isProduction && (!BASE_URL.startsWith("https://") || !REDIRECT_URI.startsWith("https://"))) {
   throw new Error("Em produção, BASE_URL e ROBLOX_REDIRECT_URI precisam usar HTTPS.");
@@ -31,30 +30,67 @@ let roleRanks = {};
 try { roleRanks = JSON.parse(process.env.ROLE_RANKS_JSON || "{}"); }
 catch { throw new Error("ROLE_RANKS_JSON precisa conter um JSON válido."); }
 
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: isProduction ? { rejectUnauthorized: false } : undefined,
+  max: 10,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 10000
+});
+
 app.disable("x-powered-by");
 if (isProduction) app.set("trust proxy", 1);
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json({ limit: "30kb" }));
 app.use(express.static("public"));
-app.get("/", (_req, res) => res.sendFile(path.join(__dirname, "index.html")));
 
-fs.mkdirSync("./data", { recursive: true });
 app.use(session({
-  store: new SQLiteStore({ db: "sessions.sqlite", dir: "./data", table: "sessions" }),
+  store: new PgSession({
+    pool,
+    tableName: "user_sessions",
+    createTableIfMissing: true
+  }),
   name: "ebm.sid",
   secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  cookie: { httpOnly: true, secure: isProduction, sameSite: "lax", maxAge: 8 * 60 * 60 * 1000 }
+  cookie: {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: "lax",
+    maxAge: 8 * 60 * 60 * 1000
+  }
 }));
 
+app.get("/", (_req, res) => res.sendFile(path.join(__dirname, "index.html")));
 app.use("/auth", rateLimit({ windowMs: 15 * 60 * 1000, limit: 20, standardHeaders: "draft-7", legacyHeaders: false }));
 app.use("/api", rateLimit({ windowMs: 60 * 1000, limit: 60, standardHeaders: "draft-7", legacyHeaders: false }));
 
-const db = new Database("./data/eb-manager.sqlite");
-db.pragma("journal_mode = WAL");
-db.exec("CREATE TABLE IF NOT EXISTS promotions (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL, target_user_id TEXT NOT NULL, target_username TEXT NOT NULL, from_role TEXT NOT NULL, to_role TEXT NOT NULL, author_user_id TEXT NOT NULL, author_username TEXT NOT NULL, author_role TEXT NOT NULL, reason TEXT NOT NULL)");
-const insertPromotion = db.prepare("INSERT INTO promotions (created_at, target_user_id, target_username, from_role, to_role, author_user_id, author_username, author_role, reason) VALUES (@created_at, @target_user_id, @target_username, @from_role, @to_role, @author_user_id, @author_username, @author_role, @reason)");
+async function initializeDatabase() {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS promotions (
+      id BIGSERIAL PRIMARY KEY,
+      created_at TIMESTAMPTZ NOT NULL,
+      target_user_id TEXT NOT NULL,
+      target_username TEXT NOT NULL,
+      from_role TEXT NOT NULL,
+      to_role TEXT NOT NULL,
+      author_user_id TEXT NOT NULL,
+      author_username TEXT NOT NULL,
+      author_role TEXT NOT NULL,
+      reason TEXT NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS panel_records (
+      id BIGSERIAL PRIMARY KEY,
+      record_type TEXT NOT NULL CHECK (record_type IN ('training', 'cpd', 'denied')),
+      data JSONB NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      created_by TEXT NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS panel_records_type_created_idx
+      ON panel_records(record_type, created_at DESC);
+  `);
+}
 
 function requireCsrf(req, res, next) {
   const supplied = req.get("x-csrf-token") || "";
@@ -66,7 +102,6 @@ function requireCsrf(req, res, next) {
   }
   next();
 }
-
 function requireLogin(req, res, next) {
   if (!req.session.user) return res.status(401).json({ error: "Faça login com Roblox para continuar." });
   next();
@@ -88,14 +123,12 @@ async function robloxJson(url, options = {}) {
   }
   return response.json();
 }
-
 async function getGroupRole(userId) {
   const data = await robloxJson("https://groups.roblox.com/v2/users/" + encodeURIComponent(userId) + "/groups/roles");
   const membership = (data.data || []).find(item => String(item.group?.id) === String(GROUP_ID));
   if (!membership) return null;
   return { id: String(membership.role?.id || ""), name: String(membership.role?.name || ""), rank: Number(membership.role?.rank || 0) };
 }
-
 async function getRobloxUserId(username) {
   const data = await robloxJson("https://users.roblox.com/v1/usernames/users", {
     method: "POST",
@@ -112,7 +145,6 @@ app.get("/auth/roblox", (req, res) => {
   const verifier = randomUrlSafe(48);
   req.session.oauthState = state;
   req.session.codeVerifier = verifier;
-
   const authorize = new URL("https://apis.roblox.com/oauth/v1/authorize");
   authorize.search = new URLSearchParams({
     client_id: CLIENT_ID,
@@ -133,11 +165,9 @@ app.get("/auth/roblox/callback", async (req, res) => {
   if (!code || !state || !req.session.oauthState || state !== req.session.oauthState || !req.session.codeVerifier) {
     return res.status(400).send("Não foi possível validar a solicitação de login. Tente novamente.");
   }
-
   const codeVerifier = req.session.codeVerifier;
   delete req.session.oauthState;
   delete req.session.codeVerifier;
-
   try {
     const tokenResponse = await fetch("https://apis.roblox.com/oauth/v1/token", {
       method: "POST",
@@ -154,15 +184,12 @@ app.get("/auth/roblox/callback", async (req, res) => {
     if (!tokenResponse.ok) throw new Error("A troca do código de autorização falhou.");
     const tokens = await tokenResponse.json();
     if (!tokens.access_token) throw new Error("O Roblox não retornou um token de acesso.");
-
     const profile = await robloxJson("https://apis.roblox.com/oauth/v1/userinfo", {
       headers: { Authorization: "Bearer " + tokens.access_token }
     });
     if (!profile.sub) throw new Error("Não foi possível confirmar a conta Roblox.");
-
     const groupRole = await getGroupRole(profile.sub);
     if (!groupRole) return res.status(403).send("Sua conta Roblox não pertence ao grupo configurado para este painel.");
-
     req.session.regenerate(err => {
       if (err) return res.status(500).send("Não foi possível criar uma sessão segura.");
       req.session.user = {
@@ -198,10 +225,15 @@ app.post("/auth/logout", requireLogin, requireCsrf, (req, res) => {
   });
 });
 
-app.get("/api/promotions", requireLogin, (req, res) => {
-  res.json({ promotions: db.prepare("SELECT * FROM promotions ORDER BY id DESC LIMIT 300").all() });
+app.get("/api/promotions", requireLogin, async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM promotions ORDER BY id DESC LIMIT 300");
+    res.json({ promotions: result.rows });
+  } catch (err) {
+    console.error("Falha ao consultar promoções:", err.message);
+    res.status(500).json({ error: "Não foi possível consultar o banco de dados." });
+  }
 });
-
 app.post("/api/promotions", requireLogin, requireCsrf, async (req, res) => {
   const body = req.body || {};
   const targetUsername = body.targetUsername;
@@ -212,34 +244,24 @@ app.post("/api/promotions", requireLogin, requireCsrf, async (req, res) => {
     return res.status(400).json({ error: "Preencha militar, patente atual, nova patente e motivo." });
   }
   if (targetUsername.length > 40 || reason.length > 1000) return res.status(400).json({ error: "Algum campo ultrapassou o limite permitido." });
-
   const author = req.session.user;
   if (author.groupRoleRank < MIN_PROMOTER_RANK) return res.status(403).json({ error: "Permissão negada: sua função no grupo não permite promover." });
-
   const fromRank = roleRank(fromRole);
   const toRank = roleRank(toRole);
-  if (fromRank === null || toRank === null) return res.status(503).json({ error: "As patentes ainda não foram mapeadas pelo responsável técnico." });
+  if (fromRank === null || toRank === null) return res.status(503).json({ error: "O mapeamento das patentes reais do Roblox ainda não foi configurado." });
   if (toRank <= fromRank) return res.status(400).json({ error: "A nova patente precisa ser superior à patente atual." });
   if (toRank >= author.groupRoleRank) return res.status(403).json({ error: "Você não pode promover alguém para uma patente igual ou superior à sua." });
-
   try {
     const target = await getRobloxUserId(targetUsername.trim());
     if (!target) return res.status(404).json({ error: "Não encontrei esse usuário Roblox." });
     const targetRole = await getGroupRole(target.id);
     if (!targetRole) return res.status(400).json({ error: "O militar informado não pertence ao grupo." });
     if (targetRole.rank !== fromRank) return res.status(409).json({ error: "A patente atual informada não corresponde à função real do militar no grupo." });
-
-    insertPromotion.run({
-      created_at: new Date().toISOString(),
-      target_user_id: target.id,
-      target_username: target.name,
-      from_role: fromRole.trim(),
-      to_role: toRole.trim(),
-      author_user_id: author.robloxId,
-      author_username: author.username,
-      author_role: author.groupRoleName,
-      reason: reason.trim()
-    });
+    await pool.query(
+      `INSERT INTO promotions (created_at, target_user_id, target_username, from_role, to_role, author_user_id, author_username, author_role, reason)
+       VALUES (NOW(), $1, $2, $3, $4, $5, $6, $7, $8)`,
+      [target.id, target.name, fromRole.trim(), toRole.trim(), author.robloxId, author.username, author.groupRoleName, reason.trim()]
+    );
     res.status(201).json({ ok: true });
   } catch (err) {
     console.error("Falha ao registrar promoção:", err.message);
@@ -247,5 +269,65 @@ app.post("/api/promotions", requireLogin, requireCsrf, async (req, res) => {
   }
 });
 
-app.get("/api/health", (_req, res) => res.json({ ok: true, service: "EB Manager API" }));
-app.listen(PORT, () => console.log("EB Manager API disponível na porta " + PORT));
+const recordTypes = new Set(["training", "cpd", "denied"]);
+app.get("/api/records/:type", requireLogin, async (req, res) => {
+  const type = req.params.type;
+  if (!recordTypes.has(type)) return res.status(404).json({ error: "Tipo de registro inválido." });
+  try {
+    const result = await pool.query(
+      "SELECT id, data, created_at FROM panel_records WHERE record_type = $1 ORDER BY created_at DESC LIMIT 500",
+      [type]
+    );
+    res.json({ records: result.rows });
+  } catch (err) {
+    console.error("Falha ao consultar registros:", err.message);
+    res.status(500).json({ error: "Não foi possível consultar o banco de dados." });
+  }
+});
+app.post("/api/records/:type", requireLogin, requireCsrf, async (req, res) => {
+  const type = req.params.type;
+  if (!recordTypes.has(type)) return res.status(404).json({ error: "Tipo de registro inválido." });
+  const data = req.body || {};
+  const required = type === "training" ? ["person", "training", "score", "instructor"]
+    : type === "cpd" ? ["person", "type", "description"] : ["person", "rank", "reason"];
+  if (!required.every(key => data[key] !== undefined && String(data[key]).trim() !== "")) {
+    return res.status(400).json({ error: "Preencha todos os campos obrigatórios." });
+  }
+  if (JSON.stringify(data).length > 5000) return res.status(400).json({ error: "Registro muito grande." });
+  if (type === "training") {
+    const score = Number(data.score);
+    if (!Number.isFinite(score) || score < 0 || score > 100) return res.status(400).json({ error: "A pontuação deve ficar entre 0 e 100." });
+    data.score = score;
+  }
+  try {
+    const result = await pool.query(
+      "INSERT INTO panel_records (record_type, data, created_by) VALUES ($1, $2::jsonb, $3) RETURNING id, data, created_at",
+      [type, JSON.stringify(data), req.session.user.robloxId]
+    );
+    res.status(201).json({ record: result.rows[0] });
+  } catch (err) {
+    console.error("Falha ao salvar registro:", err.message);
+    res.status(500).json({ error: "Não foi possível salvar no banco de dados." });
+  }
+});
+
+app.get("/api/health", async (_req, res) => {
+  try {
+    await pool.query("SELECT 1");
+    res.json({ ok: true, service: "EB Manager API", database: "connected" });
+  } catch {
+    res.status(503).json({ ok: false, database: "unavailable" });
+  }
+});
+
+initializeDatabase().then(() => {
+  app.listen(PORT, () => console.log("EB Manager API disponível na porta " + PORT));
+}).catch(err => {
+  console.error("Falha ao iniciar o banco de dados:", err);
+  process.exit(1);
+});
+
+process.on("SIGTERM", async () => {
+  await pool.end();
+  process.exit(0);
+});
