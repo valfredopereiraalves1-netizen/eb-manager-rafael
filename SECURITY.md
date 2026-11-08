@@ -8,3 +8,7 @@
 - O backend consulta o grupo Roblox antes de aceitar cada promoção e usa a identidade da sessão para registrar o responsável.
 - Esta base ainda precisa de revisão de segurança, hospedagem, política de privacidade e testes antes de uso oficial.
 - A consulta pública de funções do grupo pode mudar; acompanhe a documentação Roblox e avalie migrar para Open Cloud autenticado.
+
+## Limite funcional atual
+
+O endpoint de promoção valida e grava o registro, mas não altera a função do membro no grupo Roblox. A próxima integração deve usar os endpoints oficiais de associação e atribuição de função do Open Cloud, com permissão group:write concedida pelo responsável do grupo. Não habilite alterações reais de função até testar o fluxo em ambiente controlado.
