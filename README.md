@@ -57,6 +57,7 @@ A versão atual usa PostgreSQL para persistir promoções, treinamentos, CPD, pr
 - `BASE_URL`: URL HTTPS pública do serviço.
 - `ROBLOX_REDIRECT_URI`: `BASE_URL` seguido de `/auth/roblox/callback`.
 - `ROBLOX_CLIENT_ID` e `ROBLOX_CLIENT_SECRET`: credenciais OAuth criadas no portal oficial do Roblox.
+- `MIN_PROMOTER_RANK` e `MIN_RECORD_RANK`: ranks mínimos do grupo Roblox para promover e registrar dados administrativos. Ajuste aos ranks reais do grupo.
 - `ROLE_RANKS_JSON`: JSON com o nome exato de cada patente do painel e o número de rank correspondente no grupo Roblox.
 
 O servidor cria as tabelas necessárias na primeira inicialização. Os formulários de treinamento, CPD e promoção negada exigem login Roblox e token CSRF. A promoção também exige o mapeamento correto dos ranks reais; não preencha esses valores por estimativa.
