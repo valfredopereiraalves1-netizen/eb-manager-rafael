@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const crypto = require("node:crypto");
 const fs = require("node:fs");
+const path = require("node:path");
 const express = require("express");
 const session = require("express-session");
 const SQLiteStoreFactory = require("connect-sqlite3");
@@ -19,7 +20,7 @@ const REDIRECT_URI = process.env.ROBLOX_REDIRECT_URI || (BASE_URL + "/auth/roblo
 const CLIENT_ID = process.env.ROBLOX_CLIENT_ID;
 const CLIENT_SECRET = process.env.ROBLOX_CLIENT_SECRET;
 const SESSION_SECRET = process.env.SESSION_SECRET;
-const MIN_PROMOTER_RANK = Number(process.env.MIN_PROMOTER_RANK || 0);
+const MIN_PROMOTER_RANK = Number(process.env.MIN_PROMOTER_RANK || 256);
 
 if (!SESSION_SECRET || SESSION_SECRET.length < 32) throw new Error("Configure SESSION_SECRET com pelo menos 32 caracteres.");
 if (isProduction && (!BASE_URL.startsWith("https://") || !REDIRECT_URI.startsWith("https://"))) {
@@ -35,6 +36,7 @@ if (isProduction) app.set("trust proxy", 1);
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json({ limit: "30kb" }));
 app.use(express.static("public"));
+app.get("/", (_req, res) => res.sendFile(path.join(__dirname, "index.html")));
 
 fs.mkdirSync("./data", { recursive: true });
 app.use(session({
@@ -53,6 +55,17 @@ const db = new Database("./data/eb-manager.sqlite");
 db.pragma("journal_mode = WAL");
 db.exec("CREATE TABLE IF NOT EXISTS promotions (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL, target_user_id TEXT NOT NULL, target_username TEXT NOT NULL, from_role TEXT NOT NULL, to_role TEXT NOT NULL, author_user_id TEXT NOT NULL, author_username TEXT NOT NULL, author_role TEXT NOT NULL, reason TEXT NOT NULL)");
 const insertPromotion = db.prepare("INSERT INTO promotions (created_at, target_user_id, target_username, from_role, to_role, author_user_id, author_username, author_role, reason) VALUES (@created_at, @target_user_id, @target_username, @from_role, @to_role, @author_user_id, @author_username, @author_role, @reason)");
+
+function requireCsrf(req, res, next) {
+  const supplied = req.get("x-csrf-token") || "";
+  const expected = req.session.csrfToken || "";
+  const a = Buffer.from(supplied);
+  const b = Buffer.from(expected);
+  if (!a.length || a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
+    return res.status(403).json({ error: "Solicitação inválida. Atualize a página e tente novamente." });
+  }
+  next();
+}
 
 function requireLogin(req, res, next) {
   if (!req.session.user) return res.status(401).json({ error: "Faça login com Roblox para continuar." });
@@ -173,8 +186,11 @@ app.get("/auth/roblox/callback", async (req, res) => {
   }
 });
 
-app.get("/api/me", requireLogin, (req, res) => res.json({ user: req.session.user, minPromoterRank: MIN_PROMOTER_RANK }));
-app.post("/auth/logout", requireLogin, (req, res) => {
+app.get("/api/me", requireLogin, (req, res) => {
+  if (!req.session.csrfToken) req.session.csrfToken = randomUrlSafe();
+  res.json({ user: req.session.user, csrfToken: req.session.csrfToken });
+});
+app.post("/auth/logout", requireLogin, requireCsrf, (req, res) => {
   req.session.destroy(err => {
     if (err) return res.status(500).json({ error: "Não foi possível encerrar a sessão." });
     res.clearCookie("ebm.sid", { httpOnly: true, sameSite: "lax", secure: isProduction });
@@ -186,7 +202,7 @@ app.get("/api/promotions", requireLogin, (req, res) => {
   res.json({ promotions: db.prepare("SELECT * FROM promotions ORDER BY id DESC LIMIT 300").all() });
 });
 
-app.post("/api/promotions", requireLogin, async (req, res) => {
+app.post("/api/promotions", requireLogin, requireCsrf, async (req, res) => {
   const body = req.body || {};
   const targetUsername = body.targetUsername;
   const fromRole = body.fromRole;
