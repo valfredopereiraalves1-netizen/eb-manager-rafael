@@ -21,7 +21,7 @@
 <button data-page="negadas"><span class="ico">⊘</span>Promoção negada</button>
 <button data-page="admin"><span class="ico">⚙</span>Administração</button>
 </nav><div class="sidefoot">Sistema administrativo demonstrativo<br><b>Versão inicial · 0.1</b></div></aside>
-<main class="main"><header class="top"><div class="crumb">Painel / <b id="crumb">Visão geral</b></div><div class="user"><div class="avatar">EB</div><span>Administrador</span></div></header><div class="content">
+<main class="main"><header class="top"><div class="crumb">Painel / <b id="crumb">Visão geral</b></div><div class="user"><a class="btn primary" id="robloxLogin" href="/auth/roblox">Entrar com Roblox</a><div id="robloxUser" class="hidden"><div class="avatar" id="robloxAvatar">RB</div><span id="robloxUserLabel">Conectado</span><button class="btn" id="robloxLogout" type="button">Sair</button></div></div></header><div class="content">
 <section id="page-inicio" class="page"><div class="pagehead"><div><h1>Visão geral</h1><p class="sub">Bem-vindo ao painel de gestão do Exército Brasileiro.</p></div><span class="tag">SISTEMA EM DESENVOLVIMENTO</span></div>
 <div class="grid"><div class="card stat"><small>Registros de promoção</small><strong id="stat-prom">0</strong><span>Total neste navegador</span></div><div class="card stat"><small>Promoções negadas</small><strong id="stat-neg">0</strong><span>Registros locais</span></div><div class="card stat"><small>Treinamentos</small><strong id="stat-treino">0</strong><span>Participações registradas</span></div><div class="card stat"><small>Patentes cadastradas</small><strong id="stat-ranks">32</strong><span>Hierarquia inicial</span></div></div>
 <div class="two section"><div class="card"><h2>Atividade recente</h2><div id="recent" class="empty">Nenhuma atividade registrada ainda.</div></div><div class="card"><h2>Acesso rápido</h2><div class="ranklist"><button class="btn" data-go="hierarquia">Consultar hierarquia →</button><button class="btn" data-go="promocoes">Registrar promoção →</button><button class="btn" data-go="ranking">Registrar treinamento →</button></div></div></div>
@@ -56,4 +56,28 @@ document.getElementById('deniedForm').onsubmit=e=>{e.preventDefault();let f=new 
 document.getElementById('exportLogs').onclick=()=>{let rows=[['Data','Militar','De','Para','Responsável','Motivo'],...get(keys.prom).map(x=>[x.date,x.person,x.from,x.to,x.author,x.reason])];let csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='logs-promocoes-eb.csv';a.click();URL.revokeObjectURL(a.href)};
 document.getElementById('clearData').onclick=()=>{if(confirm('Tem certeza que deseja apagar todos os registros locais?')){Object.values(keys).forEach(k=>localStorage.removeItem(k));refresh()}};
 refresh();
+
+let csrfToken=null;
+async function checkRobloxSession(){
+  const login=document.getElementById('robloxLogin');
+  const userBox=document.getElementById('robloxUser');
+  try{
+    const response=await fetch('/api/me',{credentials:'same-origin'});
+    if(!response.ok) return;
+    const data=await response.json();
+    csrfToken=data.csrfToken;
+    login.classList.add('hidden');
+    userBox.classList.remove('hidden');
+    document.getElementById('robloxUserLabel').textContent='@'+data.user.username+' · '+data.user.groupRoleName;
+    const avatar=document.getElementById('robloxAvatar');
+    if(data.user.avatar){avatar.innerHTML='<img alt="" src="'+esc(data.user.avatar)+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';}
+    else avatar.textContent='RB';
+  }catch(error){console.warn('Não foi possível consultar a sessão Roblox.');}
+}
+document.getElementById('robloxLogout').onclick=async()=>{
+  if(!csrfToken)return;
+  const response=await fetch('/auth/logout',{method:'POST',headers:{'x-csrf-token':csrfToken},credentials:'same-origin'});
+  if(response.ok) location.reload();
+};
+checkRobloxSession();
 </script></body></html>
