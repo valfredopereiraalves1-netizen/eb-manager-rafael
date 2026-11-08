@@ -86,3 +86,24 @@ Use os valores combinados pelo responsável do projeto e não os publique no Git
 As solicitações de patente, rebaixamento e revogação ficam **pendentes para auditoria**; esta etapa ainda não altera automaticamente cargos no grupo Roblox. A integração de escrita precisa de uma chave Open Cloud configurada no Render com escopo `group:write`, além de validação de hierarquia e testes com o grupo correto. O login OAuth Roblox também precisa estar configurado. Não trate o painel como sistema oficial até terminar esses passos.
 
 A hierarquia visual já está no site, mas os nomes/ranks reais precisam ser conferidos com a configuração do grupo. Configure `ROLE_RANKS_JSON`, `MIN_PROMOTER_RANK` e `MIN_RECORD_RANK` com os valores reais antes de liberar promoções.
+
+
+## Integração Open Cloud e hierarquia
+
+A API de alteração de função foi ligada ao backend usando a operação oficial **Assign Role Group Membership** da Roblox Open Cloud. O serviço não executa alterações enquanto as configurações abaixo estiverem ausentes.
+
+Configure no Render (Environment), nunca no GitHub:
+
+- `ROBLOX_OPEN_CLOUD_API_KEY`: chave criada pelo proprietário/responsável autorizado do grupo, com acesso ao grupo correto e escopo `group:write`.
+- `ROLE_IDS_JSON`: objeto JSON que associa cada nome exato de patente usado no painel ao ID real da função Roblox. Exemplo de formato (substitua os valores de exemplo pelos IDs verdadeiros):
+  `{"[ASP] Aspirante a Oficial":"ID_REAL","[REC] Recrutamento":"ID_REAL"}`
+- `ROLE_RANKS_JSON`: objeto JSON com os nomes exatos das patentes e seus níveis/ranks reais para validar a ordem hierárquica.
+- `MIN_PROMOTER_RANK`: rank real mínimo de Aspirante a Oficial.
+- `MIN_RECORD_RANK`: rank mínimo para criar registros administrativos.
+- `ADMIN_ACCESS_CODE`, `CGEX_ACCESS_CODE`, `CREATOR_ACCESS_CODE`: códigos definidos pelo responsável, mantidos apenas como variáveis privadas do serviço.
+
+O formulário normal de promoção verifica a patente atual real do membro, exige destino acima da patente atual e impede que o promotor promova alguém para patente igual ou superior à dele. Em seguida tenta atribuir a função via Open Cloud e só então grava o log.
+
+O painel ADM aplica a patente escolhida. O painel CGEx calcula rebaixamento para a patente imediatamente inferior e revogação para a patente de entrada configurada como menor rank. O painel do Criador também gerencia a WL. Essas ações exigem a chave e os mapeamentos reais; a API da Roblox também pode recusar a ação se a chave não tiver autorização suficiente.
+
+**Atenção:** confirme com o responsável pelo grupo o significado operacional de “revogação” antes de usar essa opção; no código, ela foi definida como retorno à patente inicial, sem expulsar o membro do grupo. A WL deste painel é uma lista administrativa interna; não controla por si só o login Roblox.
