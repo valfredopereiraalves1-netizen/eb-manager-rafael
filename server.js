@@ -19,6 +19,7 @@ const CLIENT_ID = process.env.ROBLOX_CLIENT_ID;
 const CLIENT_SECRET = process.env.ROBLOX_CLIENT_SECRET;
 const SESSION_SECRET = process.env.SESSION_SECRET;
 const MIN_PROMOTER_RANK = Number(process.env.MIN_PROMOTER_RANK || 256);
+const MIN_RECORD_RANK = Number(process.env.MIN_RECORD_RANK || MIN_PROMOTER_RANK);
 
 if (!process.env.DATABASE_URL) throw new Error("Configure DATABASE_URL com a URL do PostgreSQL no Render.");
 if (!SESSION_SECRET || SESSION_SECRET.length < 32) throw new Error("Configure SESSION_SECRET com pelo menos 32 caracteres.");
@@ -287,6 +288,7 @@ app.get("/api/records/:type", requireLogin, async (req, res) => {
 app.post("/api/records/:type", requireLogin, requireCsrf, async (req, res) => {
   const type = req.params.type;
   if (!recordTypes.has(type)) return res.status(404).json({ error: "Tipo de registro inválido." });
+  if (req.session.user.groupRoleRank < MIN_RECORD_RANK) return res.status(403).json({ error: "Permissão negada: seu cargo no grupo não pode criar registros administrativos." });
   const data = req.body || {};
   const required = type === "training" ? ["person", "training", "score", "instructor"]
     : type === "cpd" ? ["person", "type", "description"] : ["person", "rank", "reason"];
