@@ -180,7 +180,9 @@ async function getCloudMembership(userId) {
     if (pageToken) url.searchParams.set("pageToken", pageToken);
     const data = await openCloudJson(url.toString());
     const match = (data.groupMemberships || data.memberships || []).find(item => {
-      const id = String(item.user?.userId || item.user?.id || item.userId || "");
+      const userPath = typeof item.user === "string" ? item.user : "";
+      const nestedId = item.user?.userId || item.user?.id || item.userId || "";
+      const id = userPath.startsWith("users/") ? userPath.slice("users/".length) : String(nestedId);
       return id === String(userId);
     });
     if (match) return match;
