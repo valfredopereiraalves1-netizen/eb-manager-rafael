@@ -31,6 +31,8 @@ Foi adicionado um backend Node.js com:
 - API de promoções que verifica no servidor a permissão do promotor, a patente atual do militar e a patente de destino.
 - Banco SQLite para os registros de promoção.
 
+**Limite atual:** o backend registra uma promoção validada, mas ainda não altera automaticamente a função do membro dentro do grupo Roblox. Para isso, falta integrar a operação oficial de atribuição de função do Open Cloud, com autorização `group:write` concedida pelo responsável do grupo. A interface antiga já chama a API para registrar promoções quando a sessão está ativa.
+
 ### Configuração necessária antes de executar
 1. Instale Node.js 20 ou superior.
 2. Copie .env.example para .env e configure as variáveis sem publicar o arquivo.
@@ -40,7 +42,7 @@ Foi adicionado um backend Node.js com:
 
 O cadastro/publicação de aplicativos OAuth Roblox exige os requisitos de elegibilidade definidos pela Roblox. Não tente contornar verificações de idade ou identidade; o responsável autorizado deve cuidar dessa etapa.
 
-O backend ainda não está hospedado nem conectado à interface antiga. Não use em produção até concluir configuração, revisão de segurança e testes.
+O backend ainda não está hospedado. Não use em produção até concluir configuração, integração da atribuição real de função via Open Cloud, revisão de segurança e testes.
 
 ## Tecnologias
 HTML, CSS, JavaScript, Node.js, Express e SQLite.
