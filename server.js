@@ -160,6 +160,45 @@ async function getRobloxUserId(username) {
   return user?.id ? { id: String(user.id), name: String(user.name) } : null;
 }
 
+const openCloudKey = process.env.ROBLOX_OPEN_CLOUD_API_KEY || "";
+async function openCloudJson(url, options = {}) {
+  if (!openCloudKey) {
+    const error = new Error("Integração Open Cloud não configurada no Render (ROBLOX_OPEN_CLOUD_API_KEY).");
+    error.status = 503;
+    throw error;
+  }
+  return robloxJson(url, {
+    ...options,
+    headers: { "x-api-key": openCloudKey, ...(options.headers || {}) }
+  });
+}
+async function getCloudMembership(userId) {
+  let pageToken = "";
+  for (let page = 0; page < 30; page++) {
+    const url = new URL("https://apis.roblox.com/cloud/v2/groups/" + encodeURIComponent(GROUP_ID) + "/memberships");
+    url.searchParams.set("maxPageSize", "100");
+    if (pageToken) url.searchParams.set("pageToken", pageToken);
+    const data = await openCloudJson(url.toString());
+    const match = (data.groupMemberships || data.memberships || []).find(item => {
+      const id = String(item.user?.userId || item.user?.id || item.userId || "");
+      return id === String(userId);
+    });
+    if (match) return match;
+    pageToken = data.nextPageToken || "";
+    if (!pageToken) break;
+  }
+  return null;
+}
+async function assignCloudRole(userId, roleId) {
+  const membership = await getCloudMembership(userId);
+  if (!membership?.path) throw new Error("Não foi possível localizar a associação do usuário pela Open Cloud.");
+  return openCloudJson(
+    "https://apis.roblox.com/cloud/v2/groups/" + encodeURIComponent(GROUP_ID) + "/memberships/" +
+      encodeURIComponent(membership.path.split("/").pop()) + ":assignRole",
+    { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ role: "groups/" + GROUP_ID + "/roles/" + roleId }) }
+  );
+}
+
 app.get("/auth/roblox", (req, res) => {
   if (!CLIENT_ID || !CLIENT_SECRET || !BASE_URL) return res.status(503).send("O login Roblox ainda não foi configurado pelo responsável técnico.");
   const state = randomUrlSafe();
@@ -278,12 +317,17 @@ app.post("/api/promotions", requireLogin, requireCsrf, async (req, res) => {
     const targetRole = await getGroupRole(target.id);
     if (!targetRole) return res.status(400).json({ error: "O militar informado não pertence ao grupo." });
     if (targetRole.rank !== fromRank) return res.status(409).json({ error: "A patente atual informada não corresponde à função real do militar no grupo." });
+    if (!process.env.ROBLOX_OPEN_CLOUD_API_KEY) return res.status(503).json({ error: "A integração Open Cloud ainda não foi configurada no Render." });
+    const roleIds = JSON.parse(process.env.ROLE_IDS_JSON || "{}");
+    const targetRoleId = roleIds[toRole.trim()];
+    if (!targetRoleId) return res.status(503).json({ error: "Falta mapear o ID real da patente de destino em ROLE_IDS_JSON." });
+    await assignCloudRole(target.id, String(targetRoleId));
     await pool.query(
       `INSERT INTO promotions (created_at, target_user_id, target_username, from_role, to_role, author_user_id, author_username, author_role, reason)
        VALUES (NOW(), $1, $2, $3, $4, $5, $6, $7, $8)`,
       [target.id, target.name, fromRole.trim(), toRole.trim(), author.robloxId, author.username, author.groupRoleName, reason.trim()]
     );
-    res.status(201).json({ ok: true });
+    res.status(201).json({ ok: true, applied: true });
   } catch (err) {
     console.error("Falha ao registrar promoção:", err.message);
     res.status(502).json({ error: "Não foi possível verificar os dados do grupo Roblox agora." });
@@ -396,12 +440,31 @@ app.post("/api/admin/requests", requireLogin, requireCsrf, async (req, res) => {
     if (!target) return res.status(404).json({ error: "Usuário Roblox não encontrado." });
     const currentRole = await getGroupRole(target.id);
     if (!currentRole) return res.status(400).json({ error: "O usuário não pertence ao grupo EB configurado." });
+    if (!process.env.ROBLOX_OPEN_CLOUD_API_KEY) return res.status(503).json({ error: "Configure ROBLOX_OPEN_CLOUD_API_KEY no Render antes de aplicar alterações." });
+    const roleIds = JSON.parse(process.env.ROLE_IDS_JSON || "{}");
+    let destinationRoleId = null;
+    if (action === "set_role") {
+      destinationRoleId = roleIds[requestedRole];
+      if (!destinationRoleId) return res.status(503).json({ error: "Falta mapear o ID real da patente em ROLE_IDS_JSON." });
+    } else {
+      const currentRank = Number(currentRole.rank);
+      const configured = Object.entries(roleRanks).filter(([, rank]) => Number.isInteger(rank)).sort((a,b) => b[1]-a[1]);
+      const lower = configured.find(([, rank]) => rank < currentRank);
+      const recruit = configured[configured.length - 1];
+      const destinationLabel = action === "revoke" ? recruit?.[0] : lower?.[0];
+      if (!destinationLabel) return res.status(400).json({ error: "Não foi possível determinar a patente de destino. Revise ROLE_RANKS_JSON." });
+      destinationRoleId = roleIds[destinationLabel];
+      if (!destinationRoleId) return res.status(503).json({ error: "Falta mapear a patente de destino em ROLE_IDS_JSON." });
+    }
+    if (String(target.id) === String(req.session.user.robloxId)) return res.status(403).json({ error: "Você não pode alterar a própria patente por este painel." });
+    if (currentRole.rank >= req.session.user.groupRoleRank && access !== "creator") return res.status(403).json({ error: "Você não pode alterar a patente de alguém de nível igual ou superior ao seu." });
+    await assignCloudRole(target.id, String(destinationRoleId));
     await pool.query(
-      `INSERT INTO admin_requests (action, target_user_id, target_username, requested_role, reason, created_by, created_by_role)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-      [action, target.id, target.name, requestedRole, reason, req.session.user.robloxId, access]
+      `INSERT INTO admin_requests (action, target_user_id, target_username, requested_role, reason, created_by, created_by_role, status)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, 'applied')`,
+      [action, target.id, target.name, requestedRole || (action === "revoke" ? "Revogado para patente inicial" : "Rebaixado uma patente"), reason, req.session.user.robloxId, access]
     );
-    res.status(201).json({ ok: true, status: "pending" });
+    res.status(201).json({ ok: true, status: "applied" });
   } catch (err) {
     console.error("Falha ao registrar solicitação administrativa:", err.message);
     res.status(502).json({ error: "Não foi possível verificar o usuário Roblox ou registrar a solicitação." });
