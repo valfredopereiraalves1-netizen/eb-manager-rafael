@@ -88,7 +88,7 @@
   async function loadWhitelist() {
     const data = await api("/api/whitelist");
     document.getElementById("wlList").innerHTML = data.entries.length
-      ? data.entries.map(item => '<div class="rank"><b>' + safe(item.username) + '</b><small>' + safe(item.note || "Sem observação") + '</small></div>').join("")
+      ? data.entries.map(item => '<div class="rank"><b>' + safe(item.username) + '</b><small>' + safe(item.note || "Sem observação") + '</small><button class="btn danger" type="button" data-remove-wl="' + Number(item.id) + '">Remover</button></div>').join("")
       : "WL vazia.";
   }
 
@@ -117,14 +117,23 @@
     try {
       const body = formData(event.target); body.action = "set_role";
       await api("/api/admin/requests", { method: "POST", body: JSON.stringify(body) });
-      event.target.reset(); await loadRequests(); alert("Solicitação registrada para auditoria.");
+      event.target.reset(); await loadRequests(); alert("Patente alterada no grupo Roblox e registrada nos logs.");
     } catch (error) { alert(error.message); }
   });
   document.getElementById("cgexForm").addEventListener("submit", async event => {
     event.preventDefault();
     try {
       await api("/api/admin/requests", { method: "POST", body: JSON.stringify(formData(event.target)) });
-      event.target.reset(); await loadRequests(); alert("Solicitação registrada para auditoria.");
+      event.target.reset(); await loadRequests(); alert("Alteração aplicada no grupo Roblox e registrada nos logs.");
+    } catch (error) { alert(error.message); }
+  });
+  document.getElementById("wlList").addEventListener("click", async event => {
+    const button = event.target.closest("[data-remove-wl]");
+    if (!button) return;
+    if (!confirm("Remover este usuário da WL?")) return;
+    try {
+      await api("/api/whitelist/" + encodeURIComponent(button.dataset.removeWl), { method: "DELETE" });
+      await loadWhitelist();
     } catch (error) { alert(error.message); }
   });
   document.getElementById("wlForm").addEventListener("submit", async event => {
