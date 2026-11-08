@@ -23,6 +23,7 @@
 <aside class="side"><div class="brand"><div class="crest">EB</div><div><b>EXÉRCITO BRASILEIRO</b><small>Manager do Rafael</small></div></div>
 <div class="navlabel">PAINEL PRINCIPAL</div><nav class="nav" id="nav">
 <button class="active" data-page="inicio"><span class="ico">▦</span>Visão geral</button>
+<button data-page="membros"><span class="ico">♟</span>Membros do grupo</button>
 <button data-page="hierarquia"><span class="ico">♜</span>Hierarquia</button>
 <button data-page="promocoes"><span class="ico">⬆</span>Promoções</button>
 <button data-page="logs"><span class="ico">▤</span>Logs de promoção</button>
@@ -40,6 +41,16 @@
 <div class="two section"><div class="card"><h2>Atividade recente</h2><div id="recent" class="empty">Nenhuma atividade registrada ainda.</div></div><div class="card"><h2>Acesso rápido</h2><div class="ranklist"><button class="btn" data-go="hierarquia">Consultar hierarquia →</button><button class="btn" data-go="promocoes">Registrar promoção →</button><button class="btn" data-go="ranking">Registrar treinamento →</button></div></div></div>
 <div class="notice">Os registros administrativos são armazenados no banco de dados do servidor. O login Roblox e as permissões dependem da configuração das credenciais e dos cargos reais do grupo.</div></section>
 <section id="page-hierarquia" class="page hidden"><div class="pagehead"><div><h1>Hierarquia</h1><p class="sub">Cargos e patentes em ordem decrescente.</p></div></div><div class="card"><div class="ranklist" id="ranks"></div></div></section>
+<section id="page-membros" class="page hidden">
+<div class="pagehead"><div><h1>Membros do grupo Roblox</h1><p class="sub">Lista consultada diretamente no grupo 241982252.</p></div><button class="btn primary" id="refreshMembers" type="button">Atualizar lista</button></div>
+<div class="card">
+<div class="formgrid"><div class="field full"><label for="memberSearch">Pesquisar por usuário ou patente</label><input id="memberSearch" type="search" placeholder="Digite um nome ou patente..."></div></div>
+<p class="muted" id="membersStatus">Entre com sua conta Roblox para carregar os membros.</p>
+<div class="tablewrap"><table><thead><tr><th>Usuário</th><th>Nome de exibição</th><th>Patente</th><th>Rank</th></tr></thead><tbody id="membersBody"></tbody></table></div>
+<div id="membersEmpty" class="empty">A lista ainda não foi carregada.</div>
+</div>
+<div class="notice">A lista atualiza automaticamente a cada 60 segundos enquanto o painel estiver aberto. A API Key fica somente no servidor; nunca coloque a chave no HTML.</div>
+</section>
 <section id="page-promocoes" class="page hidden"><div class="pagehead"><div><h1>Registrar promoção</h1><p class="sub">Registre uma alteração de patente para auditoria.</p></div></div><div class="card"><form id="promotionForm" class="formgrid"><div class="field"><label>Nome do militar</label><input name="person" required placeholder="Nome no Roblox"></div><div class="field"><label>Usuário de quem promove</label><input name="author" required placeholder="Seu nome no Roblox"></div><div class="field"><label>Patente atual</label><select name="from" id="fromRank" required></select></div><div class="field"><label>Nova patente</label><select name="to" id="toRank" required></select></div><div class="field full"><label>Motivo da promoção</label><textarea name="reason" required placeholder="Descreva o motivo..."></textarea></div><div class="field full"><button class="btn primary" type="submit">Registrar promoção</button></div></form><div class="notice">As promoções são verificadas no servidor com a API do Roblox. O mapeamento das patentes e os níveis de permissão precisam corresponder aos cargos reais do grupo.</div></div></section>
 <section id="page-logs" class="page hidden"><div class="pagehead"><div><h1>Logs de promoção</h1><p class="sub">Histórico dos registros feitos neste navegador.</p></div><button class="btn" id="exportLogs">Exportar CSV</button></div><div class="card tablewrap"><table><thead><tr><th>Data</th><th>Militar</th><th>De</th><th>Para</th><th>Responsável</th><th>Motivo</th></tr></thead><tbody id="logsBody"></tbody></table><div id="logsEmpty" class="empty">Nenhuma promoção registrada.</div></div></section>
 <section id="page-ranking" class="page hidden"><div class="pagehead"><div><h1>Ranking de treinamentos</h1><p class="sub">Acompanhe participações e resultados.</p></div></div><div class="card"><form id="trainingForm" class="formgrid"><div class="field"><label>Nome do militar</label><input name="person" required></div><div class="field"><label>Treinamento</label><input name="training" required placeholder="Ex.: Formação básica"></div><div class="field"><label>Pontuação</label><input name="score" type="number" min="0" max="100" required></div><div class="field"><label>Instrutor</label><input name="instructor" required></div><div class="field full"><button class="btn primary">Adicionar ao ranking</button></div></form></div><div class="card section tablewrap"><table><thead><tr><th>Posição</th><th>Militar</th><th>Treinamento</th><th>Pontos</th><th>Instrutor</th></tr></thead><tbody id="trainingBody"></tbody></table><div id="trainingEmpty" class="empty">Nenhum treinamento registrado.</div></div></section>
@@ -63,7 +74,8 @@ document.getElementById('trainingBody').innerHTML=[...t].sort((a,b)=>b.score-a.s
 document.getElementById('cpdList').innerHTML=c.length?c.map(x=>'<div class="rank"><b>'+esc(x.person)+' · '+esc(x.type)+'</b><small>'+esc(x.description)+'</small></div>').join(''):'Nenhum registro no CPD.';
 document.getElementById('deniedList').innerHTML=d.length?d.map(x=>'<div class="rank"><b>'+esc(x.person)+' · '+esc(x.rank)+'</b><small>'+esc(x.reason)+'</small></div>').join(''):'Nenhuma promoção negada registrada.'}
 document.getElementById('promotionForm').onsubmit=async e=>{e.preventDefault();if(!csrfToken){alert('O login Roblox ainda não está ativo. O backend precisa ser hospedado e configurado antes de registrar promoções oficiais.');return}let f=new FormData(e.target);const response=await fetch('/api/promotions',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','x-csrf-token':csrfToken},body:JSON.stringify({targetUsername:f.get('person'),fromRole:f.get('from'),toRole:f.get('to'),reason:f.get('reason')})});const result=await response.json().catch(()=>({}));if(!response.ok){alert(result.error||'Não foi possível registrar a promoção.');return}e.target.reset();await loadServerPromotions();
-    await loadServerRecords();page('logs')}
+    await loadServerRecords();
+    await loadGroupMembers();page('logs')}
 document.getElementById('trainingForm').onsubmit=async e=>{e.preventDefault();if(!csrfToken){alert('Entre com sua conta Roblox para continuar.');return}let f=new FormData(e.target);const r=await fetch('/api/records/training',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','x-csrf-token':csrfToken},body:JSON.stringify({person:f.get('person'),training:f.get('training'),score:Number(f.get('score')),instructor:f.get('instructor')})});const out=await r.json().catch(()=>({}));if(!r.ok){alert(out.error||'Não foi possível salvar.');return}e.target.reset();await loadServerRecords()};
 document.getElementById('cpdForm').onsubmit=async e=>{e.preventDefault();if(!csrfToken){alert('Entre com sua conta Roblox para continuar.');return}let f=new FormData(e.target);const r=await fetch('/api/records/cpd',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','x-csrf-token':csrfToken},body:JSON.stringify({person:f.get('person'),type:f.get('type'),description:f.get('description')})});const out=await r.json().catch(()=>({}));if(!r.ok){alert(out.error||'Não foi possível salvar.');return}e.target.reset();await loadServerRecords()};
 document.getElementById('deniedForm').onsubmit=async e=>{e.preventDefault();if(!csrfToken){alert('Entre com sua conta Roblox para continuar.');return}let f=new FormData(e.target);const r=await fetch('/api/records/denied',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','x-csrf-token':csrfToken},body:JSON.stringify({person:f.get('person'),rank:f.get('rank'),reason:f.get('reason')})});const out=await r.json().catch(()=>({}));if(!r.ok){alert(out.error||'Não foi possível salvar.');return}e.target.reset();await loadServerRecords()};
@@ -72,6 +84,47 @@ document.getElementById('exportLogs').onclick=()=>{let rows=[['Data','Militar','
 refresh();
 
 let csrfToken=null;
+
+let groupMembers = [];
+function renderGroupMembers() {
+  const query = (document.getElementById("memberSearch")?.value || "").trim().toLocaleLowerCase("pt-BR");
+  const filtered = groupMembers.filter(member =>
+    [member.username, member.displayName, member.roleName].some(value => String(value || "").toLocaleLowerCase("pt-BR").includes(query))
+  );
+  document.getElementById("membersBody").innerHTML = filtered.map(member =>
+    '<tr><td>@'+esc(member.username)+'</td><td>'+esc(member.displayName)+'</td><td>'+esc(member.roleName)+'</td><td>'+esc(member.rank)+'</td></tr>'
+  ).join("");
+  document.getElementById("membersEmpty").textContent = groupMembers.length
+    ? (filtered.length ? "" : "Nenhum membro corresponde à pesquisa.")
+    : "Nenhum membro carregado.";
+  document.getElementById("membersEmpty").classList.toggle("hidden", filtered.length > 0);
+}
+async function loadGroupMembers(showAlert = false) {
+  if (!csrfToken) {
+    document.getElementById("membersStatus").textContent = "Entre com sua conta Roblox para carregar os membros.";
+    return;
+  }
+  const button = document.getElementById("refreshMembers");
+  if (button) button.disabled = true;
+  try {
+    const response = await fetch("/api/group/members", { credentials: "same-origin" });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || "Não foi possível consultar os membros.");
+    groupMembers = data.members || [];
+    renderGroupMembers();
+    document.getElementById("membersStatus").textContent =
+      groupMembers.length + " membro(s) carregado(s) · Atualizado em " +
+      new Date(data.updatedAt).toLocaleTimeString("pt-BR");
+  } catch (error) {
+    document.getElementById("membersStatus").textContent = error.message;
+    if (showAlert) alert(error.message);
+  } finally {
+    if (button) button.disabled = false;
+  }
+}
+document.getElementById("refreshMembers").onclick = () => loadGroupMembers(true);
+document.getElementById("memberSearch").addEventListener("input", renderGroupMembers);
+
 async function loadServerPromotions(){
   if(!csrfToken)return;
   try{
