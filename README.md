@@ -61,3 +61,28 @@ A versão atual usa PostgreSQL para persistir promoções, treinamentos, CPD, pr
 - `ROLE_RANKS_JSON`: JSON com o nome exato de cada patente do painel e o número de rank correspondente no grupo Roblox.
 
 O servidor cria as tabelas necessárias na primeira inicialização. Os formulários de treinamento, CPD e promoção negada exigem login Roblox e token CSRF. A promoção também exige o mapeamento correto dos ranks reais; não preencha esses valores por estimativa.
+
+
+## Acessos especiais adicionados
+
+A interface agora inclui uma área **Acessos especiais** com validação dos códigos no backend (os códigos não ficam no HTML nem no JavaScript público). Configure no painel Environment do Render:
+
+- `ADMIN_ACCESS_CODE`: código privado do painel ADM.
+- `CGEX_ACCESS_CODE`: código privado do painel CGEx.
+- `CREATOR_ACCESS_CODE`: código privado do painel do Criador.
+
+Use os valores combinados pelo responsável do projeto e não os publique no GitHub. Os três valores devem ser configurados como variáveis de ambiente no serviço web.
+
+### O que esta etapa faz
+
+- Valida o código no servidor e guarda o nível de acesso na sessão autenticada do Roblox.
+- ADM/Criador podem registrar solicitações para definir patente.
+- CGEx/Criador podem registrar solicitações de rebaixamento ou revogação.
+- Criador pode administrar a lista de WL do painel.
+- Solicitações administrativas e WL são guardadas no PostgreSQL.
+
+### O que ainda não está concluído
+
+As solicitações de patente, rebaixamento e revogação ficam **pendentes para auditoria**; esta etapa ainda não altera automaticamente cargos no grupo Roblox. A integração de escrita precisa de uma chave Open Cloud configurada no Render com escopo `group:write`, além de validação de hierarquia e testes com o grupo correto. O login OAuth Roblox também precisa estar configurado. Não trate o painel como sistema oficial até terminar esses passos.
+
+A hierarquia visual já está no site, mas os nomes/ranks reais precisam ser conferidos com a configuração do grupo. Configure `ROLE_RANKS_JSON`, `MIN_PROMOTER_RANK` e `MIN_RECORD_RANK` com os valores reais antes de liberar promoções.
