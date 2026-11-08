@@ -46,3 +46,17 @@ O backend ainda não está hospedado. Não use em produção até concluir confi
 
 ## Tecnologias
 HTML, CSS, JavaScript, Node.js, Express e SQLite.
+
+
+## Banco de dados PostgreSQL no Render
+
+A versão atual usa PostgreSQL para persistir promoções, treinamentos, CPD, promoções negadas e sessões de login. O serviço precisa receber estas variáveis de ambiente:
+
+- `DATABASE_URL`: URL interna do banco PostgreSQL criado no Render.
+- `SESSION_SECRET`: segredo aleatório com pelo menos 32 caracteres.
+- `BASE_URL`: URL HTTPS pública do serviço.
+- `ROBLOX_REDIRECT_URI`: `BASE_URL` seguido de `/auth/roblox/callback`.
+- `ROBLOX_CLIENT_ID` e `ROBLOX_CLIENT_SECRET`: credenciais OAuth criadas no portal oficial do Roblox.
+- `ROLE_RANKS_JSON`: JSON com o nome exato de cada patente do painel e o número de rank correspondente no grupo Roblox.
+
+O servidor cria as tabelas necessárias na primeira inicialização. Os formulários de treinamento, CPD e promoção negada exigem login Roblox e token CSRF. A promoção também exige o mapeamento correto dos ranks reais; não preencha esses valores por estimativa.
