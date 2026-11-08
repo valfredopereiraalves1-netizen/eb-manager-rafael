@@ -479,6 +479,18 @@ app.get("/api/whitelist", requireLogin, requireSpecialAccess("creator"), async (
     res.status(500).json({ error: "Não foi possível consultar a WL." });
   }
 });
+app.delete("/api/whitelist/:id", requireLogin, requireCsrf, requireSpecialAccess("creator"), async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isSafeInteger(id) || id < 1) return res.status(400).json({ error: "Identificador inválido." });
+  try {
+    const result = await pool.query("DELETE FROM whitelist_entries WHERE id = $1 RETURNING id", [id]);
+    if (!result.rowCount) return res.status(404).json({ error: "Registro da WL não encontrado." });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("Falha ao remover da WL:", err.message);
+    res.status(500).json({ error: "Não foi possível remover o usuário da WL." });
+  }
+});
 app.post("/api/whitelist", requireLogin, requireCsrf, requireSpecialAccess("creator"), async (req, res) => {
   const username = String(req.body?.username || "").trim();
   const note = String(req.body?.note || "").trim();
