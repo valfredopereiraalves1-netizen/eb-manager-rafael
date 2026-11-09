@@ -847,6 +847,161 @@ body{background:#101713;color:#edf3ed}
  #dashboardApp *,#dashboardApp *:before,#dashboardApp *:after{animation:none!important;transition:none!important}
 }
 
+
+/* EB MANAGER — renovação visual suave, acolhedora e responsiva */
+:root{
+ --eb-soft-bg:#f7f8f5;--eb-soft-surface:#ffffff;--eb-soft-ink:#263b30;
+ --eb-soft-muted:#7b897f;--eb-soft-line:#e6ece5;--eb-soft-green:#326b4c;
+ --eb-soft-green-2:#eaf3ec;--eb-soft-gold:#d9bd78;--eb-soft-pink:#f8eeee;
+}
+body{background:var(--eb-soft-bg);color:var(--eb-soft-ink)}
+#dashboardApp{background:var(--eb-soft-bg)!important;color:var(--eb-soft-ink)!important}
+#dashboardApp .side{
+ background:linear-gradient(180deg,#214d38 0%,#183d2d 100%)!important;
+ border:0!important;box-shadow:5px 0 26px rgba(31,75,52,.10)!important
+}
+#dashboardApp .brand{border-bottom:1px solid rgba(255,255,255,.15)!important}
+#dashboardApp .crest{
+ background:linear-gradient(145deg,#f0dca7,#d4b66e)!important;color:#294b37!important;
+ border:2px solid rgba(255,255,255,.65)!important;border-radius:14px!important;
+ box-shadow:0 5px 14px rgba(0,0,0,.12)!important
+}
+#dashboardApp .navlabel{color:#c2d6c7!important}
+#dashboardApp .nav button{
+ color:#e3eee6!important;border-radius:12px!important;margin:4px 0!important;
+ padding:12px 13px!important;font-weight:650!important
+}
+#dashboardApp .nav button.active,#dashboardApp .nav button:hover{
+ color:#244633!important;background:#f4e8c9!important;box-shadow:0 5px 14px rgba(0,0,0,.08)
+}
+#dashboardApp .nav .ico{display:grid;place-items:center}
+#dashboardApp .nav .ico svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+#dashboardApp .sidefoot{background:rgba(255,255,255,.07)!important;border-color:rgba(255,255,255,.16)!important;color:#d5e4d9!important;border-radius:14px!important}
+#dashboardApp .main,#dashboardApp .content{background:var(--eb-soft-bg)!important}
+#dashboardApp .top{
+ background:rgba(255,255,255,.92)!important;border-bottom:1px solid var(--eb-soft-line)!important;
+ box-shadow:0 4px 18px rgba(37,65,45,.035)!important;backdrop-filter:blur(12px)
+}
+#dashboardApp .crumb{color:#89968c!important}
+#dashboardApp .crumb b{color:#315b40!important}
+#dashboardApp .user{color:#355440!important}
+#dashboardApp .avatar{background:#e8f1e9!important;color:#326b4c!important;border:2px solid #fff!important;box-shadow:0 2px 8px rgba(34,75,48,.12)}
+#dashboardApp .content{max-width:1450px!important;padding:clamp(18px,3vw,38px)!important}
+#dashboardApp .pagehead h1,#dashboardApp .pagehead h2{color:#284a35!important;letter-spacing:-.025em}
+#dashboardApp .sub,#dashboardApp .muted{color:var(--eb-soft-muted)!important}
+#dashboardApp .card{
+ background:var(--eb-soft-surface)!important;border:1px solid var(--eb-soft-line)!important;
+ border-radius:18px!important;box-shadow:0 7px 24px rgba(44,74,49,.055)!important
+}
+#dashboardApp .card h2{color:#31553d!important}
+#dashboardApp .stat{overflow:hidden}
+#dashboardApp .stat:after{background:linear-gradient(180deg,#d8bd7b,#a9cbb0)!important}
+#dashboardApp .stat strong{color:#2e6345!important}
+#dashboardApp .stat small,#dashboardApp .stat span{color:#839087!important}
+#dashboardApp .stat-icon,.stat-icon{
+ background:#edf5ee!important;color:#39734f!important;border:1px solid #e0ece1!important;border-radius:12px!important
+}
+#dashboardApp .tag{background:#edf5ee!important;color:#39704e!important;border:1px solid #dceade!important}
+#dashboardApp .btn{
+ background:#f7faf7!important;border:1px solid #dfe9df!important;color:#355741!important;
+ border-radius:11px!important;font-weight:700!important;box-shadow:0 2px 5px rgba(40,70,45,.025)
+}
+#dashboardApp .btn:hover{background:#edf5ee!important;transform:translateY(-1px)}
+#dashboardApp .btn.primary{background:#39734f!important;border-color:#39734f!important;color:#fff!important}
+#dashboardApp .btn.primary:hover{background:#2d6041!important}
+#dashboardApp .btn.danger{background:#fff1f0!important;border-color:#f2d9d6!important;color:#a34f48!important}
+#dashboardApp .field label{color:#587260!important;font-weight:700!important}
+#dashboardApp .field input,#dashboardApp .field select,#dashboardApp .field textarea{
+ background:#fbfcfa!important;color:#2c4033!important;border:1px solid #dfe8df!important;border-radius:11px!important
+}
+#dashboardApp .field input:focus,#dashboardApp .field select:focus,#dashboardApp .field textarea:focus{
+ outline:3px solid rgba(119,169,129,.18)!important;border-color:#83ad8c!important
+}
+#dashboardApp th{background:#f4f8f3!important;color:#728477!important}
+#dashboardApp td{color:#405b48!important;border-color:#edf1ec!important}
+#dashboardApp .rank{background:#f8faf7!important;border:1px solid #e8eee7!important;border-radius:12px!important}
+#dashboardApp .rank b{color:#315640!important}
+#dashboardApp .rank small{color:#879389!important}
+#dashboardApp .notice{background:#fff9e9!important;border:1px solid #efe2bd!important;color:#78643a!important;border-radius:12px!important}
+#dashboardApp .empty{color:#89958c!important}
+#dashboardApp .overview-hero{
+ background:radial-gradient(circle at 90% 15%,rgba(244,226,185,.7),transparent 26%),linear-gradient(120deg,#eaf3eb,#f7f5ed 72%,#f8eeee)!important;
+ border:1px solid #e4ece2!important;border-radius:22px!important;box-shadow:0 10px 30px rgba(54,85,57,.07)!important;
+ padding:clamp(23px,3vw,38px)!important
+}
+#dashboardApp .overview-eyebrow,#dashboardApp .section-kicker{color:#668d6d!important}
+#dashboardApp .overview-hero h1{color:#284b36!important}
+#dashboardApp .overview-hero p{color:#718176!important}
+#dashboardApp .overview-hero-mark{
+ background:rgba(255,255,255,.7)!important;border:1px solid #dce8dc!important;border-radius:28px!important;
+ box-shadow:0 8px 22px rgba(55,90,60,.07)
+}
+#dashboardApp .overview-hero-mark span{color:#39734f!important}
+#dashboardApp .overview-hero-mark small{color:#819084!important}
+#dashboardApp .status-dot{background:#70ad7d!important;box-shadow:0 0 0 4px rgba(112,173,125,.13)!important}
+#dashboardApp .menu-welcome,#dashboardApp .menu-promo-card{
+ border-radius:18px!important;box-shadow:0 8px 22px rgba(42,76,49,.07)!important
+}
+#dashboardApp .menu-welcome{background:linear-gradient(120deg,#eaf3eb,#f8f5ed)!important;border:1px solid #e2ebe1!important}
+#dashboardApp .menu-brandmark{background:#326b4c!important;color:#fff!important;border-radius:14px!important}
+#dashboardApp .menu-usercard{background:#fff!important;border:1px solid #e7eee6!important;border-radius:14px!important}
+#dashboardApp .menu-useravatar{background:#eaf3eb!important;color:#326b4c!important}
+#dashboardApp .menu-userinfo strong{color:#2c4b36!important}
+#dashboardApp .menu-userinfo span{color:#7e8b80!important}
+#dashboardApp .menu-online{background:#edf5ee!important;color:#477452!important;border-radius:20px!important}
+#dashboardApp .menu-promo-card{background:linear-gradient(125deg,#315f43,#234a36)!important;border:1px solid #477554!important}
+#dashboardApp .menu-promo-card h2,#dashboardApp .menu-promo-card p,#dashboardApp .menu-promo-card small{color:#f4f7f1!important}
+#dashboardApp .menu-promo-card .menu-promo-top{color:#e6d6a8!important}
+#dashboardApp .menu-upgrade{background:#f0dca7!important;color:#35533c!important;border-radius:11px!important}
+#dashboardApp .menu-shortcuts-head h2{color:#2c4b36!important}
+#dashboardApp .menu-shortcuts-head p{color:#839087!important}
+#dashboardApp .menu-shortcut{
+ background:#fff!important;border:1px solid #e5ece4!important;color:#31533d!important;
+ border-radius:15px!important;padding:14px!important;box-shadow:0 4px 14px rgba(45,75,48,.035);
+ transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease
+}
+#dashboardApp .menu-shortcut:hover{transform:translateY(-2px);border-color:#cbdccb!important;box-shadow:0 9px 20px rgba(45,75,48,.08)!important}
+#dashboardApp .shortcut-icon{background:#edf5ee!important;color:#477953!important;border-radius:13px!important}
+#dashboardApp .menu-shortcut small{color:#859187!important}
+#dashboardApp .menu-shortcut>b{color:#a1afa2!important}
+#dashboardApp .profile-tabs button.active,#dashboardApp [data-profile-tab].active{background:#eaf3eb!important;color:#326b4c!important;border-color:#d6e7d8!important}
+#dashboardApp .profile-event{border-color:#e6ece5!important}
+#dashboardApp a{color:#39734f}
+#dashboardApp button,#dashboardApp .card,#dashboardApp .menu-shortcut{transition:background .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+#publicHome{background:#f7f8f5!important;color:#293e31!important}
+#publicHome .public-nav{background:rgba(255,255,255,.94)!important;border-color:#e6ece5!important;backdrop-filter:blur(12px)}
+#publicHome .public-brand{color:#294b36!important}
+#publicHome .public-brand-mark{background:#326b4c!important;border-color:#e2cf9b!important}
+#publicHome .public-links a{color:#536b59!important}
+#publicHome .public-cta{background:#39734f!important;border-radius:11px!important;box-shadow:0 5px 14px rgba(49,103,70,.15)}
+#publicHome .public-cta.secondary{background:rgba(255,255,255,.12)!important;border-color:rgba(255,255,255,.55)!important}
+#publicHome .public-section{background:#f7f8f5}
+#publicHome .public-feature{border-color:#e5ece4!important;border-radius:17px!important;box-shadow:0 8px 22px rgba(43,75,48,.05)!important}
+#publicHome .public-feature-icon{background:#edf5ee!important;color:#39734f!important;border-radius:13px!important}
+#publicHome .public-section-head small{color:#54805e!important}
+#publicHome .public-stats{background:#214b36!important}
+#publicHome .public-footer{background:#173a2b!important}
+@media(max-width:850px){
+ #dashboardApp .side{width:100%!important;height:auto!important;position:relative!important}
+ #dashboardApp .content{padding:22px 16px!important}
+}
+@media(max-width:600px){
+ #dashboardApp .side{padding:12px 13px!important}
+ #dashboardApp .brand{padding:3px 5px 12px!important}
+ #dashboardApp .nav{gap:5px!important}
+ #dashboardApp .nav button{padding:10px 11px!important;border-radius:10px!important}
+ #dashboardApp .top{padding:10px 14px!important}
+ #dashboardApp .content{padding:17px 12px!important}
+ #dashboardApp .overview-hero{padding:22px 18px!important;border-radius:17px!important}
+ #dashboardApp .overview-hero-mark{width:76px;height:76px;flex-basis:76px;border-radius:20px!important}
+ #dashboardApp .overview-hero-mark span{font-size:29px}
+ #dashboardApp .card{border-radius:15px!important;padding:15px!important}
+ #dashboardApp .menu-shortcut{padding:12px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ #dashboardApp *,#publicHome *{transition:none!important;animation:none!important}
+}
+
 </style></head>
 <body>
 <div id="publicHome" class="public-home hidden">
