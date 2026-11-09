@@ -1451,6 +1451,37 @@ body{font-family:var(--ebx-text)}
 }
 </style>
 
+
+<style id="eb-hamburger-navigation">
+/* Menu recolhido por padrão: abrir somente ao tocar nos três traços */
+#dashboardApp .side{position:relative}
+#dashboardApp .nav-menu-button{
+  display:flex;position:absolute;top:22px;right:17px;z-index:30;
+  width:42px;height:42px;flex-direction:column;align-items:center;
+  justify-content:center;gap:5px;border:1px solid rgba(240,213,139,.42);
+  border-radius:9px;background:rgba(255,255,255,.07);color:#fff;cursor:pointer
+}
+#dashboardApp .nav-menu-button span{
+  display:block;width:19px;height:2px;border-radius:2px;background:#f0d58b;
+  transition:transform .2s ease,opacity .2s ease
+}
+#dashboardApp .side.nav-open .nav-menu-button span:first-child{transform:translateY(7px) rotate(45deg)}
+#dashboardApp .side.nav-open .nav-menu-button span:nth-child(2){opacity:0}
+#dashboardApp .side.nav-open .nav-menu-button span:last-child{transform:translateY(-7px) rotate(-45deg)}
+#dashboardApp .side:not(.nav-open) #nav{display:none!important}
+#dashboardApp .side.nav-open #nav{display:flex!important}
+#dashboardApp .side.nav-open .navlabel{display:block!important}
+@media(max-width:900px){
+ #dashboardApp .side{padding-top:12px!important}
+ #dashboardApp .nav-menu-button{top:12px;right:15px}
+ #dashboardApp .side.nav-open #nav{display:grid!important}
+}
+@media(max-width:520px){
+ #dashboardApp .nav-menu-button{top:10px;right:12px;width:40px;height:40px}
+ #dashboardApp .side.nav-open #nav{grid-template-columns:minmax(0,1fr)!important}
+}
+</style>
+
 </head>
 <body>
 <div id="publicHome" class="public-home hidden">
@@ -1513,6 +1544,7 @@ body{font-family:var(--ebx-text)}
 </div>
 <div id="dashboardApp" class="shell hidden">
 <aside class="side"><div class="brand"><div class="crest">EB</div><div><b>EXÉRCITO BRASILEIRO</b><small>Sistema de Gestão Militar</small></div></div>
+<button type="button" id="navMenuButton" class="nav-menu-button" aria-label="Abrir menu de navegação" aria-controls="nav" aria-expanded="false"><span></span><span></span><span></span></button>
 <div class="navlabel">PAINEL PRINCIPAL</div>
 <nav class="nav" id="nav" aria-label="Navegação principal">
  <div class="nav-group"><div class="nav-group-title">VISÃO GERAL</div>
@@ -1765,7 +1797,19 @@ target.classList.remove('hidden');
 document.querySelectorAll('#nav [data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===p));
 document.getElementById('crumb').textContent=p==='inicio'?'Visão geral':(document.querySelector('#nav [data-page="'+p+'"]')?.textContent.trim()||p);
 }
-document.querySelectorAll('#nav [data-page]').forEach(b=>b.onclick=()=>page(b.dataset.page));
+const navMenuButton=document.getElementById('navMenuButton');
+const navSidebar=document.querySelector('#dashboardApp .side');
+navMenuButton.addEventListener('click',()=>{
+  const opened=navSidebar.classList.toggle('nav-open');
+  navMenuButton.setAttribute('aria-expanded',String(opened));
+  navMenuButton.setAttribute('aria-label',opened?'Fechar menu de navegação':'Abrir menu de navegação');
+});
+document.querySelectorAll('#nav [data-page]').forEach(b=>b.onclick=()=>{
+  page(b.dataset.page);
+  navSidebar.classList.remove('nav-open');
+  navMenuButton.setAttribute('aria-expanded','false');
+  navMenuButton.setAttribute('aria-label','Abrir menu de navegação');
+});
 document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>page(b.dataset.go));
 document.getElementById('ranks').innerHTML=ranks.map((r,i)=>'<div class="rank"><b>'+(i+1)+'. '+esc(r)+'</b><small>'+(i===0?'Maior cargo':i===ranks.length-1?'Entrada':'Cargo / patente')+'</small></div>').join('');
 ['fromRank','toRank'].forEach(id=>document.getElementById(id).innerHTML=ranks.map(r=>'<option>'+esc(r)+'</option>').join(''));
