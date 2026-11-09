@@ -1797,6 +1797,33 @@ html,body{font-family:var(--eb-text)!important}
 }
 @media(min-width:601px){#mobileBottomNav .store-nav-medallion{display:none}}
 </style>
+
+<style id="eb-bottom-nav-compact">
+@media(max-width:600px){
+ #mobileBottomNav.mobile-bottom-nav{
+  height:88px!important;padding:20px 8px calc(8px + env(safe-area-inset-bottom))!important;
+  gap:0!important
+ }
+ #mobileBottomNav button{
+  height:60px!important;min-height:60px!important;gap:5px!important;
+  font-size:12px!important;padding:2px 1px 0!important
+ }
+ #mobileBottomNav button .bottom-ico{
+  width:29px!important;height:29px!important
+ }
+ #mobileBottomNav button.active:not(.store-nav-item)::before{
+  top:-12px!important;width:42px!important;height:4px!important
+ }
+ #mobileBottomNav .store-nav-medallion{
+  width:68px!important;height:68px!important;top:-50px!important;border-width:5px!important
+ }
+ #mobileBottomNav .store-nav-medallion .bottom-ico{
+  width:33px!important;height:33px!important
+ }
+ #dashboardApp .content{padding-bottom:calc(100px + env(safe-area-inset-bottom))!important}
+ #dashboardApp .menu-panel{bottom:calc(88px + env(safe-area-inset-bottom))!important}
+}
+</style>
 </head>
 <body>
 <div id="publicHome" class="public-home hidden">
