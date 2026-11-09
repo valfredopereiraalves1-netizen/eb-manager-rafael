@@ -573,6 +573,10 @@ app.post("/api/admin/requests", requireLogin, requireCsrf, async (req, res) => {
     if (action === "set_role") {
       destinationRoleId = roleIds[requestedRole];
       if (!destinationRoleId) return res.status(503).json({ error: "Falta mapear o ID real da patente em ROLE_IDS_JSON." });
+      const destinationRank = roleRank(requestedRole);
+      if (access !== "creator" && destinationRank >= Number(req.session.user.groupRoleRank)) {
+        return res.status(403).json({ error: "O painel ADM não pode atribuir uma patente igual ou superior à patente de quem está operando." });
+      }
     } else {
       const currentRank = Number(currentRole.rank);
       const configured = Object.entries(roleRanks).filter(([, rank]) => Number.isInteger(rank)).sort((a,b) => b[1]-a[1]);
@@ -585,6 +589,9 @@ app.post("/api/admin/requests", requireLogin, requireCsrf, async (req, res) => {
     }
     if (String(target.id) === String(req.session.user.robloxId)) return res.status(403).json({ error: "Você não pode alterar a própria patente por este painel." });
     if (currentRole.rank >= req.session.user.groupRoleRank && access !== "creator") return res.status(403).json({ error: "Você não pode alterar a patente de alguém de nível igual ou superior ao seu." });
+    if (action === "set_role" && access !== "creator" && roleRank(requestedRole) <= currentRole.rank) {
+      return res.status(400).json({ error: "O painel ADM só pode atribuir uma patente superior à patente atual. Use o painel CGEx para rebaixamento ou revogação." });
+    }
     await assignCloudRole(target.id, String(destinationRoleId));
     await pool.query(
       `INSERT INTO admin_requests (action, target_user_id, target_username, requested_role, from_role, to_role, reason, created_by, created_by_username, created_by_role, status)
