@@ -93,7 +93,7 @@
 .public-links a{color:#405065;text-decoration:none;font-size:13px;font-weight:650}
 .public-links a:hover{color:#17633f}
 .public-cta{display:inline-flex;align-items:center;justify-content:center;padding:12px 19px;border-radius:7px;background:#17633f;color:white!important;text-decoration:none;font-weight:750;border:0}
-.public-hero{position:relative;min-height:490px;display:grid;align-items:center;overflow:hidden;background:linear-gradient(90deg,rgba(8,24,20,.91),rgba(8,24,20,.62)),url('https://belem.com.br/images/noticias/18190/10034132_capa_43.png') center/cover}
+.public-hero{position:relative;min-height:490px;display:grid;align-items:center;overflow:hidden;background:linear-gradient(90deg,rgba(8,24,20,.91),rgba(8,24,20,.62)),url('https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cc/06_11_2021_5%C2%BA_Esquadr%C3%A3o_de_Cavalaria_Mecanizado%2C_cerim%C3%B4nia_de_hasteamento_da_Bandeira_e_formatura_militar_de_apresenta%C3%A7%C3%A3o_da_tropa_%2851659209742%29.jpg/1280px-06_11_2021_5%C2%BA_Esquadr%C3%A3o_de_Cavalaria_Mecanizado%2C_cerim%C3%B4nia_de_hasteamento_da_Bandeira_e_formatura_militar_de_apresenta%C3%A7%C3%A3o_da_tropa_%2851659209742%29.jpg') center/cover}
 .public-hero-inner{max-width:1160px;width:100%;margin:auto;padding:76px 28px;color:#fff}
 .public-eyebrow{display:inline-block;color:#e8d29b;text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:800;margin-bottom:18px}
 .public-hero h1{max-width:680px;font-size:clamp(34px,5vw,58px);line-height:1.08;margin:0 0 18px;letter-spacing:-.035em}
@@ -185,6 +185,21 @@
   }
 }
 
+
+/* Ícones vetoriais padronizados e galeria sem imagens repetidas */
+#dashboardApp .nav .ico{width:22px;height:22px;flex:0 0 22px;display:inline-flex;align-items:center;justify-content:center;color:#c9d8cb}
+#dashboardApp .nav .ico svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+#dashboardApp .nav button{gap:12px;min-height:44px;font-size:13px;letter-spacing:.01em}
+#dashboardApp .nav button.active .ico,#dashboardApp .nav button:hover .ico{color:#183b2b}
+#dashboardApp .hero-gallery{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+#dashboardApp .hero-photo{min-height:210px}
+#dashboardApp .hero-photo img{height:220px;min-height:220px;object-fit:cover}
+#dashboardApp .hero-photo.flag img{object-fit:contain}
+#dashboardApp .hero-caption{min-height:74px}
+#dashboardApp .hero-caption small{display:block;line-height:1.45;margin-top:3px}
+@media(max-width:850px){#dashboardApp .hero-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){#dashboardApp .hero-gallery{grid-template-columns:1fr}#dashboardApp .hero-photo,#dashboardApp .hero-photo img{min-height:190px;height:190px}}
+
 </style></head>
 <body>
 <div id="publicHome" class="public-home">
@@ -237,20 +252,21 @@
 <div id="dashboardApp" class="shell hidden">
 <aside class="side"><div class="brand"><div class="crest">EB</div><div><b>EXÉRCITO BRASILEIRO</b><small>Manager do Rafael</small></div></div>
 <div class="navlabel">PAINEL PRINCIPAL</div><nav class="nav" id="nav">
-<button class="active" data-page="inicio"><span class="ico">▦</span>Visão geral</button>
-<button data-page="membros"><span class="ico">♟</span>Membros do grupo</button>
-<button data-page="hierarquia"><span class="ico">♜</span>Hierarquia</button>
-<button data-page="promocoes" id="promotionNav"><span class="ico">⬆</span>Promoções</button>
-<button data-page="logs"><span class="ico">▤</span>Logs de promoção</button>
-<button data-page="ranking"><span class="ico">★</span>Ranking de treinamentos</button>
-<button data-page="cpd"><span class="ico">◈</span>CPD</button>
-<button data-page="negadas"><span class="ico">⊘</span>Promoção negada</button>
-<button data-page="admin"><span class="ico">⚙</span>Administração</button>
+<button class="active" data-page="inicio"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></svg></span>Painel inicial</button>
+<button data-page="membros"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20v-1.5A4.5 4.5 0 0 1 7 14h4a4.5 4.5 0 0 1 4.5 4.5V20"/><path d="M16 5.2a3.5 3.5 0 0 1 0 6.6M17 14.5a4.5 4.5 0 0 1 4.5 4.5V20"/></svg></span>Efetivo</button>
+<button data-page="hierarquia"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="9" y="2.5" width="6" height="5" rx="1"/><rect x="2.5" y="17" width="6" height="5" rx="1"/><rect x="15.5" y="17" width="6" height="5" rx="1"/><path d="M12 7.5v5M5.5 17v-4.5h13V17"/></svg></span>Patentes</button>
+<button data-page="promocoes" id="promotionNav"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5"/></svg></span>Promoções</button>
+<button data-page="logs"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 4H6a2 2 0 0 0-2 2v14h16V6a2 2 0 0 0-2-2h-2"/><rect x="8" y="2.5" width="8" height="4" rx="1"/><path d="M8 11h8M8 15h8M8 19h5"/></svg></span>Histórico</button>
+<button data-page="ranking"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="m8.5 12-1 9 4.5-2.5 4.5 2.5-1-9"/></svg></span>Treinamentos</button>
+<button data-page="cpd"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 0 4 22z"/><path d="M4 5.5v14A2.5 2.5 0 0 1 6.5 17H20M8 7h8M8 11h7"/></svg></span>CPD</button>
+<button data-page="negadas"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m6 6 12 12"/></svg></span>Recusas</button>
+<button data-page="admin"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"/><path d="m19.4 15 .1.1 1.4 1.1-1.4 2.4-1.7-.6a8 8 0 0 1-1.5.9l-.3 1.8h-2.8l-.3-1.8a8 8 0 0 1-1.5-.9l-1.7.6-1.4-2.4 1.4-1.1a7 7 0 0 1 0-1.8l-1.4-1.1 1.4-2.4 1.7.6a8 8 0 0 1 1.5-.9l.3-1.8h2.8l.3 1.8a8 8 0 0 1 1.5.9l1.7-.6 1.4 2.4-1.4 1.1a7 7 0 0 1 0 1.7Z"/></svg></span>Administração</button>
 </nav><div class="sidefoot">Sistema administrativo demonstrativo<br><b>Versão inicial · 0.1</b></div></aside>
 <main class="main"><header class="top"><div class="crumb">Painel / <b id="crumb">Visão geral</b></div><div class="user"><a class="btn primary" id="robloxLogin" href="/auth/roblox">Entrar com Roblox</a><div id="robloxUser" class="hidden"><div class="avatar" id="robloxAvatar">RB</div><span id="robloxUserLabel">Conectado</span><button class="btn" id="robloxLogout" type="button">Sair</button></div></div></header><div class="content">
-<section id="page-inicio" class="page"><div class="hero-gallery" aria-label="Imagens do Exército Brasileiro">
+<section id="page-inicio" class="page"><div class="hero-gallery" aria-label="Galeria de imagens do Exército Brasileiro">
 <div class="hero-photo flag"><img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Flag_of_Brazil.svg" alt="Bandeira nacional do Brasil"><div class="hero-caption"><b>Orgulho de ser Brasil</b><small>Bandeira Nacional</small></div></div>
-<div class="hero-photo"><img src="https://belem.com.br/images/noticias/18190/10034132_capa_43.png" alt="Militares do Exército Brasileiro em formatura diante da bandeira do Brasil"><div class="hero-caption"><b>Disciplina, união e compromisso</b><small>Foto: Belém.com.br · Formatura no 2º Batalhão de Infantaria de Selva</small><small>Recrutas do Exército Brasileiro · Foto: FilipePaz / Wikimedia Commons · <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 3.0</a></small></div></div>
+<div class="hero-photo"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/2/20/Grupo_de_Recrutas_do_Ex%C3%A9rcito_Brasileiro_em_Treinamento.JPG/960px-Grupo_de_Recrutas_do_Ex%C3%A9rcito_Brasileiro_em_Treinamento.JPG" alt="Recrutas do 50º Batalhão de Infantaria de Selva em treinamento"><div class="hero-caption"><b>Formação e espírito de equipe</b><small>Foto: FilipePaz · Wikimedia Commons · <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 3.0</a></small></div></div>
+<div class="hero-photo"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b2/07_09_2022_Desfile_C%C3%ADvico-Militar_por_ocasi%C3%A3o_das_Comemora%C3%A7%C3%B5es_do_Bicenten%C3%A1rio_da_Independ%C3%AAncia_do_Brasil_%2852341477078%29.jpg/960px-07_09_2022_Desfile_C%C3%ADvico-Militar_por_ocasi%C3%A3o_das_Comemora%C3%A7%C3%B5es_do_Bicenten%C3%A1rio_da_Independ%C3%AAncia_do_Brasil_%2852341477078%29.jpg" alt="Militar brasileiro em cerimônia cívico-militar"><div class="hero-caption"><b>Tradição e patriotismo</b><small>Foto: Estevam Costa/PR · Wikimedia Commons · <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC BY 2.0</a></small></div></div>
 </div><div class="pagehead"><div><h1>Visão geral</h1><p class="sub">Bem-vindo ao painel de gestão do Exército Brasileiro.</p></div><span class="tag">SISTEMA EM DESENVOLVIMENTO</span></div>
 <div class="grid"><div class="card stat"><small>Registros de promoção</small><strong id="stat-prom">0</strong><span>Registros no servidor</span></div><div class="card stat"><small>Promoções negadas</small><strong id="stat-neg">0</strong><span>Registros no servidor</span></div><div class="card stat"><small>Treinamentos</small><strong id="stat-treino">0</strong><span>Participações no servidor</span></div><div class="card stat"><small>Patentes cadastradas</small><strong id="stat-ranks">32</strong><span>Hierarquia inicial</span></div></div>
 <div class="two section"><div class="card"><h2>Atividade recente</h2><div id="recent" class="empty">Nenhuma atividade registrada ainda.</div></div><div class="card"><h2>Acesso rápido</h2><div class="ranklist"><button class="btn" data-go="hierarquia">Consultar hierarquia →</button><button class="btn" data-go="promocoes">Registrar promoção →</button><button class="btn" data-go="ranking">Registrar treinamento →</button></div></div></div>
