@@ -873,6 +873,17 @@ body{background:#0b0c10;color:#fff}
       <div class="field full"><button class="btn primary" type="submit">Salvar apresentação</button><p id="profileSaveStatus" class="muted" aria-live="polite"></p></div>
     </form></div>
   </div>
+  <div class="card section" id="profileCdpCard">
+    <h2>Controle de Desenvolvimento de Patente (CDP)</h2>
+    <p class="muted">Acompanhe o tempo contabilizado na sua patente atual e quanto falta para cumprir o requisito de promoção.</p>
+    <div class="profile-stats-grid">
+      <div class="profile-stat"><small>Tempo na patente</small><strong id="profileCdpElapsed">—</strong></div>
+      <div class="profile-stat"><small>Tempo mínimo</small><strong id="profileCdpRequired">—</strong></div>
+      <div class="profile-stat"><small>Tempo restante</small><strong id="profileCdpRemaining">—</strong></div>
+      <div class="profile-stat"><small>Situação</small><strong id="profileCdpStatus">—</strong></div>
+    </div>
+    <p id="profileCdpSince" class="muted" style="margin:14px 0 0;font-size:12px">Aguardando dados do servidor.</p>
+  </div>
 </div>
 <div id="profile-panel-career" class="profile-panel hidden"><div class="card"><h2>Carreira militar</h2><dl class="profile-details">
   <div><dt>Patente atual</dt><dd id="careerRole">—</dd></div><div><dt>Rank no grupo</dt><dd id="careerRank">—</dd></div>
@@ -1125,6 +1136,13 @@ async function loadProfileData(){
     document.getElementById('careerLastPromotion').textContent=stats.lastPromotionAt?new Date(stats.lastPromotionAt).toLocaleString('pt-BR'):'Nenhuma registrada';
     document.getElementById('profileLastPromotion').textContent=stats.lastPromotionAt?new Date(stats.lastPromotionAt).toLocaleString('pt-BR'):'Nenhuma promoção registrada.';
     document.getElementById('careerService').textContent=joined&&!Number.isNaN(joined.getTime())?Math.max(0,Math.floor((Date.now()-joined.getTime())/86400000))+' dias':'Indisponível sem data confirmada';
+    const cdp=p.cdp||{};
+    const fmtDuration=hours=>{const mins=Math.max(0,Math.floor(Number(hours||0)*60));const days=Math.floor(mins/1440),hrs=Math.floor((mins%1440)/60),m=mins%60;return (days?days+'d ':'')+(hrs?hrs+'h ':'')+m+'min';};
+    document.getElementById('profileCdpElapsed').textContent=fmtDuration(cdp.elapsedHours);
+    document.getElementById('profileCdpRequired').textContent=!cdp.ruleConfigured?'Não configurado':cdp.creatorOnly?'Regra especial':Number(cdp.requiredHours)===0?'Sem exigência':cdp.requiredHours+' horas';
+    document.getElementById('profileCdpRemaining').textContent=!cdp.ruleConfigured?'—':cdp.creatorOnly?'Somente Criador':cdp.eligible?'0min':fmtDuration(Math.max(0,Number(cdp.requiredHours)-Number(cdp.elapsedHours)));
+    document.getElementById('profileCdpStatus').textContent=!cdp.ruleConfigured?'Regra pendente':cdp.creatorOnly?'Apenas o Criador':cdp.eligible?'Tempo concluído':'Em andamento';
+    document.getElementById('profileCdpSince').textContent=cdp.rankSince?'Contagem nesta patente iniciada em '+new Date(cdp.rankSince).toLocaleString('pt-BR')+' · cálculo atualizado pelo servidor.':'Não foi possível identificar o início da contagem.';
     document.getElementById('profileBioInput').value=p.bio||'';
     document.getElementById('profileBioPreview').textContent=p.bio||'Você ainda não adicionou uma biografia.';
     document.getElementById('profileTaglineInput').value=p.tagline||'';
