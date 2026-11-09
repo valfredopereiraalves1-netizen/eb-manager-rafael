@@ -56,6 +56,8 @@ const CDP_DEFAULT_RULES = {
   "[CEL] Coronel": 60,
   "[TEN-CEL] Tenente-Coronel": 52,
   "[MAJ] Major": 45,
+  "[ADM-G] Administrador Geral": { hours: 0, creatorOnly: true },
+  "[MOD] Moderador": { hours: 0, creatorOnly: true },
   "[S-CR] Sub Criador": { hours: 0, creatorOnly: true },
   "[ER] Elite Real": { hours: 0, creatorOnly: true }
 };
@@ -241,7 +243,11 @@ const CDP_ROLE_ALIASES = new Map([
   ["coronel", "[CEL] Coronel"],
   ["ten cel tenente coronel", "[TEN-CEL] Tenente-Coronel"],
   ["tenente coronel", "[TEN-CEL] Tenente-Coronel"],
-  ["major", "[MAJ] Major"]
+  ["major", "[MAJ] Major"],
+  ["adm g administrador geral", "[ADM-G] Administrador Geral"],
+  ["administrador geral", "[ADM-G] Administrador Geral"],
+  ["mod moderador", "[MOD] Moderador"],
+  ["moderador", "[MOD] Moderador"]
 ]);
 function getCdpRule(roleName) {
   const normalized = normalizeCdpRoleName(roleName);
