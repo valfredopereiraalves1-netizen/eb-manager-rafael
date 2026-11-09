@@ -250,6 +250,24 @@
   #dashboardApp .content{padding-bottom:calc(92px + env(safe-area-inset-bottom))!important}
 }
 
+
+/* Ajuste final da nova navegação principal */
+#dashboardApp .menu-panel{display:grid}
+@media(max-width:600px){
+  #dashboardApp .nav{display:flex!important;flex-direction:row!important;gap:3px!important}
+  #dashboardApp .nav button{
+    flex:1 1 20%!important;width:20%!important;min-width:0!important;
+    height:62px!important;min-height:62px!important;padding:6px 2px!important;
+    font-size:10px!important;white-space:normal!important;
+  }
+  #dashboardApp .menu-panel{
+    position:fixed;left:10px;right:10px;
+    bottom:calc(82px + env(safe-area-inset-bottom));
+    z-index:1001;margin:0;max-height:55vh;overflow:auto;
+    background:#123d2c;border:1px solid rgba(240,213,139,.4);
+    box-shadow:0 12px 35px rgba(0,0,0,.28)
+  }
+}
 </style></head>
 <body>
 <div id="publicHome" class="public-home">
