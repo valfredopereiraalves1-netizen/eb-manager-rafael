@@ -820,7 +820,7 @@ body{background:#0b0c10;color:#fff}
       <div><dt>Grupo</dt><dd id="profileGroup">—</dd></div><div><dt>ID da patente</dt><dd id="profileRoleId">—</dd></div>
       <div><dt>Entrada no grupo</dt><dd id="profileJoined">Não disponibilizada pela API</dd></div><div><dt>Situação</dt><dd><span class="profile-status">Conectado</span></dd></div>
     </dl></div>
-    <div class="card"><h2>Apresentação pessoal</h2><form id="profileBioForm" class="formgrid">
+    <div class="card"><h2>Apresentação pessoal</h2><p id="profileBioPreview" class="muted">Você ainda não adicionou uma biografia.</p><form id="profileBioForm" class="formgrid">
       <div class="field full"><label for="profileTaglineInput">Frase de apresentação</label><input id="profileTaglineInput" maxlength="80" placeholder="Uma frase que representa você"></div>
       <div class="field full"><label for="profileBioInput">Biografia</label><textarea id="profileBioInput" maxlength="300" rows="4" placeholder="Conte um pouco sobre sua trajetória..."></textarea><small class="muted">Até 300 caracteres.</small></div>
       <div class="field full"><button class="btn primary" type="submit">Salvar apresentação</button><p id="profileSaveStatus" class="muted" aria-live="polite"></p></div>
@@ -874,6 +874,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 let currentUserCanPromote=false;
 function page(p){
 if(p==="promocoes"&&!currentUserCanPromote){alert("Somente Aspirante a Oficial ou patente superior pode promover.");return;}
+if(p==="perfil"&&typeof loadProfileData==="function"&&csrfToken)loadProfileData();
 if(p==="logs"&&typeof loadServerLogs==="function")loadServerLogs();
 document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));
 const target=document.getElementById('page-'+p);
@@ -1016,6 +1017,7 @@ async function loadProfileData(){
     document.getElementById('profileLastPromotion').textContent=stats.lastPromotionAt?new Date(stats.lastPromotionAt).toLocaleString('pt-BR'):'Nenhuma promoção registrada.';
     document.getElementById('careerService').textContent=joined&&!Number.isNaN(joined.getTime())?Math.max(0,Math.floor((Date.now()-joined.getTime())/86400000))+' dias':'Indisponível sem data confirmada';
     document.getElementById('profileBioInput').value=p.bio||'';
+    document.getElementById('profileBioPreview').textContent=p.bio||'Você ainda não adicionou uma biografia.';
     document.getElementById('profileTaglineInput').value=p.tagline||'';
     const events=(p.history||[]);
     const timeline=document.getElementById('profileTimeline');
@@ -1037,6 +1039,7 @@ document.getElementById('profileBioForm').addEventListener('submit',async e=>{
     if(!response.ok)throw new Error(result.error||'Não foi possível salvar.');
     status.textContent='Apresentação salva com sucesso.';
     document.getElementById('profileTagline').textContent=result.tagline||'Adicione uma frase de apresentação no seu perfil.';
+    document.getElementById('profileBioPreview').textContent=result.bio||'Você ainda não adicionou uma biografia.';
   }catch(error){status.textContent=error.message;}
 });
 document.getElementById('refreshProfile').addEventListener('click',loadProfileData);
@@ -1073,6 +1076,7 @@ async function checkRobloxSession(){
     await loadServerPromotions();
     await loadServerLogs();
     await loadServerRecords();
+    await loadProfileData();
   }catch(error){
     console.warn('Não foi possível consultar a sessão Roblox.');
     publicHome.classList.remove('hidden');
