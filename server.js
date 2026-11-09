@@ -42,7 +42,7 @@ const pool = new Pool({
 app.disable("x-powered-by");
 if (isProduction) app.set("trust proxy", 1);
 app.use(helmet({ contentSecurityPolicy: false }));
-app.use(express.json({ limit: "30kb" }));
+app.use(express.json({ limit: "4mb" }));
 app.use(express.static("public"));
 
 app.use(session({
@@ -80,6 +80,12 @@ async function initializeDatabase() {
       author_username TEXT NOT NULL,
       author_role TEXT NOT NULL,
       reason TEXT NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS promotion_evidence (
+      promotion_id BIGINT PRIMARY KEY REFERENCES promotions(id) ON DELETE CASCADE,
+      mime_type TEXT NOT NULL CHECK (mime_type IN ('image/jpeg','image/png','image/webp')),
+      image_data BYTEA NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
     CREATE TABLE IF NOT EXISTS panel_records (
       id BIGSERIAL PRIMARY KEY,
@@ -493,6 +499,20 @@ app.get("/api/logs", requireLogin, async (_req, res) => {
   }
 });
 
+app.get("/api/promotions/:id/evidence", requireLogin, async (req, res) => {
+  if (!/^\\d+$/.test(req.params.id)) return res.status(400).json({ error: "Identificador inválido." });
+  try {
+    const result = await pool.query("SELECT mime_type, image_data FROM promotion_evidence WHERE promotion_id = $1", [req.params.id]);
+    if (!result.rowCount) return res.status(404).json({ error: "Comprovante não encontrado." });
+    res.set("Content-Type", result.rows[0].mime_type);
+    res.set("Cache-Control", "private, no-store");
+    res.send(result.rows[0].image_data);
+  } catch (err) {
+    console.error("Falha ao consultar foto da promoção:", err.message);
+    res.status(500).json({ error: "Não foi possível carregar o comprovante." });
+  }
+});
+
 app.get("/api/promotions", requireLogin, async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM promotions ORDER BY id DESC LIMIT 300");
@@ -508,10 +528,22 @@ app.post("/api/promotions", requireLogin, requireCsrf, async (req, res) => {
   const fromRole = body.fromRole;
   const toRole = body.toRole;
   const reason = body.reason;
+  const evidenceData = body.evidenceData;
   if (![targetUsername, fromRole, toRole, reason].every(value => typeof value === "string" && value.trim())) {
     return res.status(400).json({ error: "Preencha militar, patente atual, nova patente e motivo." });
   }
   if (targetUsername.length > 40 || reason.length > 1000) return res.status(400).json({ error: "Algum campo ultrapassou o limite permitido." });
+  if (typeof evidenceData !== "string") return res.status(400).json({ error: "A foto EM CUNHA é obrigatória. Envie a imagem antes de entregar a patente." });
+  const evidenceMatch = evidenceData.match(/^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/]+={0,2})$/);
+  if (!evidenceMatch) return res.status(400).json({ error: "A foto precisa estar em JPG, PNG ou WEBP válido." });
+  const evidenceMime = evidenceMatch[1];
+  const evidenceBuffer = Buffer.from(evidenceMatch[2], "base64");
+  if (!evidenceBuffer.length || evidenceBuffer.length > 2 * 1024 * 1024) return res.status(400).json({ error: "A foto deve ter no máximo 2 MB." });
+  const validImage =
+    (evidenceMime === "image/jpeg" && evidenceBuffer.subarray(0,3).equals(Buffer.from([0xff,0xd8,0xff]))) ||
+    (evidenceMime === "image/png" && evidenceBuffer.subarray(0,8).equals(Buffer.from([0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a]))) ||
+    (evidenceMime === "image/webp" && evidenceBuffer.toString("ascii",0,4) === "RIFF" && evidenceBuffer.toString("ascii",8,12) === "WEBP");
+  if (!validImage) return res.status(400).json({ error: "O arquivo enviado não parece ser uma imagem válida." });
   const author = req.session.user;
   if (!canPromote(author)) return res.status(403).json({ error: "Permissão negada: somente Aspirante a Oficial ou patente superior pode promover." });
   const fromRank = roleRank(fromRole);
@@ -530,12 +562,16 @@ app.post("/api/promotions", requireLogin, requireCsrf, async (req, res) => {
     const targetRoleId = roleIds[toRole.trim()];
     if (!targetRoleId) return res.status(503).json({ error: "Falta mapear o ID real da patente de destino em ROLE_IDS_JSON." });
     await assignCloudRole(target.id, String(targetRoleId));
-    await pool.query(
+    const saved = await pool.query(
       `INSERT INTO promotions (created_at, target_user_id, target_username, from_role, to_role, author_user_id, author_username, author_role, reason)
-       VALUES (NOW(), $1, $2, $3, $4, $5, $6, $7, $8)`,
+       VALUES (NOW(), $1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
       [target.id, target.name, fromRole.trim(), toRole.trim(), author.robloxId, author.username, author.groupRoleName, reason.trim()]
     );
-    res.status(201).json({ ok: true, applied: true });
+    await pool.query(
+      "INSERT INTO promotion_evidence (promotion_id, mime_type, image_data) VALUES ($1, $2, $3)",
+      [saved.rows[0].id, evidenceMime, evidenceBuffer]
+    );
+    res.status(201).json({ ok: true, applied: true, promotionId: saved.rows[0].id, evidenceSaved: true });
   } catch (err) {
     console.error("Falha ao registrar promoção:", err.message);
     res.status(502).json({ error: "Não foi possível verificar os dados do grupo Roblox agora." });
