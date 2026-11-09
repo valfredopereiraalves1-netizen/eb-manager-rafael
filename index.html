@@ -201,6 +201,17 @@
 @media(max-width:600px){#dashboardApp .hero-gallery{grid-template-columns:1fr}#dashboardApp .hero-photo,#dashboardApp .hero-photo img{min-height:190px;height:190px}}
 
 
+/* Menu secundário: funções administrativas fora da barra principal */
+#dashboardApp .menu-panel{display:grid;gap:5px;margin:10px 0;padding:9px;background:#174a35;border:1px solid rgba(240,213,139,.28);border-radius:12px;box-shadow:0 8px 24px rgba(12,40,26,.16)}
+#dashboardApp .menu-panel button{display:flex;align-items:center;gap:10px;width:100%;min-height:42px;padding:9px 11px;border:0;border-radius:8px;background:transparent;color:#edf5ef;text-align:left;font-weight:650}
+#dashboardApp .menu-panel button:hover,#dashboardApp .menu-panel button.active{background:#f0d58b;color:#183b2b}
+#dashboardApp .menu-panel .ico{width:24px;display:inline-flex;justify-content:center}
+@media(max-width:600px){
+ #dashboardApp .nav{gap:3px!important}
+ #dashboardApp .nav button{flex:1 1 20%!important;width:20%!important;min-width:0!important;height:62px!important;min-height:62px!important;font-size:10px!important}
+ #dashboardApp .menu-panel{position:fixed;left:10px;right:10px;bottom:calc(82px + env(safe-area-inset-bottom));z-index:1001;margin:0;max-height:55vh;overflow:auto;background:#123d2c;border:1px solid rgba(240,213,139,.4);box-shadow:0 12px 35px rgba(0,0,0,.28)}
+}
+
 /* Navegação inferior estilo aplicativo para celulares */
 @media(max-width:600px){
   #dashboardApp .side{
@@ -288,17 +299,22 @@
 </div>
 <div id="dashboardApp" class="shell hidden">
 <aside class="side"><div class="brand"><div class="crest">EB</div><div><b>EXÉRCITO BRASILEIRO</b><small>Manager do Rafael</small></div></div>
-<div class="navlabel">PAINEL PRINCIPAL</div><nav class="nav" id="nav">
-<button class="active" data-page="inicio"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></svg></span>Painel inicial</button>
-<button data-page="membros"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20v-1.5A4.5 4.5 0 0 1 7 14h4a4.5 4.5 0 0 1 4.5 4.5V20"/><path d="M16 5.2a3.5 3.5 0 0 1 0 6.6M17 14.5a4.5 4.5 0 0 1 4.5 4.5V20"/></svg></span>Efetivo</button>
-<button data-page="hierarquia"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="9" y="2.5" width="6" height="5" rx="1"/><rect x="2.5" y="17" width="6" height="5" rx="1"/><rect x="15.5" y="17" width="6" height="5" rx="1"/><path d="M12 7.5v5M5.5 17v-4.5h13V17"/></svg></span>Patentes</button>
-<button data-page="promocoes" id="promotionNav"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5"/></svg></span>Promoções</button>
-<button data-page="logs"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 4H6a2 2 0 0 0-2 2v14h16V6a2 2 0 0 0-2-2h-2"/><rect x="8" y="2.5" width="8" height="4" rx="1"/><path d="M8 11h8M8 15h8M8 19h5"/></svg></span>Histórico</button>
-<button data-page="ranking"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="m8.5 12-1 9 4.5-2.5 4.5 2.5-1-9"/></svg></span>Treinamentos</button>
-
-<button data-page="negadas"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m6 6 12 12"/></svg></span>Recusas</button>
-
-</nav><div class="sidefoot">Sistema administrativo demonstrativo<br><b>Versão inicial · 0.1</b></div></aside>
+<div class="navlabel">PAINEL PRINCIPAL</div>
+<nav class="nav" id="nav" aria-label="Navegação principal">
+<button class="active" data-page="inicio"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></span>Início</button>
+<button data-page="perfil"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span>Perfil</button>
+<button data-page="loja"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 9h18l-1.5 12h-15zM5 9l2-6h10l2 6M9 13v4M15 13v4"/></svg></span>LOJA</button>
+<button data-page="hierarquia"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="9" y="2.5" width="6" height="5" rx="1"/><rect x="2.5" y="17" width="6" height="5" rx="1"/><rect x="15.5" y="17" width="6" height="5" rx="1"/><path d="M12 7.5v5M5.5 17v-4.5h13V17"/></svg></span>Patente</button>
+<button type="button" id="menuToggle" aria-expanded="false" aria-controls="menuPanel"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>Menu</button>
+</nav>
+<div id="menuPanel" class="menu-panel hidden" aria-label="Outras funções do painel">
+<button data-page="membros"><span class="ico">👥</span>Efetivo</button>
+<button data-page="promocoes" id="promotionNav"><span class="ico">⬆</span>Promoções</button>
+<button data-page="logs"><span class="ico">📋</span>Histórico</button>
+<button data-page="ranking"><span class="ico">🏅</span>Treinamentos</button>
+<button data-page="negadas"><span class="ico">🚫</span>Recusas</button>
+</div>
+<div class="sidefoot">Sistema administrativo demonstrativo<br><b>Versão inicial · 0.1</b></div></aside>
 <main class="main"><header class="top"><div class="crumb">Painel / <b id="crumb">Visão geral</b></div><div class="user"><a class="btn primary" id="robloxLogin" href="/auth/roblox">Entrar com Roblox</a><div id="robloxUser" class="hidden"><div class="avatar" id="robloxAvatar">RB</div><span id="robloxUserLabel">Conectado</span><button class="btn" id="robloxLogout" type="button">Sair</button></div></div></header><div class="content">
 <section id="page-inicio" class="page"><div class="hero-gallery" aria-label="Galeria de imagens do Exército Brasileiro">
 <div class="hero-photo flag"><img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Flag_of_Brazil.svg" alt="Bandeira nacional do Brasil"><div class="hero-caption"><b>Orgulho de ser Brasil</b><small>Bandeira Nacional</small></div></div>
@@ -308,6 +324,17 @@
 <div class="grid"><div class="card stat"><small>Registros de promoção</small><strong id="stat-prom">0</strong><span>Registros no servidor</span></div><div class="card stat"><small>Promoções negadas</small><strong id="stat-neg">0</strong><span>Registros no servidor</span></div><div class="card stat"><small>Treinamentos</small><strong id="stat-treino">0</strong><span>Participações no servidor</span></div><div class="card stat"><small>Patentes cadastradas</small><strong id="stat-ranks">32</strong><span>Hierarquia inicial</span></div></div>
 <div class="two section"><div class="card"><h2>Atividade recente</h2><div id="recent" class="empty">Nenhuma atividade registrada ainda.</div></div><div class="card"><h2>Acesso rápido</h2><div class="ranklist"><button class="btn" data-go="hierarquia">Consultar hierarquia →</button><button class="btn" data-go="promocoes">Registrar promoção →</button><button class="btn" data-go="ranking">Registrar treinamento →</button></div></div></div>
 <div class="notice">Os registros administrativos são armazenados no banco de dados do servidor. O login Roblox e as permissões dependem da configuração das credenciais e dos cargos reais do grupo.</div></section>
+<section id="page-perfil" class="page hidden">
+<div class="pagehead"><div><h1>Meu perfil</h1><p class="sub">Informações da sua conta Roblox conectada.</p></div></div>
+<div class="card" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+<div class="avatar" id="profileAvatar" style="width:76px;height:76px;font-size:22px">RB</div>
+<div><h2 id="profileUsername" style="margin:0 0 5px">Conta Roblox</h2><p class="muted" id="profileRole" style="margin:0">Patente não carregada</p></div>
+</div>
+</section>
+<section id="page-loja" class="page hidden">
+<div class="pagehead"><div><h1>Loja</h1><p class="sub">Área da loja do EB Manager.</p></div></div>
+<div class="card empty"><h2>Loja em breve</h2><p>Esta área será disponibilizada em uma próxima atualização.</p></div>
+</section>
 <section id="page-hierarquia" class="page hidden"><div class="pagehead"><div><h1>Hierarquia</h1><p class="sub">Cargos e patentes em ordem decrescente.</p></div></div><div class="card"><div class="ranklist" id="ranks"></div></div></section>
 <section id="page-membros" class="page hidden">
 <div class="pagehead"><div><h1>Membros do grupo Roblox</h1><p class="sub">Lista consultada diretamente no grupo 241982252.</p></div><button class="btn primary" id="refreshMembers" type="button">Atualizar lista</button></div>
@@ -333,8 +360,31 @@ let serverLogs=[];
 let serverRecords={training:[],cpd:[],denied:[]};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let currentUserCanPromote=false;
-function page(p){if(p==="promocoes"&&!currentUserCanPromote){alert("Somente Aspirante a Oficial ou patente superior pode promover.");return;}if(p==="logs"&&typeof loadServerLogs==="function")loadServerLogs();document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));document.getElementById('page-'+p).classList.remove('hidden');document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===p));document.getElementById('crumb').textContent=document.querySelector('[data-page="'+p+'"]').textContent.trim()}
-document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>page(b.dataset.page));document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>page(b.dataset.go));
+function page(p){
+if(p==="promocoes"&&!currentUserCanPromote){alert("Somente Aspirante a Oficial ou patente superior pode promover.");return;}
+if(p==="logs"&&typeof loadServerLogs==="function")loadServerLogs();
+document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));
+document.getElementById('page-'+p).classList.remove('hidden');
+document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===p));
+const mainPages=['inicio','perfil','loja','hierarquia'];
+const menuToggle=document.getElementById('menuToggle');
+const menuPanel=document.getElementById('menuPanel');
+const inMenu=!mainPages.includes(p);
+menuToggle.classList.toggle('active',inMenu);
+menuPanel.classList.add('hidden');
+menuToggle.setAttribute('aria-expanded','false');
+const selected=document.querySelector('[data-page="'+p+'"]');
+document.getElementById('crumb').textContent=selected?selected.textContent.trim():p;
+}
+document.querySelectorAll('#nav [data-page]').forEach(b=>b.onclick=()=>page(b.dataset.page));
+document.querySelectorAll('#menuPanel [data-page]').forEach(b=>b.onclick=()=>page(b.dataset.page));
+document.getElementById('menuToggle').onclick=()=>{
+const panel=document.getElementById('menuPanel');
+const opening=panel.classList.contains('hidden');
+panel.classList.toggle('hidden',!opening);
+document.getElementById('menuToggle').setAttribute('aria-expanded',String(opening));
+};
+document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>page(b.dataset.go));
 document.getElementById('ranks').innerHTML=ranks.map((r,i)=>'<div class="rank"><b>'+(i+1)+'. '+esc(r)+'</b><small>'+(i===0?'Maior cargo':i===ranks.length-1?'Entrada':'Cargo / patente')+'</small></div>').join('');
 ['fromRank','toRank'].forEach(id=>document.getElementById(id).innerHTML=ranks.map(r=>'<option>'+esc(r)+'</option>').join(''));
 function refresh(){let p=serverPromotions,d=serverRecords.denied,t=serverRecords.training,c=serverRecords.cpd;document.getElementById('stat-prom').textContent=p.length;document.getElementById('stat-neg').textContent=d.length;document.getElementById('stat-treino').textContent=t.length;document.getElementById('stat-ranks').textContent=ranks.length;
@@ -452,6 +502,11 @@ async function checkRobloxSession(){
     login.classList.add('hidden');
     userBox.classList.remove('hidden');
     document.getElementById('robloxUserLabel').textContent='@'+data.user.username+' · '+data.user.groupRoleName;
+    document.getElementById('profileUsername').textContent='@'+data.user.username;
+    document.getElementById('profileRole').textContent=data.user.groupRoleName||'Patente não informada';
+    const profileAvatar=document.getElementById('profileAvatar');
+    if(data.user.avatar){profileAvatar.innerHTML='<img alt="" src="'+esc(data.user.avatar)+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';}
+    else profileAvatar.textContent='RB';
     const avatar=document.getElementById('robloxAvatar');
     if(data.user.avatar){avatar.innerHTML='<img alt="" src="'+esc(data.user.avatar)+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';}
     else avatar.textContent='RB';
