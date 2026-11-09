@@ -108,6 +108,7 @@
       const select = document.getElementById("adminRoleSelect");
       if (typeof ranks !== "undefined") select.innerHTML = ranks.map(role => '<option>' + safe(role) + '</option>').join("");
       await loadRequests();
+      if (typeof loadServerLogs === "function") await loadServerLogs();
       if (currentAccess === "creator") await loadWhitelist();
     } catch (error) { message.textContent = error.message; }
   });
@@ -117,14 +118,14 @@
     try {
       const body = formData(event.target); body.action = "set_role";
       await api("/api/admin/requests", { method: "POST", body: JSON.stringify(body) });
-      event.target.reset(); await loadRequests(); alert("Patente alterada no grupo Roblox e registrada nos logs.");
+      event.target.reset(); await loadRequests(); if (typeof loadServerLogs === "function") await loadServerLogs(); alert("Patente alterada no grupo Roblox e registrada nos logs.");
     } catch (error) { alert(error.message); }
   });
   document.getElementById("cgexForm").addEventListener("submit", async event => {
     event.preventDefault();
     try {
       await api("/api/admin/requests", { method: "POST", body: JSON.stringify(formData(event.target)) });
-      event.target.reset(); await loadRequests(); alert("Alteração aplicada no grupo Roblox e registrada nos logs.");
+      event.target.reset(); await loadRequests(); if (typeof loadServerLogs === "function") await loadServerLogs(); alert("Alteração aplicada no grupo Roblox e registrada nos logs.");
     } catch (error) { alert(error.message); }
   });
   document.getElementById("wlList").addEventListener("click", async event => {
