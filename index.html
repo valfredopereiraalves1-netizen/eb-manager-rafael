@@ -305,6 +305,82 @@
 #dashboardApp .menu-panel{display:none!important}
 #dashboardApp .menu-panel.hidden{display:none!important}
 
+
+/* EB MANAGER — tema escuro operacional inspirado na referência fornecida
+   Alteração somente visual: não modifica rotas, autenticação, banco ou regras de patente. */
+:root{
+  --eb-bg:#0D1117;--eb-card:#161B22;--eb-line:#30363D;
+  --eb-text:#F0F6FC;--eb-muted:#8B949E;--eb-green:#2EA44F;
+  --eb-green-hover:#238636;--eb-control:#21262D;--eb-warning:#E1B42E;
+}
+body{background:var(--eb-bg);color:var(--eb-text)}
+#dashboardApp{background:var(--eb-bg)!important;color:var(--eb-text)!important}
+#dashboardApp .side{background:#10161e!important;border-right:1px solid var(--eb-line)!important;box-shadow:4px 0 22px rgba(0,0,0,.18)!important}
+#dashboardApp .brand{border-bottom:1px solid var(--eb-line)!important}
+#dashboardApp .crest{background:linear-gradient(145deg,#2EA44F,#176b35)!important;color:#fff!important;border:1px solid #55bd70!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.14)}
+#dashboardApp .brand b{color:var(--eb-text)!important}
+#dashboardApp .brand small,#dashboardApp .navlabel{color:var(--eb-muted)!important}
+#dashboardApp .nav button{color:#c9d1d9!important}
+#dashboardApp .nav button.active,#dashboardApp .nav button:hover{background:#203329!important;color:#fff!important}
+#dashboardApp .nav button.active:before{background:var(--eb-green)!important}
+#dashboardApp .sidefoot{background:#161B22!important;border-color:var(--eb-line)!important;color:var(--eb-muted)!important}
+#dashboardApp .main,#dashboardApp .top{background:var(--eb-bg)!important}
+#dashboardApp .top{border-bottom:1px solid var(--eb-line)!important;box-shadow:0 4px 18px rgba(0,0,0,.12)!important}
+#dashboardApp .crumb,#dashboardApp .sub{color:var(--eb-muted)!important}
+#dashboardApp .crumb b,#dashboardApp .pagehead h1,#dashboardApp .user{color:var(--eb-text)!important}
+#dashboardApp .avatar{background:#263238!important;color:#d7f5df!important;border:1px solid #3b5144!important}
+#dashboardApp .card{background:var(--eb-card)!important;border:1px solid var(--eb-line)!important;color:var(--eb-text)!important;box-shadow:0 8px 24px rgba(0,0,0,.18)!important}
+#dashboardApp .card h2,#dashboardApp .rank b{color:var(--eb-text)!important}
+#dashboardApp .stat small,#dashboardApp .stat span,#dashboardApp .rank small{color:var(--eb-muted)!important}
+#dashboardApp .stat strong{color:#d9fbe2!important}
+#dashboardApp .stat:after{background:var(--eb-green)!important}
+#dashboardApp .btn{background:var(--eb-control)!important;border:1px solid var(--eb-line)!important;color:var(--eb-text)!important}
+#dashboardApp .btn:hover{background:#30363D!important}
+#dashboardApp .btn.primary{background:var(--eb-green)!important;border-color:var(--eb-green)!important;color:#fff!important}
+#dashboardApp .btn.primary:hover{background:var(--eb-green-hover)!important}
+#dashboardApp .btn.danger{background:#3b2025!important;border-color:#70404a!important;color:#ffb8c0!important}
+#dashboardApp .tag{background:#1b3526!important;border:1px solid #285b39!important;color:#9be9a8!important}
+#dashboardApp .rank{background:#111820!important;border-color:var(--eb-line)!important;color:var(--eb-text)!important}
+#dashboardApp th{background:#111820!important;color:var(--eb-muted)!important}
+#dashboardApp td{background:transparent!important;color:#d7dee7!important;border-color:var(--eb-line)!important}
+#dashboardApp tbody tr:hover{background:#1b2821!important}
+#dashboardApp .field label{color:#c9d1d9!important}
+#dashboardApp .field input,#dashboardApp .field select,#dashboardApp .field textarea{background:#0D1117!important;color:var(--eb-text)!important;border:1px solid var(--eb-line)!important}
+#dashboardApp .field input:focus,#dashboardApp .field select:focus,#dashboardApp .field textarea:focus{outline:2px solid rgba(46,164,79,.35)!important;border-color:var(--eb-green)!important;box-shadow:0 0 0 4px rgba(46,164,79,.12)!important}
+#dashboardApp .notice{background:#302819!important;border-color:#66502a!important;color:#f0d9a8!important}
+#dashboardApp .empty{color:var(--eb-muted)!important}
+#dashboardApp .hero-photo{background:#111820!important;border-color:var(--eb-line)!important}
+#dashboardApp .side{scrollbar-color:rgba(46,164,79,.45) transparent!important}
+#dashboardApp .brand:hover .crest{box-shadow:0 7px 22px rgba(46,164,79,.2)!important}
+@media(hover:hover){
+  #dashboardApp .card:hover{border-color:#46515d!important;box-shadow:0 14px 30px rgba(0,0,0,.28)!important}
+  #dashboardApp .rank:hover{background:#1b2821!important;border-color:#3b6248!important}
+}
+/* Área pública: mantém o conteúdo e a autenticação existentes, atualizando apenas o tema. */
+.public-home{background:var(--eb-bg)!important;color:var(--eb-text)!important}
+.public-nav{background:rgba(13,17,23,.94)!important;border-color:var(--eb-line)!important;backdrop-filter:blur(12px)}
+.public-brand{color:var(--eb-text)!important}
+.public-brand-mark{background:var(--eb-green)!important;border-color:#55bd70!important}
+.public-brand small,.public-links a{color:var(--eb-muted)!important}
+.public-links a:hover{color:#9be9a8!important}
+.public-cta{background:var(--eb-green)!important;color:#fff!important}
+.public-cta:hover{background:var(--eb-green-hover)!important}
+.public-hero{background-color:#101820!important}
+.public-section{color:var(--eb-text)!important}
+.public-section-head small{color:#9be9a8!important}
+.public-section-head h2{color:var(--eb-text)!important}
+.public-section-head p,.public-feature p{color:var(--eb-muted)!important}
+.public-feature{background:var(--eb-card)!important;border-color:var(--eb-line)!important;box-shadow:0 8px 24px rgba(0,0,0,.18)!important}
+.public-feature-icon{background:#1b3526!important;color:#9be9a8!important}
+.public-feature h3{color:var(--eb-text)!important}
+.public-stats{background:#101820!important;border-top:1px solid var(--eb-line)!important;border-bottom:1px solid var(--eb-line)!important}
+.public-stat strong{color:#9be9a8!important}
+.public-stat span,.public-footer{color:var(--eb-muted)!important}
+.public-footer{background:#090d12!important;border-top:1px solid var(--eb-line)!important}
+@media(prefers-reduced-motion:reduce){
+  #dashboardApp *,#dashboardApp *:before,#dashboardApp *:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+
 </style></head>
 <body>
 <div id="publicHome" class="public-home">
