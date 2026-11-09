@@ -1233,6 +1233,68 @@ body{font-family:var(--ebx-text)}
  #dashboardApp .profile-tab{border-radius:9px!important}
 }
 </style>
+
+/* EBCAXIAS — elementos visuais inspirados na referência enviada; sem alterar lógica */
+#publicHome .public-hero{
+  background:
+    linear-gradient(90deg,rgba(21,4,64,.94) 0%,rgba(42,11,120,.78) 52%,rgba(42,11,120,.30) 100%),
+    url('https://ebcaxias.com/static/inicio/guarita-1920_v=1.webp') center 44%/cover no-repeat !important;
+  border-bottom:4px solid #e7a200;
+}
+#publicHome .public-hero::after{
+  content:"";position:absolute;inset:auto 0 0;height:100px;pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(21,4,64,.48));
+}
+#publicHome .public-hero-inner,#publicHome .public-login-card{position:relative;z-index:1}
+#publicHome .public-eyebrow{color:#ffe269}
+#publicHome .public-cta{
+  color:#2a0b78!important;background:linear-gradient(180deg,#fff0a8,#e7a200)!important;
+  border:1px solid #ffe269!important;border-radius:12px!important;
+  box-shadow:0 5px 0 #9e6900,0 10px 22px rgba(10,2,36,.28)!important;
+  font-weight:800;transition:transform .16s ease,filter .16s ease;
+}
+#publicHome .public-cta:hover{transform:translateY(-2px);filter:brightness(1.06)}
+#publicHome .public-cta.secondary{
+  color:#fff!important;background:rgba(35,8,96,.72)!important;
+  border:1px solid rgba(255,226,105,.55)!important;box-shadow:none!important;
+}
+#publicHome .public-login-card{
+  border:1px solid rgba(255,226,105,.42)!important;
+  box-shadow:0 20px 55px rgba(12,3,39,.32)!important;
+}
+#publicHome .public-section{max-width:1240px}
+#publicHome .public-section-head small{color:#5e1fd5}
+#publicHome .public-section-head h2{color:#22095e}
+#publicHome .public-feature{
+  border:1px solid #e4d8ff!important;border-top:3px solid #5e1fd5!important;
+  border-radius:15px!important;box-shadow:0 10px 28px rgba(42,11,120,.08)!important;
+  transition:transform .18s ease,box-shadow .18s ease;
+}
+#publicHome .public-feature:hover{transform:translateY(-4px);box-shadow:0 16px 34px rgba(42,11,120,.14)!important}
+#publicHome .public-feature-icon{background:#f4efff!important;color:#4811be!important;border:1px solid #cdb9ff}
+#publicHome .public-stats{
+  background:linear-gradient(90deg,rgba(21,4,64,.94),rgba(29,7,82,.80)),url('https://ebcaxias.com/static/inicio/tropa-1920_v=1.webp') center 38%/cover no-repeat!important;
+  border-top:4px solid #e7a200;border-bottom:4px solid #e7a200;
+}
+#publicHome .public-stat strong{color:#ffe269!important}
+#publicHome .public-stat span{color:#f4efff!important}
+#publicHome .public-stats-note{color:#e4d8ff!important}
+#publicHome .public-final-cta{
+  max-width:none;padding:58px max(28px,calc((100% - 1160px)/2));
+  background:linear-gradient(120deg,#2a0b78,#150440);border-top:1px solid rgba(255,226,105,.25);
+}
+#publicHome .public-final-cta h2{color:#fff}
+#publicHome .public-final-cta p{color:#e4d8ff}
+#publicHome .public-footer{background:#10032f;border-top:1px solid rgba(255,226,105,.24)}
+#publicHome .public-footer strong{color:#ffe269}
+@media(min-width:900px){#publicHome .public-features{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:760px){
+ #publicHome .public-hero{background-position:58% center!important}
+ #publicHome .public-stats{background-position:56% center!important}
+ #publicHome .public-final-cta{padding:40px 18px}
+ #publicHome .public-cta{width:100%;justify-content:center}
+}
+
 </head>
 <body>
 <div id="publicHome" class="public-home hidden">
