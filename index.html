@@ -1998,7 +1998,7 @@ html,body{font-family:var(--eb-text)!important}
 <div class="menu-promo-card">
 <div class="menu-promo-top"><span>PRÓXIMA CONQUISTA</span><span class="menu-crown">★</span></div>
 <h2>Subir de patente</h2>
-<p>Sua próxima: <strong>[CMT] Comandante</strong></p>
+<p>Sua próxima patente: <strong id="menuNextRank">Entre com Roblox para consultar</strong></p>
 <div class="menu-price-row"><strong>R$ 38,50</strong><button type="button" class="menu-upgrade" data-go="loja">Subir de patente <span>→</span></button></div>
 <small class="menu-disclaimer">Consulte as condições antes de qualquer compra. Pagamento ainda não integrado.</small>
 </div>
@@ -2099,8 +2099,9 @@ html,body{font-family:var(--eb-text)!important}
 <div class="pagehead"><div><h1>Loja</h1><p class="sub">Informações sobre opções disponíveis no EB Manager.</p></div></div>
 <div class="card">
   <span class="tag">INFORMAÇÃO</span>
-  <h2>Subir de patente</h2>
-  <p class="muted">O menu apresenta a opção de subida de patente por R$ 38,50. No momento, o painel não possui checkout nem confirmação de pagamento integrados.</p>
+  <h2>Próxima patente</h2>
+  <p class="muted">Sua próxima patente disponível: <strong id="storeNextRank">Entre com Roblox para consultar</strong>.</p>
+  <p class="muted">Valor para solicitar a próxima patente: <strong>R$ 38,50</strong>. O painel ainda não possui checkout nem confirmação de pagamento integrados.</p>
   <div class="notice">Não realize pagamentos por esta tela. A compra só poderá ser ativada depois que o responsável definir e validar o processo oficial de pagamento, as regras e a confirmação automática da operação.</div>
 </div>
 </section>
@@ -2176,6 +2177,19 @@ html,body{font-family:var(--eb-text)!important}
 </div></main></div>
 <script>
 const ranks=['[CR] Criador','[S-CR] Sub Criador','[ADM-G] Administrador Geral','[ADM] Administrador','[MOD] Moderador','[CGEx] Corregedoria Geral do Exército','[ER] Elite Real','[ES] Elite Secreta','[EM] Elite Militar','[MR] Marechal','[PRES] Presidente','[V-PRES] Vice Presidente','[CMT] Comandante','[S-CMT] Sub Comandante','[GEN-EX] General do Exército','[GEN-DIV] General de Divisão','[GEN-BDA] General de Brigada','[CEL] Coronel','[TEN-CEL] Tenente-Coronel','[MAJ] Major','[CAP] Capitão','[1• TEN] Primeiro Tenente','[2• TEN] Segundo Tenente','[ASP] Aspirante a Oficial','[CT] Cadete','[ST] Subtenente','[1• SGT] Primeiro Sargento','[2• SGT] Segundo Sargento','[3• SGT] Terceiro Sargento','[CB] Cabo','[SLD] Soldado','[REC] Recrutamento'];
+function getNextRank(currentRole){
+ const clean=value=>String(value||'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
+ const current=clean(currentRole);
+ if(!current)return 'Não identificada';
+ const index=ranks.findIndex(rank=>{const label=clean(rank.replace(/^\\[[^\\]]+\\]\\s*/,''));return current.includes(label)||label.includes(current)});
+ if(index<0)return 'Não foi possível identificar';
+ return index===0?'Você já está na patente máxima':ranks[index-1];
+}
+function updateNextRankOffer(role){
+ const next=getNextRank(role);
+ ['menuNextRank','storeNextRank'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=next});
+}
+
 let serverPromotions=[];
 let serverLogs=[];
 let serverRecords={training:[],cpd:[],denied:[]};
@@ -2500,6 +2514,7 @@ async function checkRobloxSession(){
     document.getElementById('profileUsername').textContent='@'+data.user.username;
     document.getElementById('menuUsername').textContent=data.user.username||'Conta Roblox';
     document.getElementById('menuRank').textContent=data.user.groupRoleName||'Patente não informada';
+     updateNextRankOffer(data.user.groupRoleName);
     const menuAvatar=document.getElementById('menuAvatar');
     if(data.user.avatar){menuAvatar.innerHTML='<img alt="" src="'+esc(data.user.avatar)+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';}
     else menuAvatar.textContent='RB';
