@@ -18,8 +18,92 @@
 @media(max-width:600px){.hero-gallery{grid-template-columns:1fr}.hero-photo,.hero-photo img{min-height:155px}.hero-photo.flag img{padding:16px}}
 @media(max-width:850px){.side{width:210px}.grid{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}}
 @media(max-width:600px){.shell{display:block}.side{width:auto;padding:12px;border:0;border-bottom:1px solid var(--line)}.brand{padding:3px 5px 10px}.nav{display:flex;overflow:auto;gap:4px}.navlabel,.sidefoot{display:none}.nav button{white-space:nowrap;width:auto;font-size:12px;padding:9px}.top{height:55px;padding:0 16px}.content{padding:20px 14px}.grid{gap:9px}.card{padding:13px}.stat strong{font-size:23px}.pagehead h1{font-size:21px}.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}}
+
+/* Landing page institucional inspirada na organização visual da referência */
+.public-home{min-height:100vh;background:#f4f6f8;color:#172333;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+.public-nav{height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(18px,5vw,76px);background:#fff;border-bottom:1px solid #e4e9ef;position:sticky;top:0;z-index:20}
+.public-brand{display:flex;align-items:center;gap:12px;color:#14243a;text-decoration:none}
+.public-brand-mark{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#173b2b;color:#fff;font-weight:900;border:2px solid #c8a85a}
+.public-brand strong{display:block;font-size:13px;letter-spacing:.06em}
+.public-brand small{display:block;color:#738092;font-size:11px}
+.public-links{display:flex;align-items:center;gap:24px}
+.public-links a{color:#405065;text-decoration:none;font-size:13px;font-weight:650}
+.public-links a:hover{color:#17633f}
+.public-cta{display:inline-flex;align-items:center;justify-content:center;padding:12px 19px;border-radius:7px;background:#17633f;color:white!important;text-decoration:none;font-weight:750;border:0}
+.public-hero{position:relative;min-height:490px;display:grid;align-items:center;overflow:hidden;background:linear-gradient(90deg,rgba(8,24,20,.91),rgba(8,24,20,.62)),url('https://thumb.wikimedia.org/wikipedia/commons/thumb/2/20/Grupo_de_Recrutas_do_Ex%C3%A9rcito_Brasileiro_em_Treinamento.JPG/1280px-Grupo_de_Recrutas_do_Ex%C3%A9rcito_Brasileiro_em_Treinamento.JPG') center/cover}
+.public-hero-inner{max-width:1160px;width:100%;margin:auto;padding:76px 28px;color:#fff}
+.public-eyebrow{display:inline-block;color:#e8d29b;text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:800;margin-bottom:18px}
+.public-hero h1{max-width:680px;font-size:clamp(34px,5vw,58px);line-height:1.08;margin:0 0 18px;letter-spacing:-.035em}
+.public-hero p{max-width:600px;color:#e0e8e4;font-size:16px;line-height:1.75;margin:0 0 28px}
+.public-hero-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.public-cta.secondary{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.45);color:#fff!important}
+.public-section{max-width:1160px;margin:0 auto;padding:68px 28px}
+.public-section-head{text-align:center;max-width:700px;margin:0 auto 32px}
+.public-section-head small{color:#17633f;text-transform:uppercase;letter-spacing:.14em;font-weight:800}
+.public-section-head h2{font-size:clamp(25px,3vw,36px);color:#172b3d;margin:10px 0}
+.public-section-head p{color:#68778a;line-height:1.7;margin:0}
+.public-features{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.public-feature{background:#fff;border:1px solid #e2e8ed;border-radius:12px;padding:24px;box-shadow:0 8px 24px rgba(20,42,62,.045)}
+.public-feature-icon{width:42px;height:42px;border-radius:10px;background:#e8f1eb;color:#17633f;display:grid;place-items:center;font-size:20px;margin-bottom:15px}
+.public-feature h3{font-size:16px;margin:0 0 8px;color:#1d3043}
+.public-feature p{font-size:13px;line-height:1.7;color:#718093;margin:0}
+.public-stats{background:#142b24;color:#fff}
+.public-stats-inner{max-width:1160px;margin:auto;padding:38px 28px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;text-align:center}
+.public-stat strong{display:block;font-size:25px;color:#f0dcae}
+.public-stat span{font-size:12px;color:#d1ded7}
+.public-login-note{font-size:12px;color:#e3e9e5;margin-top:16px}
+.public-footer{background:#101e1a;color:#c7d2cc;padding:25px 28px;text-align:center;font-size:12px}
+@media(max-width:760px){.public-nav{height:auto;min-height:68px;padding:12px 16px;flex-wrap:wrap;gap:12px}.public-links{gap:13px;flex-wrap:wrap}.public-links a{font-size:12px}.public-links .public-cta{padding:9px 12px}.public-hero{min-height:460px}.public-hero-inner{padding:58px 20px}.public-features{grid-template-columns:1fr}.public-stats-inner{grid-template-columns:1fr;gap:24px}.public-section{padding:48px 18px}}
 </style></head>
-<body><div class="shell">
+<body>
+<div id="publicHome" class="public-home">
+  <header class="public-nav">
+    <a class="public-brand" href="/">
+      <span class="public-brand-mark">EB</span>
+      <span><strong>EB MANAGER RAFAEL</strong><small>Gestão e organização do grupo</small></span>
+    </a>
+    <nav class="public-links" aria-label="Menu principal">
+      <a href="#recursos">Recursos</a>
+      <a href="#sobre">Sobre o painel</a>
+      <a class="public-cta" href="/auth/roblox">Entrar com Roblox</a>
+    </nav>
+  </header>
+  <main>
+    <section class="public-hero">
+      <div class="public-hero-inner">
+        <span class="public-eyebrow">Organização • Transparência • Gestão</span>
+        <h1>O gerenciamento do grupo em um só lugar.</h1>
+        <p>Acesse o painel do EB Manager Rafael com sua conta Roblox. Consulte a hierarquia, acompanhe registros e utilize as ferramentas administrativas conforme suas permissões.</p>
+        <div class="public-hero-actions">
+          <a class="public-cta" href="/auth/roblox">Entrar com Roblox</a>
+          <a class="public-cta secondary" href="#recursos">Conhecer recursos</a>
+        </div>
+        <div class="public-login-note">A entrada é validada pela sua conta Roblox e pela sua participação no grupo configurado.</div>
+      </div>
+    </section>
+    <section id="recursos" class="public-section">
+      <div class="public-section-head">
+        <small>Ferramentas do painel</small>
+        <h2>O que você encontra por aqui</h2>
+        <p>Uma interface centralizada para consultar informações e registrar atividades administrativas autorizadas.</p>
+      </div>
+      <div class="public-features">
+        <article class="public-feature"><div class="public-feature-icon">♜</div><h3>Hierarquia e membros</h3><p>Consulte a estrutura de patentes e os membros vinculados ao grupo Roblox.</p></article>
+        <article class="public-feature"><div class="public-feature-icon">⬆</div><h3>Promoções e registros</h3><p>Registre solicitações e acompanhe o histórico das movimentações administrativas.</p></article>
+        <article class="public-feature"><div class="public-feature-icon">★</div><h3>Treinamentos e CPD</h3><p>Organize resultados de treinamento, acompanhamentos e registros de ocorrências.</p></article>
+      </div>
+    </section>
+    <section id="sobre" class="public-stats">
+      <div class="public-stats-inner">
+        <div class="public-stat"><strong>Roblox</strong><span>Identificação pela conta oficial</span></div>
+        <div class="public-stat"><strong>PostgreSQL</strong><span>Armazenamento centralizado do painel</span></div>
+        <div class="public-stat"><strong>Permissões</strong><span>Acesso conforme a função no grupo</span></div>
+      </div>
+    </section>
+  </main>
+  <footer class="public-footer">EB Manager Rafael · Painel independente de gestão de grupo Roblox</footer>
+</div>
+<div id="dashboardApp" class="shell hidden">
 <aside class="side"><div class="brand"><div class="crest">EB</div><div><b>EXÉRCITO BRASILEIRO</b><small>Manager do Rafael</small></div></div>
 <div class="navlabel">PAINEL PRINCIPAL</div><nav class="nav" id="nav">
 <button class="active" data-page="inicio"><span class="ico">▦</span>Visão geral</button>
@@ -156,6 +240,8 @@ async function checkRobloxSession(){
     const response=await fetch('/api/me',{credentials:'same-origin'});
     if(!response.ok) return;
     const data=await response.json();
+    document.getElementById('publicHome').classList.add('hidden');
+    document.getElementById('dashboardApp').classList.remove('hidden');
     csrfToken=data.csrfToken;
     login.classList.add('hidden');
     userBox.classList.remove('hidden');
