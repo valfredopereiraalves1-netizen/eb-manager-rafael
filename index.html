@@ -655,6 +655,8 @@ body{background:#0b0c10;color:#fff}
 #dashboardApp .profile-event p{margin:4px 0 0;color:var(--eb-muted,#8b949e);font-size:12px}
 @media(max-width:850px){#dashboardApp .profile-stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#dashboardApp .profile-columns{grid-template-columns:1fr}}
 @media(max-width:600px){#dashboardApp .profile-hero{align-items:flex-start;flex-wrap:wrap;padding:16px}#dashboardApp .profile-avatar{width:68px;height:68px;flex-basis:68px}#dashboardApp .profile-verified{width:100%}#dashboardApp .profile-details{grid-template-columns:1fr 1fr}#dashboardApp .profile-tab{padding:9px 11px;font-size:12px}}
+#dashboardApp .cdp-pending{background:rgba(234,179,8,.12)!important;border-color:rgba(234,179,8,.25)!important;color:#facc15!important}
+#dashboardApp .cdp-ready{background:rgba(16,185,129,.14)!important;border-color:rgba(16,185,129,.28)!important;color:#6ee7b7!important}
 </style></head>
 <body>
 <div id="publicHome" class="public-home hidden">
@@ -779,11 +781,30 @@ body{background:#0b0c10;color:#fff}
 <div class="menu-shortcuts-head"><div><h2>Atalhos</h2><p>Acesse rapidamente as ferramentas</p></div></div>
 <div class="menu-shortcuts">
 <button class="menu-shortcut" type="button" data-go="promocoes"><span class="shortcut-icon">⬆</span><span><strong>Entregar</strong><small>Registrar entrega de patente</small></span><b>›</b></button>
-
+<button class="menu-shortcut" type="button" data-go="cdp"><span class="shortcut-icon">⏱</span><span><strong>CDP</strong><small>Tempo de serviço na patente atual</small></span><b>›</b></button>
 <button class="menu-shortcut" type="button" data-go="formularios"><span class="shortcut-icon">📝</span><span><strong>Formulários</strong><small>Solicitações e formulários</small></span><b>›</b></button>
 </div>
 </section>
 
+<section id="page-cdp" class="page hidden">
+<div class="pagehead">
+  <div><h1>CDP — Controle de Desenvolvimento de Patente</h1><p class="sub">Acompanhe automaticamente o tempo de serviço de cada militar na patente atual.</p></div>
+  <button class="btn primary" id="refreshCdp" type="button">Atualizar CDP</button>
+</div>
+<div class="grid" style="margin-bottom:16px">
+  <div class="card stat"><small>Início da contagem</small><strong id="cdpActivation">—</strong><span>Todos começam do zero na ativação</span></div>
+  <div class="card stat"><small>Militares acompanhados</small><strong id="cdpTotal">—</strong><span>Sincronizados com o grupo Roblox</span></div>
+  <div class="card stat"><small>Regras configuradas</small><strong id="cdpConfigured">—</strong><span>Patentes com tempo definido</span></div>
+  <div class="card stat"><small>Promoções liberadas</small><strong id="cdpEligible">—</strong><span>Tempo mínimo atingido</span></div>
+</div>
+<div class="card">
+  <div class="card-heading"><h2>Tempo na patente atual</h2><span class="tag">ATUALIZAÇÃO AUTOMÁTICA</span></div>
+  <p class="muted" id="cdpStatus">Carregue os dados para consultar o tempo de serviço.</p>
+  <div class="tablewrap"><table><thead><tr><th>Militar</th><th>Patente atual</th><th>Tempo acumulado</th><th>Mínimo exigido</th><th>Situação</th></tr></thead><tbody id="cdpBody"></tbody></table></div>
+  <div id="cdpEmpty" class="empty">Nenhum militar encontrado.</div>
+</div>
+<div class="notice">A contagem começa na ativação do CDP. Quando a patente muda, o relógio daquela patente é reiniciado. Patentes sem regra cadastrada ficam bloqueadas para promoção até que o tempo mínimo seja definido.</div>
+</section>
 <section id="page-formularios" class="page hidden">
 <div class="pagehead"><div><h1>Formulários</h1><p class="sub">Acesse os formulários disponíveis no painel.</p></div></div>
 <div class="grid">
@@ -876,6 +897,7 @@ function page(p){
 if(p==="promocoes"&&!currentUserCanPromote){alert("Somente Aspirante a Oficial ou patente superior pode promover.");return;}
 if(p==="perfil"&&typeof loadProfileData==="function"&&csrfToken)loadProfileData();
 if(p==="logs"&&typeof loadServerLogs==="function")loadServerLogs();
+if(p==="cdp"&&typeof loadCdp==="function")loadCdp();
 document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));
 const target=document.getElementById('page-'+p);
 if(!target){console.warn('Página não encontrada:',p);return;}
@@ -974,6 +996,36 @@ async function loadGroupMembers(showAlert = false) {
 document.getElementById("refreshMembers").onclick = () => loadGroupMembers(true);
 document.getElementById("memberSearch").addEventListener("input", renderGroupMembers);
 setInterval(() => { if (csrfToken) loadGroupMembers(); }, 60_000);
+
+async function loadCdp(){
+  if(!csrfToken)return;
+  const status=document.getElementById("cdpStatus");
+  const button=document.getElementById("refreshCdp");
+  if(button)button.disabled=true;
+  status.textContent="Sincronizando membros e calculando o tempo de serviço...";
+  try{
+    const response=await fetch("/api/cdp",{credentials:"same-origin"});
+    const data=await response.json().catch(()=>({}));
+    if(!response.ok)throw new Error(data.error||"Não foi possível carregar o CDP.");
+    const members=data.members||[];
+    document.getElementById("cdpActivation").textContent=data.activationAt?new Date(data.activationAt).toLocaleDateString("pt-BR"):"—";
+    document.getElementById("cdpTotal").textContent=members.length;
+    document.getElementById("cdpConfigured").textContent=members.filter(x=>x.ruleConfigured).length;
+    document.getElementById("cdpEligible").textContent=members.filter(x=>x.eligible).length;
+    document.getElementById("cdpBody").innerHTML=members.map(member=>{
+      const hours=Number(member.elapsedHours||0);
+      const time=hours>=24?Math.floor(hours/24)+"d "+Math.floor(hours%24)+"h":Math.floor(hours)+"h "+Math.floor((hours%1)*60)+"min";
+      const required=member.ruleConfigured?(member.requiredHours===0?"Sem exigência":member.requiredHours+" horas"):"Não configurado";
+      const statusLabel=!member.ruleConfigured?"Regra pendente":member.eligible?"Tempo atingido":"Em contagem";
+      const statusClass=!member.ruleConfigured?"tag cdp-pending":member.eligible?"tag cdp-ready":"tag";
+      return "<tr><td>@"+esc(member.username)+"</td><td>"+esc(member.roleName)+"</td><td>"+time+"</td><td>"+required+"</td><td><span class=\""+statusClass+"\">"+statusLabel+"</span></td></tr>";
+    }).join("");
+    document.getElementById("cdpEmpty").classList.toggle("hidden",members.length>0);
+    status.textContent="Última sincronização: "+new Date().toLocaleString("pt-BR")+" · O tempo é calculado no servidor.";
+  }catch(error){status.textContent=error.message;}
+  finally{if(button)button.disabled=false;}
+}
+document.getElementById("refreshCdp").addEventListener("click",loadCdp);
 
 async function loadServerPromotions(){
   if(!csrfToken)return;
