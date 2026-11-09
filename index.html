@@ -824,9 +824,9 @@ body{background:#0b0c10;color:#fff}
   <div class="card stat"><small>Promoções liberadas</small><strong id="cdpEligible">—</strong><span>Tempo mínimo atingido</span></div>
 </div>
 <div class="card">
-  <div class="card-heading"><h2>Tempo na patente atual</h2><span class="tag">ATUALIZAÇÃO AUTOMÁTICA</span></div>
+  <div class="card-heading"><h2>Tempo restante para promoção</h2><span class="tag">ATUALIZAÇÃO AUTOMÁTICA</span></div>
   <p class="muted" id="cdpStatus">Carregue os dados para consultar o tempo de serviço.</p>
-  <div class="tablewrap"><table><thead><tr><th>Militar</th><th>Patente atual</th><th>Tempo acumulado</th><th>Mínimo exigido</th><th>Situação</th></tr></thead><tbody id="cdpBody"></tbody></table></div>
+  <div class="tablewrap"><table><thead><tr><th>Militar</th><th>Patente atual</th><th>Tempo restante</th><th>Mínimo exigido</th><th>Situação</th></tr></thead><tbody id="cdpBody"></tbody></table></div>
   <div id="cdpEmpty" class="empty">Nenhum militar encontrado.</div>
 </div>
 <div class="notice">A contagem começa na ativação do CDP. Quando a patente muda, o relógio daquela patente é reiniciado. Patentes sem regra cadastrada ficam bloqueadas para promoção até que o tempo mínimo seja definido.</div>
@@ -1040,11 +1040,16 @@ async function loadCdp(){
     document.getElementById("cdpEligible").textContent=members.filter(x=>x.eligible).length;
     document.getElementById("cdpBody").innerHTML=members.map(member=>{
       const hours=Number(member.elapsedHours||0);
-      const time=hours>=24?Math.floor(hours/24)+"d "+Math.floor(hours%24)+"h":Math.floor(hours)+"h "+Math.floor((hours%1)*60)+"min";
-      const required=member.ruleConfigured?(member.requiredHours===0?"Sem exigência":member.requiredHours+" horas"):"Não configurado";
-      const statusLabel=!member.ruleConfigured?"Regra pendente":member.eligible?"Tempo atingido":"Em contagem";
-      const statusClass=!member.ruleConfigured?"tag cdp-pending":member.eligible?"tag cdp-ready":"tag";
-      return "<tr><td>@"+esc(member.username)+"</td><td>"+esc(member.roleName)+"</td><td>"+time+"</td><td>"+required+"</td><td><span class=\""+statusClass+"\">"+statusLabel+"</span></td></tr>";
+      const requiredHours=Number(member.requiredHours||0);
+      const remainingMinutes=Math.max(0,Math.ceil((requiredHours-hours)*60));
+      const days=Math.floor(remainingMinutes/1440);
+      const wholeHours=Math.floor((remainingMinutes%1440)/60);
+      const minutes=remainingMinutes%60;
+      const remaining=!member.ruleConfigured?"Regra pendente":member.eligible||requiredHours===0?"Tempo concluído":(days?days+"d ":"")+(wholeHours?wholeHours+"h ":"")+(minutes||(!days&&!wholeHours)?minutes+"min":"").trim();
+      const required=member.ruleConfigured?(requiredHours===0?"Sem exigência":requiredHours+" horas"):"Não configurado";
+      const statusLabel=!member.ruleConfigured?"Regra pendente":member.eligible?"Tempo concluído":requiredHours===0?"Sem exigência":"Faltam "+remaining;
+      const statusClass=!member.ruleConfigured?"tag cdp-pending":member.eligible||requiredHours===0?"tag cdp-ready":"tag";
+      return "<tr><td>@"+esc(member.username)+"</td><td>"+esc(member.roleName)+"</td><td>"+remaining+"</td><td>"+required+"</td><td><span class=\""+statusClass+"\">"+statusLabel+"</span></td></tr>";
     }).join("");
     document.getElementById("cdpEmpty").classList.toggle("hidden",members.length>0);
     status.textContent="Última sincronização: "+new Date().toLocaleString("pt-BR")+" · O tempo é calculado no servidor.";
