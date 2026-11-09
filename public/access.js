@@ -48,7 +48,7 @@
         </form>
         <div id="wlList" class="section empty">Carregando lista...</div>
       </div>
-      <div class="card section"><h2>Solicitações administrativas</h2><p class="muted">As solicitações ficam registradas para auditoria. A alteração real de patente no Roblox só será ativada após configurar a integração oficial Open Cloud e suas permissões.</p><div id="adminRequests" class="empty">Nenhuma solicitação carregada.</div></div>
+      <div class="card section"><h2>Solicitações administrativas</h2><p class="muted">As operações autorizadas são aplicadas diretamente no grupo Roblox e registradas no histórico. Se a integração ou as permissões não estiverem configuradas, o servidor informa o erro e não confirma a alteração.</p><div id="adminRequests" class="empty">Nenhuma solicitação carregada.</div></div>
     </div>`;
   content.appendChild(section);
 
