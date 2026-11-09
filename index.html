@@ -1482,6 +1482,49 @@ body{font-family:var(--ebx-text)}
 }
 </style>
 
+<style id="eb-mobile-bottom-navigation">
+/* Barra inferior com cinco atalhos principais; menu completo permanece nos três traços. */
+.mobile-bottom-nav{display:none}
+@media(max-width:600px){
+ #dashboardApp .side{
+  position:relative!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;
+  width:100%!important;height:auto!important;max-height:none!important;overflow:visible!important;
+  padding:10px 14px!important;border:0!important;border-bottom:1px solid rgba(255,255,255,.09)!important;
+  box-shadow:none!important;z-index:100!important
+ }
+ #dashboardApp .side .brand{display:flex!important;padding:3px 52px 8px 4px!important;margin:0!important;border:0!important}
+ #dashboardApp .side .navlabel{display:none!important}
+ #dashboardApp .nav-menu-button{top:10px!important;right:14px!important}
+ #dashboardApp .side:not(.nav-open) #nav{display:none!important}
+ #dashboardApp .side.nav-open #nav{
+  display:grid!important;position:absolute!important;top:64px!important;left:10px!important;right:10px!important;
+  z-index:1100!important;max-height:calc(100vh - 150px)!important;overflow:auto!important;
+  padding:12px!important;border:1px solid rgba(255,255,255,.14)!important;border-radius:14px!important;
+  background:#14271c!important;box-shadow:0 16px 38px rgba(0,0,0,.38)!important
+ }
+ #dashboardApp .side.nav-open #nav .nav-group{display:grid!important;gap:3px!important}
+ #dashboardApp .side.nav-open #nav .nav-group-title{display:block!important;padding:9px 10px 5px!important;color:#aab9ae!important;font-size:10px!important;letter-spacing:.12em!important}
+ #dashboardApp .side.nav-open #nav button{width:100%!important;min-width:0!important;min-height:42px!important;height:auto!important;flex-direction:row!important;justify-content:flex-start!important;padding:10px 12px!important;font-size:12px!important;text-align:left!important}
+ #dashboardApp .menu-panel{bottom:calc(76px + env(safe-area-inset-bottom))!important}
+ #dashboardApp .main{padding-bottom:0!important}
+ #dashboardApp .content{padding-bottom:calc(100px + env(safe-area-inset-bottom))!important}
+ .mobile-bottom-nav{
+  display:flex!important;position:fixed!important;left:0!important;right:0!important;bottom:0!important;z-index:1200!important;
+  align-items:stretch!important;justify-content:space-around!important;gap:3px!important;
+  padding:7px 5px calc(7px + env(safe-area-inset-bottom))!important;
+  background:rgba(17,26,21,.97)!important;border-top:1px solid rgba(240,213,139,.22)!important;
+  box-shadow:0 -7px 24px rgba(0,0,0,.22)!important;backdrop-filter:blur(16px)!important
+ }
+ .mobile-bottom-nav button{
+  flex:1 1 20%!important;min-width:0!important;min-height:55px!important;
+  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;
+  padding:5px 2px!important;border:0!important;border-radius:11px!important;background:transparent!important;
+  color:#c7d2ca!important;font:600 10px/1.1 Inter,system-ui,sans-serif!important
+ }
+ .mobile-bottom-nav button .bottom-ico{font-size:19px!important;line-height:1!important}
+ .mobile-bottom-nav button.active{background:rgba(16,185,129,.15)!important;color:#65d6a3!important}
+}
+</style>
 </head>
 <body>
 <div id="publicHome" class="public-home hidden">
@@ -1575,6 +1618,13 @@ body{font-family:var(--ebx-text)}
 </nav>
 <div id="menuPanel" class="menu-panel hidden" aria-label="Atalhos adicionais"></div>
 <div class="sidefoot">Sistema de gestão militar<br><b>EB Manager · 2026</b></div></aside>
+<nav id="mobileBottomNav" class="mobile-bottom-nav" aria-label="Navegação inferior">
+ <button type="button" class="active" data-page="inicio"><span class="bottom-ico" aria-hidden="true">⌂</span><span>Início</span></button>
+ <button type="button" data-page="perfil"><span class="bottom-ico" aria-hidden="true">◉</span><span>Perfil</span></button>
+ <button type="button" data-page="loja"><span class="bottom-ico" aria-hidden="true">◇</span><span>LOJA</span></button>
+ <button type="button" data-page="hierarquia"><span class="bottom-ico" aria-hidden="true">♜</span><span>Patente</span></button>
+ <button type="button" data-page="menu"><span class="bottom-ico" aria-hidden="true">☰</span><span>Menu</span></button>
+</nav>
 <main class="main"><header class="top"><div class="crumb">Painel / <b id="crumb">Visão geral</b></div><div class="user"><a class="btn primary" id="robloxLogin" href="/auth/roblox">Entrar com Roblox</a><div id="robloxUser" class="hidden"><div class="avatar" id="robloxAvatar">RB</div><span id="robloxUserLabel">Conectado</span><button class="btn" id="robloxLogout" type="button">Sair</button></div></div></header><div class="content">
 <section id="page-inicio" class="page">
   <div class="overview-hero">
@@ -1795,6 +1845,7 @@ const target=document.getElementById('page-'+p);
 if(!target){console.warn('Página não encontrada:',p);return;}
 target.classList.remove('hidden');
 document.querySelectorAll('#nav [data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===p));
+document.querySelectorAll('#mobileBottomNav [data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===p));
 document.getElementById('crumb').textContent=p==='inicio'?'Visão geral':(document.querySelector('#nav [data-page="'+p+'"]')?.textContent.trim()||p);
 }
 const navMenuButton=document.getElementById('navMenuButton');
@@ -1810,6 +1861,12 @@ document.querySelectorAll('#nav [data-page]').forEach(b=>b.onclick=()=>{
   navMenuButton.setAttribute('aria-expanded','false');
   navMenuButton.setAttribute('aria-label','Abrir menu de navegação');
 });
+document.querySelectorAll('#mobileBottomNav [data-page]').forEach(b=>b.addEventListener('click',()=>{
+  page(b.dataset.page);
+  navSidebar.classList.remove('nav-open');
+  navMenuButton.setAttribute('aria-expanded','false');
+  navMenuButton.setAttribute('aria-label','Abrir menu de navegação');
+}));
 document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>page(b.dataset.go));
 document.getElementById('ranks').innerHTML=ranks.map((r,i)=>'<div class="rank"><b>'+(i+1)+'. '+esc(r)+'</b><small>'+(i===0?'Maior cargo':i===ranks.length-1?'Entrada':'Cargo / patente')+'</small></div>').join('');
 ['fromRank','toRank'].forEach(id=>document.getElementById(id).innerHTML=ranks.map(r=>'<option>'+esc(r)+'</option>').join(''));
