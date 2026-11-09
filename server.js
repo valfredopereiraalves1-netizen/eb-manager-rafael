@@ -131,6 +131,16 @@ function roleRank(label) {
   const value = roleRanks[label];
   return Number.isInteger(value) ? value : null;
 }
+
+function minimumPromoterRank() {
+  const aspiranteEntry = Object.entries(roleRanks).find(([name, value]) =>
+    /aspirante/i.test(name) && Number.isInteger(value)
+  );
+  return aspiranteEntry ? aspiranteEntry[1] : MIN_PROMOTER_RANK;
+}
+function canPromote(user) {
+  return Number(user?.groupRoleRank) >= minimumPromoterRank();
+}
 function randomUrlSafe(bytes = 32) { return crypto.randomBytes(bytes).toString("base64url"); }
 function pkceChallenge(verifier) { return crypto.createHash("sha256").update(verifier).digest("base64url"); }
 
@@ -277,7 +287,7 @@ app.get("/auth/roblox/callback", async (req, res) => {
 
 app.get("/api/me", requireLogin, (req, res) => {
   if (!req.session.csrfToken) req.session.csrfToken = randomUrlSafe();
-  res.json({ user: req.session.user, csrfToken: req.session.csrfToken });
+  res.json({ user: req.session.user, csrfToken: req.session.csrfToken, permissions: { canPromote: canPromote(req.session.user) } });
 });
 app.post("/auth/logout", requireLogin, requireCsrf, (req, res) => {
   req.session.destroy(err => {
@@ -391,7 +401,7 @@ app.post("/api/promotions", requireLogin, requireCsrf, async (req, res) => {
   }
   if (targetUsername.length > 40 || reason.length > 1000) return res.status(400).json({ error: "Algum campo ultrapassou o limite permitido." });
   const author = req.session.user;
-  if (author.groupRoleRank < MIN_PROMOTER_RANK) return res.status(403).json({ error: "Permissão negada: sua função no grupo não permite promover." });
+  if (!canPromote(author)) return res.status(403).json({ error: "Permissão negada: somente Aspirante a Oficial ou patente superior pode promover." });
   const fromRank = roleRank(fromRole);
   const toRank = roleRank(toRole);
   if (fromRank === null || toRank === null) return res.status(503).json({ error: "O mapeamento das patentes reais do Roblox ainda não foi configurado." });
