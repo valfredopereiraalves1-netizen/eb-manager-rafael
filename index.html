@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#101a2d"><title>EB Manager | Painel Administrativo</title>
+<meta name="theme-color" content="#0b0c10"><meta name="description" content="EB Caxias — plataforma de gestão, hierarquia, promoções e registros do Exército Brasileiro no Roblox."><title>EB Caxias | EB Manager</title>
 <style>
 :root{--bg:#0b1220;--panel:#121e32;--panel2:#172640;--line:#263854;--text:#edf3fc;--muted:#9aabc3;--blue:#3678d8;--red:#a83242;--green:#31a879}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 Inter,system-ui,-apple-system,Segoe UI,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.shell{display:flex;min-height:100vh}.side{width:250px;background:#0e192b;border-right:1px solid var(--line);padding:24px 16px;flex-shrink:0}.brand{display:flex;gap:12px;align-items:center;padding:4px 8px 26px}.crest{width:42px;height:42px;border-radius:12px;background:linear-gradient(145deg,#245eae,#142d52);display:grid;place-items:center;font-weight:900;border:1px solid #4b79b7}.brand b{display:block;font-size:14px;letter-spacing:.04em}.brand small{color:var(--muted)}.navlabel{font-size:10px;letter-spacing:.16em;color:#71839e;padding:14px 10px 8px}.nav button{width:100%;border:0;background:transparent;color:#aebbd0;text-align:left;padding:11px 12px;border-radius:9px;margin:2px 0;display:flex;gap:11px;align-items:center}.nav button.active,.nav button:hover{background:#1a2b46;color:white}.nav .ico{width:20px;text-align:center}.sidefoot{position:sticky;top:calc(100vh - 72px);margin-top:30px;padding:12px;border:1px solid var(--line);border-radius:10px;color:var(--muted);font-size:12px}.main{flex:1;min-width:0}.top{height:72px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 30px;background:#0e192b}.crumb{color:var(--muted);font-size:13px}.user{display:flex;align-items:center;gap:10px;font-size:13px}.avatar{width:34px;height:34px;border-radius:50%;background:#263d60;display:grid;place-items:center;font-weight:700}.content{max-width:1250px;margin:auto;padding:30px}.pagehead{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:24px}.pagehead h1{font-size:25px;margin:0 0 4px}.sub{color:var(--muted);margin:0}.btn{border:1px solid var(--line);border-radius:8px;padding:10px 14px;color:var(--text);background:#1a2b46}.btn.primary{background:var(--blue);border-color:var(--blue)}.btn.danger{background:#642b39;border-color:#8c3b4c}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:18px}.stat small{color:var(--muted)}.stat strong{display:block;font-size:28px;margin:6px 0}.stat span{font-size:12px;color:#8fa6c6}.section{margin-top:20px}.section h2{font-size:16px;margin:0 0 12px}.two{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:520px}th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);font-size:13px}th{color:var(--muted);font-weight:600}td{color:#e1e9f5}.tag{display:inline-block;padding:3px 8px;border-radius:20px;background:#203a5c;color:#bcd8ff;font-size:11px}.muted{color:var(--muted)}.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:12px;color:#aebbd0}.field input,.field select,.field textarea{background:#0d1829;color:var(--text);border:1px solid var(--line);border-radius:8px;padding:11px;min-width:0}.field textarea{min-height:90px;resize:vertical}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.notice{border:1px solid #66502a;background:#302819;color:#f0d9a8;padding:12px 14px;border-radius:9px;font-size:12px;margin-top:16px}.empty{padding:28px;text-align:center;color:var(--muted)}.ranklist{display:grid;gap:8px}.rank{display:flex;justify-content:space-between;align-items:center;background:#0e1a2c;border:1px solid var(--line);padding:11px 13px;border-radius:9px}.rank b{font-size:13px}.rank small{color:var(--muted)}.hidden{display:none!important}.mobilebar{display:none}
@@ -491,42 +491,202 @@ body{background:var(--eb-bg);color:var(--eb-text)}
       #edf3eb;
   }
 }
+
+/* Identidade visual definitiva EB Caxias — dark tático e verde esmeralda */
+:root{color-scheme:dark;--bg:#0b0c10;--panel:#14161f;--panel2:#1a1d26;--line:rgba(255,255,255,.08);--text:#fff;--muted:#9ca3af;--green:#10b981}
+body{background:#0b0c10;color:#fff}
+#dashboardApp{background:#0b0c10;color:#f3f4f6}
+#dashboardApp .side{background:linear-gradient(180deg,#111a16,#0c100e);border-right:1px solid rgba(255,255,255,.08);box-shadow:8px 0 30px rgba(0,0,0,.25)}
+#dashboardApp .brand{border-bottom-color:rgba(255,255,255,.08)}
+#dashboardApp .crest{background:linear-gradient(145deg,#10b981,#086342);border:1px solid rgba(110,231,183,.35);color:#fff}
+#dashboardApp .brand b{color:#fff}
+#dashboardApp .brand small,#dashboardApp .navlabel{color:#9ca3af}
+#dashboardApp .nav button{color:#c4cbd2}
+#dashboardApp .nav button.active,#dashboardApp .nav button:hover{background:rgba(16,185,129,.14);color:#6ee7b7}
+#dashboardApp .nav button.active:before{background:#10b981}
+#dashboardApp .sidefoot{background:rgba(255,255,255,.035);border-color:rgba(255,255,255,.08);color:#9ca3af}
+#dashboardApp .main,#dashboardApp .content{background:#0b0c10}
+#dashboardApp .content{background:radial-gradient(ellipse at 12% 0%,rgba(16,185,129,.08),transparent 32%),#0b0c10}
+#dashboardApp .top{background:rgba(17,19,24,.94);border-bottom:1px solid rgba(255,255,255,.08);box-shadow:0 6px 24px rgba(0,0,0,.18);backdrop-filter:blur(16px)}
+#dashboardApp .crumb{color:#9ca3af}
+#dashboardApp .crumb b,#dashboardApp .user{color:#f3f4f6}
+#dashboardApp .avatar{background:#17372a;border-color:rgba(16,185,129,.25);color:#6ee7b7}
+#dashboardApp .pagehead h1,#dashboardApp .pagehead h2{color:#fff}
+#dashboardApp .sub{color:#9ca3af}
+#dashboardApp .card{background:linear-gradient(145deg,rgba(26,29,38,.96),rgba(20,22,31,.96));border:1px solid rgba(255,255,255,.08);box-shadow:0 12px 32px rgba(0,0,0,.24);color:#f3f4f6}
+#dashboardApp .card h2{color:#f9fafb}
+#dashboardApp .stat{background:linear-gradient(145deg,#1a1d26,#14161f)}
+#dashboardApp .stat:after{background:linear-gradient(180deg,#34d399,#059669)}
+#dashboardApp .stat small,#dashboardApp .stat span{color:#9ca3af}
+#dashboardApp .stat strong{color:#fff}
+#dashboardApp .tag{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.22);color:#6ee7b7}
+#dashboardApp .btn{background:#1a1d26;border-color:rgba(255,255,255,.1);color:#e5e7eb;box-shadow:none}
+#dashboardApp .btn:hover{background:#242a31;border-color:rgba(16,185,129,.3);color:#fff}
+#dashboardApp .btn.primary{background:linear-gradient(135deg,#10b981,#07845c);border-color:#10b981;color:#fff;box-shadow:0 6px 18px rgba(16,185,129,.16)}
+#dashboardApp .btn.primary:hover{background:linear-gradient(135deg,#34d399,#059669)}
+#dashboardApp .btn.danger{background:rgba(239,68,68,.1);border-color:rgba(248,113,113,.2);color:#fca5a5}
+#dashboardApp .rank{background:#11151a;border-color:rgba(255,255,255,.08);color:#e5e7eb}
+#dashboardApp .rank b,#dashboardApp td{color:#e5e7eb}
+#dashboardApp .rank small,#dashboardApp th{color:#9ca3af}
+#dashboardApp th{background:#171b22}
+#dashboardApp td{border-color:rgba(255,255,255,.07)}
+#dashboardApp table tbody tr:hover{background:rgba(16,185,129,.06)}
+#dashboardApp .field label{color:#cbd5d1}
+#dashboardApp .field input,#dashboardApp .field select,#dashboardApp .field textarea{background:#0f1217;color:#f3f4f6;border-color:rgba(255,255,255,.12)}
+#dashboardApp .field input:focus,#dashboardApp .field select:focus,#dashboardApp .field textarea:focus{outline:0;border-color:#10b981;box-shadow:0 0 0 4px rgba(16,185,129,.12)}
+#dashboardApp .notice{background:rgba(59,130,246,.08);border-color:rgba(96,165,250,.18);color:#bfdbfe}
+#dashboardApp .empty{color:#9ca3af}
+#dashboardApp .hero-photo{border-color:rgba(255,255,255,.1)}
+#dashboardApp .top{position:sticky;top:0;z-index:10}
+#dashboardApp .menu-welcome,#dashboardApp .menu-promo-card,#dashboardApp .menu-shortcut{background:#14161f;border-color:rgba(255,255,255,.08);color:#f3f4f6}
+#dashboardApp .menu-userinfo strong,#dashboardApp .menu-shortcuts-head h2{color:#fff}
+#dashboardApp .menu-userinfo span,#dashboardApp .menu-shortcuts-head p{color:#9ca3af}
+#dashboardApp .menu-promo-card p,#dashboardApp .menu-promo-card small{color:#cbd5d1}
+#dashboardApp .menu-shortcut small{color:#9ca3af}
+#dashboardApp .menu-shortcut:hover{border-color:rgba(16,185,129,.3);background:#19221e}
+#dashboardApp .menu-upgrade{background:#10b981;color:#fff}
+#dashboardApp .overview-hero{position:relative;display:flex;align-items:center;justify-content:space-between;gap:24px;overflow:hidden;padding:30px 34px;margin:0 0 28px;border:1px solid rgba(16,185,129,.18);border-radius:18px;background:radial-gradient(circle at 90% 20%,rgba(16,185,129,.2),transparent 30%),linear-gradient(115deg,#14231c,#11171a 62%,#111318);box-shadow:0 16px 38px rgba(0,0,0,.25)}
+#dashboardApp .overview-hero-copy{max-width:720px}
+#dashboardApp .overview-eyebrow,#dashboardApp .section-kicker{display:block;color:#34d399;font-size:10px;font-weight:800;letter-spacing:.16em;margin-bottom:9px}
+#dashboardApp .overview-hero h1{font-size:clamp(25px,3.4vw,39px);line-height:1.1;letter-spacing:-.035em;color:#fff;margin:0 0 10px}
+#dashboardApp .overview-hero p{max-width:650px;color:#b6c3bb;line-height:1.7;margin:0}
+#dashboardApp .overview-hero-mark{width:112px;height:112px;flex:0 0 112px;display:grid;place-content:center;text-align:center;border:1px solid rgba(52,211,153,.25);border-radius:26px;background:rgba(16,185,129,.08);transform:rotate(4deg)}
+#dashboardApp .overview-hero-mark span{font-size:38px;line-height:1;font-weight:900;color:#6ee7b7;letter-spacing:-.08em}
+#dashboardApp .overview-hero-mark small{font-size:9px;letter-spacing:.24em;color:#9ca3af;margin-top:7px}
+#dashboardApp .overview-heading{margin-bottom:18px}
+#dashboardApp .overview-heading h2{font-size:20px;margin:0 0 4px}
+#dashboardApp .status-dot,#dashboardApp .public-live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#34d399;box-shadow:0 0 12px rgba(52,211,153,.7);margin-right:6px}
+#dashboardApp .overview-stats{gap:14px}
+#dashboardApp .overview-stats .stat{min-height:150px;padding:20px 20px 18px 24px}
+#dashboardApp .stat-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:rgba(16,185,129,.1);color:#6ee7b7;font-size:18px;margin-bottom:12px}
+#dashboardApp .overview-stats .stat strong{font-size:31px;margin:4px 0}
+#dashboardApp .overview-lower{gap:16px}
+#dashboardApp .card-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+#dashboardApp .card-heading h2{margin:0}
+#dashboardApp .card-heading-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:rgba(16,185,129,.1);color:#6ee7b7}
+#dashboardApp .overview-quick .ranklist{gap:9px}
+#dashboardApp .quick-action{display:flex;align-items:center;gap:11px;text-align:left;width:100%;padding:12px 13px;min-height:52px;border-radius:12px}
+#dashboardApp .quick-action span:nth-child(2){flex:1}
+#dashboardApp .quick-action b{color:#34d399;font-size:17px}
+#dashboardApp .quick-action-icon{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;background:rgba(16,185,129,.1);color:#6ee7b7}
+#dashboardApp .overview-security{display:flex;gap:11px;align-items:flex-start;margin-top:18px;padding:13px 15px;border:1px solid rgba(16,185,129,.14);border-radius:12px;background:rgba(16,185,129,.045);color:#aebbb2;font-size:12px;line-height:1.6}
+#dashboardApp .security-check{display:grid;place-items:center;flex:0 0 20px;width:20px;height:20px;border-radius:50%;background:rgba(16,185,129,.15);color:#6ee7b7;font-weight:800}
+.public-home{min-height:100vh;background:#0b0c10;color:#f3f4f6;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+.public-nav{height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(18px,5vw,76px);background:rgba(12,14,18,.92);border-bottom:1px solid rgba(255,255,255,.08);position:sticky;top:0;z-index:20;backdrop-filter:blur(18px)}
+.public-brand{color:#fff}
+.public-brand-mark{background:linear-gradient(145deg,#10b981,#065f46);border:1px solid rgba(110,231,183,.5);box-shadow:0 5px 18px rgba(16,185,129,.18)}
+.public-brand small{color:#9ca3af}
+.public-links a{color:#cbd5d1;transition:color .2s ease}
+.public-links a:hover{color:#6ee7b7}
+.public-cta{background:linear-gradient(135deg,#10b981,#07845c);border:1px solid #10b981;border-radius:11px;color:#fff!important;box-shadow:0 7px 20px rgba(16,185,129,.16);transition:transform .2s ease,box-shadow .2s ease,filter .2s ease}
+.public-cta:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(16,185,129,.22);filter:brightness(1.06)}
+.public-hero{min-height:570px;display:flex;align-items:center;justify-content:space-between;gap:42px;padding:64px clamp(20px,7vw,100px);background:radial-gradient(ellipse at 72% 12%,rgba(16,185,129,.16),transparent 34%),linear-gradient(125deg,#101a16,#0b0c10 62%,#101318)}
+.public-hero-inner{max-width:690px;margin:0;padding:30px 0}
+.public-hero h1{font-size:clamp(39px,5.5vw,66px);max-width:700px;color:#fff}
+.public-hero p{color:#c0cbc4}
+.public-eyebrow{color:#6ee7b7}
+.public-trust-line{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:22px;color:#9ca3af;font-size:11px}
+.public-trust-line span{color:#34d399}
+.public-trust-line i{height:3px;width:3px;border-radius:50%;background:#64748b;margin:0 4px}
+.public-login-card{width:min(360px,100%);flex:0 0 min(360px,100%);padding:26px;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:linear-gradient(145deg,rgba(26,29,38,.96),rgba(18,22,25,.96));box-shadow:0 22px 55px rgba(0,0,0,.35)}
+.public-login-card-top{display:flex;gap:11px;align-items:center;padding-bottom:19px;border-bottom:1px solid rgba(255,255,255,.08)}
+.public-login-card-top strong{display:block;font-size:11px;letter-spacing:.12em;color:#f3f4f6}
+.public-login-card-top small{display:block;font-size:11px;color:#9ca3af;margin-top:3px}
+.public-login-mark{width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:rgba(16,185,129,.12);color:#6ee7b7;font-weight:900}
+.public-login-card h2{font-size:21px;color:#fff;margin:21px 0 8px}
+.public-login-card p{font-size:13px;color:#aab6ae;line-height:1.7}
+.public-login-button{display:flex;justify-content:center;align-items:center;gap:9px;padding:13px;border-radius:11px;background:linear-gradient(135deg,#10b981,#07845c);color:#fff;text-decoration:none;font-weight:800;box-shadow:0 7px 18px rgba(16,185,129,.16)}
+.public-login-security{display:flex;gap:8px;margin-top:15px;color:#9ca3af;font-size:11px;line-height:1.6}
+.public-login-security>span:first-child{color:#34d399;font-weight:900}
+.public-section{max-width:1160px;margin:0 auto;padding:72px 28px}
+.public-section-head{text-align:center;max-width:700px;margin:0 auto 32px}
+.public-section-head small{color:#34d399}
+.public-section-head h2{color:#fff}
+.public-section-head p{color:#9ca3af}
+.public-features{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.public-feature{background:linear-gradient(145deg,#171a22,#13161d);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:23px;box-shadow:0 10px 28px rgba(0,0,0,.2);transition:transform .25s ease,border-color .25s ease}
+.public-feature:hover{transform:translateY(-4px);border-color:rgba(16,185,129,.25)}
+.public-feature-icon{background:rgba(16,185,129,.11);color:#6ee7b7}
+.public-feature h3{color:#f3f4f6}
+.public-feature p{color:#9ca3af}
+.public-stats{background:linear-gradient(120deg,#111b16,#0f1512);border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)}
+.public-stats-inner{grid-template-columns:repeat(4,1fr)}
+.public-stat strong{color:#6ee7b7;font-size:30px}
+.public-stat span{color:#b8c5bd}
+.public-stats-note{max-width:900px;margin:0 auto;padding:0 24px 30px;text-align:center;color:#7f8d84;font-size:11px}
+.public-final-cta{max-width:1160px;margin:0 auto;padding:55px 28px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.public-final-cta h2{margin:8px 0;color:#fff;font-size:clamp(25px,3vw,34px)}
+.public-final-cta p{color:#9ca3af;margin:0}
+.public-footer{display:flex;flex-direction:column;gap:6px;background:#07080a;color:#9ca3af;border-top:1px solid rgba(255,255,255,.07)}
+.public-footer strong{color:#fff;letter-spacing:.1em}
+.public-footer small{color:#6b7280}
+@media(max-width:1000px){#dashboardApp .overview-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.public-hero{gap:24px;padding-left:32px;padding-right:32px}.public-features{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.public-nav{height:auto;min-height:68px;padding:12px 16px;flex-wrap:wrap;gap:12px}.public-links{gap:13px;flex-wrap:wrap}.public-links a{font-size:12px}.public-links .public-cta{padding:9px 12px}.public-hero{min-height:0;display:block;padding:38px 19px 28px}.public-hero-inner{padding:18px 0 28px}.public-login-card{width:100%;max-width:480px}.public-features{grid-template-columns:1fr}.public-stats-inner{grid-template-columns:repeat(2,1fr);padding:32px 18px}.public-section{padding:50px 18px}.public-final-cta{padding:40px 18px;display:block}.public-final-cta .public-cta{margin-top:18px;width:100%}}
+@media(max-width:600px){#dashboardApp .overview-hero{padding:22px 20px;border-radius:15px}#dashboardApp .overview-hero-mark{width:70px;height:70px;flex-basis:70px;border-radius:18px}#dashboardApp .overview-hero-mark span{font-size:28px}#dashboardApp .overview-hero-mark small{font-size:7px}#dashboardApp .overview-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}#dashboardApp .overview-stats .stat{padding:15px 13px;min-height:135px}#dashboardApp .overview-stats .stat strong{font-size:25px}#dashboardApp .overview-lower{grid-template-columns:1fr}#dashboardApp .overview-heading{align-items:flex-start;flex-direction:column}.public-stats-inner{gap:20px}.public-trust-line{font-size:10px}}
+@media(prefers-reduced-motion:reduce){#dashboardApp .page:not(.hidden),#dashboardApp .pagehead,#dashboardApp .stat{animation:none!important}#dashboardApp *,#publicHome *{scroll-behavior:auto!important;transition:none!important}}
+
 </style></head>
 <body>
 <div id="publicHome" class="public-home hidden">
   <header class="public-nav">
     <a class="public-brand" href="/">
       <span class="public-brand-mark">EB</span>
-      <span><strong>EB MANAGER RAFAEL</strong><small>Gestão e organização do grupo</small></span>
+      <span><strong>EB CAXIAS</strong><small>Exército Brasileiro · EB Manager</small></span>
     </a>
     <nav class="public-links" aria-label="Menu principal">
       <a href="#recursos">Recursos</a>
       <a href="#sobre">Sobre o painel</a>
-      <a class="public-cta" href="/auth/roblox">Entrar com Roblox</a>
+      <a class="public-cta" href="/auth/roblox">Entrar com Roblox <span aria-hidden="true">↗</span></a>
     </nav>
   </header>
   <main>
     <section class="public-hero">
       <div class="public-hero-inner">
-        <span class="public-eyebrow">Organização • Transparência • Gestão</span>
-        <h1>O gerenciamento do grupo em um só lugar.</h1>
-        <p>Acesse o painel do EB Manager Rafael com sua conta Roblox. Consulte a hierarquia, acompanhe registros e utilize as ferramentas administrativas conforme suas permissões.</p>
+        <span class="public-eyebrow"><span class="public-live-dot"></span> ORGANIZAÇÃO · TRANSPARÊNCIA · HIERARQUIA</span>
+        <h1>O quartel inteiro num painel só.</h1>
+        <p>Uma plataforma centralizada de gestão, controle hierárquico e auditoria para a diretoria, instrutores, membros e divisões do Exército Brasileiro no Roblox.</p>
+        <div class="public-hero-actions">
+          <a class="public-cta" href="/auth/roblox">Entrar com Roblox <span aria-hidden="true">↗</span></a>
+          <a class="public-cta secondary" href="#recursos">Conhecer a plataforma <span aria-hidden="true">↓</span></a>
+        </div>
+        <div class="public-trust-line"><span>✓</span> Autenticação segura pelo Roblox <i></i><span>✓</span> Ações registradas no sistema</div>
       </div>
       <aside class="public-login-card" aria-label="Acesso ao painel">
         <div class="public-login-card-top">
-          <span class="public-login-mark" aria-hidden="true">R</span>
+          <span class="public-login-mark" aria-hidden="true">EB</span>
           <span><strong>ACESSO AO PAINEL</strong><small>Autenticação oficial Roblox</small></span>
         </div>
-        <h2>Entre com sua conta Roblox</h2>
-        <p>Conecte sua conta para acessar o EB Manager e visualizar as ferramentas liberadas para sua patente.</p>
+        <h2>Bem-vindo ao EB Caxias.</h2>
+        <p>Entre com sua conta Roblox para acessar as ferramentas liberadas conforme sua patente e suas permissões.</p>
         <a class="public-login-button" href="/auth/roblox"><span aria-hidden="true">↗</span> Entrar com Roblox</a>
-        <div class="public-login-security"><span aria-hidden="true">✓</span><span style="color:inherit;font-weight:400">A autenticação acontece pelo Roblox. Sua senha não é solicitada nem armazenada pelo EB Manager.</span></div>
+        <div class="public-login-security"><span aria-hidden="true">✓</span><span>A autenticação acontece pelo Roblox. Sua senha não é solicitada nem armazenada pelo EB Manager.</span></div>
       </aside>
+    </section>
+    <section class="public-section" id="recursos">
+      <div class="public-section-head"><small>GESTÃO INTEGRADA</small><h2>Ferramentas para manter tudo em ordem.</h2><p>Recursos organizados em um único ambiente, com acesso controlado e histórico das operações.</p></div>
+      <div class="public-features">
+        <article class="public-feature"><span class="public-feature-icon">↗</span><h3>Promoções e patentes</h3><p>Fluxos de alteração hierárquica integrados ao grupo Roblox, conforme as permissões de cada patente.</p></article>
+        <article class="public-feature"><span class="public-feature-icon">⌘</span><h3>Painéis por divisão</h3><p>Estrutura preparada para organizar ferramentas e rotinas de divisões como SGEX, SRT, CEE e CDE.</p></article>
+        <article class="public-feature"><span class="public-feature-icon">▤</span><h3>Registros e auditoria</h3><p>Histórico centralizado de operações para facilitar consultas, acompanhamento e transparência.</p></article>
+        <article class="public-feature"><span class="public-feature-icon">◇</span><h3>Acesso verificado</h3><p>Autenticação Roblox e controle de permissões para proteger as áreas internas do sistema.</p></article>
       </div>
     </section>
-
+    <section class="public-stats" id="sobre">
+      <div class="public-section-head"><small>EXÉRCITO BRASILEIRO NO ROBLOX</small><h2>Dimensão da comunidade.</h2><p>Indicadores de referência informados para a apresentação institucional do grupo.</p></div>
+      <div class="public-stats-inner">
+        <div class="public-stat"><strong>167.754</strong><span>Membros no grupo</span></div>
+        <div class="public-stat"><strong>2,5 mi</strong><span>Visitas</span></div>
+        <div class="public-stat"><strong>48.590</strong><span>Favoritos</span></div>
+        <div class="public-stat"><strong>36</strong><span>Patentes</span></div>
+      </div>
+      <p class="public-stats-note">Os números acima são valores de referência fornecidos para esta versão visual; a atualização automática depende da integração com as fontes oficiais do Roblox.</p>
+    </section>
+    <section class="public-final-cta">
+      <div><span class="public-eyebrow">EB CAXIAS · EB MANAGER</span><h2>Pronto para acessar o painel?</h2><p>Entre com sua conta Roblox e continue de onde sua patente permitir.</p></div>
+      <a class="public-cta" href="/auth/roblox">Entrar com Roblox <span aria-hidden="true">↗</span></a>
+    </section>
   </main>
-  <footer class="public-footer">EB Manager Rafael · Painel independente de gestão de grupo Roblox<br><small>Imagem de fundo: Clauber Cleber Caetano/PR · Wikimedia Commons · <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC BY 2.0</a></small></footer>
+  <footer class="public-footer"><strong>EB CAXIAS</strong><span>© Exército Brasileiro do Caxias · EB Manager</span><small>Plataforma independente de gestão da comunidade no Roblox.</small></footer>
 </div>
 <div id="dashboardApp" class="shell hidden">
 <aside class="side"><div class="brand"><div class="crest">EB</div><div><b>EXÉRCITO BRASILEIRO</b><small>Manager do Rafael</small></div></div>
@@ -541,14 +701,35 @@ body{background:var(--eb-bg);color:var(--eb-text)}
 <div id="menuPanel" class="menu-panel hidden" aria-label="Atalhos adicionais"></div>
 <div class="sidefoot">Sistema administrativo demonstrativo<br><b>Versão inicial · 0.1</b></div></aside>
 <main class="main"><header class="top"><div class="crumb">Painel / <b id="crumb">Visão geral</b></div><div class="user"><a class="btn primary" id="robloxLogin" href="/auth/roblox">Entrar com Roblox</a><div id="robloxUser" class="hidden"><div class="avatar" id="robloxAvatar">RB</div><span id="robloxUserLabel">Conectado</span><button class="btn" id="robloxLogout" type="button">Sair</button></div></div></header><div class="content">
-<section id="page-inicio" class="page"><div class="hero-gallery" aria-label="Galeria de imagens do Exército Brasileiro">
-<div class="hero-photo flag"><img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Flag_of_Brazil.svg" alt="Bandeira nacional do Brasil"><div class="hero-caption"><b>Orgulho de ser Brasil</b><small>Bandeira Nacional</small></div></div>
-<div class="hero-photo"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/2/20/Grupo_de_Recrutas_do_Ex%C3%A9rcito_Brasileiro_em_Treinamento.JPG/960px-Grupo_de_Recrutas_do_Ex%C3%A9rcito_Brasileiro_em_Treinamento.JPG" alt="Recrutas do 50º Batalhão de Infantaria de Selva em treinamento"><div class="hero-caption"><b>Formação e espírito de equipe</b><small>Foto: FilipePaz · Wikimedia Commons · <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 3.0</a></small></div></div>
-<div class="hero-photo"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b2/07_09_2022_Desfile_C%C3%ADvico-Militar_por_ocasi%C3%A3o_das_Comemora%C3%A7%C3%B5es_do_Bicenten%C3%A1rio_da_Independ%C3%AAncia_do_Brasil_%2852341477078%29.jpg/960px-07_09_2022_Desfile_C%C3%ADvico-Militar_por_ocasi%C3%A3o_das_Comemora%C3%A7%C3%B5es_do_Bicenten%C3%A1rio_da_Independ%C3%AAncia_do_Brasil_%2852341477078%29.jpg" alt="Militar brasileiro em cerimônia cívico-militar"><div class="hero-caption"><b>Tradição e patriotismo</b><small>Foto: Estevam Costa/PR · Wikimedia Commons · <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC BY 2.0</a></small></div></div>
-</div><div class="pagehead"><div><h1>Visão geral</h1><p class="sub">Bem-vindo ao painel de gestão do Exército Brasileiro.</p></div><span class="tag">SISTEMA EM DESENVOLVIMENTO</span></div>
-<div class="grid"><div class="card stat"><small>Registros de promoção</small><strong id="stat-prom">0</strong><span>Registros no servidor</span></div><div class="card stat"><small>Promoções negadas</small><strong id="stat-neg">0</strong><span>Registros no servidor</span></div><div class="card stat"><small>Treinamentos</small><strong id="stat-treino">0</strong><span>Participações no servidor</span></div><div class="card stat"><small>Patentes cadastradas</small><strong id="stat-ranks">32</strong><span>Hierarquia inicial</span></div></div>
-<div class="two section"><div class="card"><h2>Atividade recente</h2><div id="recent" class="empty">Nenhuma atividade registrada ainda.</div></div><div class="card"><h2>Acesso rápido</h2><div class="ranklist"><button class="btn" data-go="hierarquia">Consultar hierarquia →</button><button class="btn" data-go="promocoes">Registrar promoção →</button><button class="btn" data-go="ranking">Registrar treinamento →</button></div></div></div>
-<div class="notice">Os registros administrativos são armazenados no banco de dados do servidor. O login Roblox e as permissões dependem da configuração das credenciais e dos cargos reais do grupo.</div></section>
+<section id="page-inicio" class="page">
+  <div class="overview-hero">
+    <div class="overview-hero-copy">
+      <span class="overview-eyebrow">EB CAXIAS · CENTRAL DE GESTÃO</span>
+      <h1>O quartel inteiro num painel só.</h1>
+      <p>Bem-vindo ao EB Manager. Acompanhe a atividade do grupo, consulte a hierarquia e acesse as ferramentas liberadas para sua patente.</p>
+    </div>
+    <div class="overview-hero-mark" aria-hidden="true"><span>EB</span><small>CAXIAS</small></div>
+  </div>
+  <div class="pagehead overview-heading">
+    <div><h2>Visão geral</h2><p class="sub">Indicadores e movimentações administrativas do grupo.</p></div>
+    <span class="tag"><span class="status-dot"></span> PAINEL AUTENTICADO</span>
+  </div>
+  <div class="grid overview-stats">
+    <div class="card stat"><div class="stat-icon">↗</div><small>Registros de promoção</small><strong id="stat-prom">0</strong><span>Registros no servidor</span></div>
+    <div class="card stat"><div class="stat-icon">⊘</div><small>Promoções negadas</small><strong id="stat-neg">0</strong><span>Registros no servidor</span></div>
+    <div class="card stat"><div class="stat-icon">▤</div><small>Treinamentos</small><strong id="stat-treino">0</strong><span>Participações no servidor</span></div>
+    <div class="card stat"><div class="stat-icon">✦</div><small>Patentes cadastradas</small><strong id="stat-ranks">32</strong><span>Hierarquia inicial</span></div>
+  </div>
+  <div class="two section overview-lower">
+    <div class="card overview-activity"><div class="card-heading"><div><span class="section-kicker">AUDITORIA</span><h2>Atividade recente</h2></div><span class="card-heading-icon">◷</span></div><div id="recent" class="empty">Nenhuma atividade registrada ainda.</div></div>
+    <div class="card overview-quick"><div class="card-heading"><div><span class="section-kicker">FERRAMENTAS</span><h2>Acesso rápido</h2></div><span class="card-heading-icon">⌘</span></div><div class="ranklist">
+      <button class="btn quick-action" data-go="hierarquia"><span class="quick-action-icon">☷</span><span>Consultar hierarquia</span><b>→</b></button>
+      <button class="btn quick-action" data-go="promocoes"><span class="quick-action-icon">↗</span><span>Registrar promoção</span><b>→</b></button>
+      <button class="btn quick-action" data-go="ranking"><span class="quick-action-icon">▤</span><span>Registrar treinamento</span><b>→</b></button>
+    </div></div>
+  </div>
+  <div class="overview-security"><span class="security-check">✓</span><span>As operações administrativas são registradas no servidor. O acesso às ferramentas respeita a autenticação Roblox e as permissões da sua patente.</span></div>
+</section>
 <section id="page-menu" class="page hidden">
 <div class="menu-welcome">
 <div class="menu-brandline"><span class="menu-brandmark">EB</span><div><strong>EB Manager</strong><small>Painel do grupo</small></div></div>
