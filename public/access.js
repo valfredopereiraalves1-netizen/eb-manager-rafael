@@ -4,7 +4,7 @@
   if (!nav || !content) return;
   const navButton = document.createElement("button");
   navButton.dataset.page = "acessos";
-  navButton.innerHTML = '<span class="ico">🔐</span>Acessos especiais';
+  navButton.innerHTML = '<span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="m11 12 8-8 2 2-2 2 2 2-3 3-2-2-2 2"/></svg></span>Acessos restritos';
   nav.appendChild(navButton);
 
   const section = document.createElement("section");
@@ -58,7 +58,7 @@
     if (target) target.classList.remove("hidden");
     document.querySelectorAll("#nav button").forEach(el => el.classList.toggle("active", el.dataset.page === name));
     const crumb = document.getElementById("crumb");
-    if (crumb) crumb.textContent = name === "acessos" ? "Acessos especiais" : name;
+    if (crumb) crumb.textContent = name === "acessos" ? "Acessos restritos" : name;
   }
   navButton.addEventListener("click", () => switchPage("acessos"));
   const message = document.getElementById("specialMessage");
