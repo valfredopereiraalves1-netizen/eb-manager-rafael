@@ -107,6 +107,12 @@ async function initializeDatabase() {
     ALTER TABLE admin_requests ADD COLUMN IF NOT EXISTS from_role TEXT;
     ALTER TABLE admin_requests ADD COLUMN IF NOT EXISTS to_role TEXT;
     ALTER TABLE admin_requests ADD COLUMN IF NOT EXISTS created_by_username TEXT;
+    CREATE TABLE IF NOT EXISTS profile_settings (
+      roblox_user_id TEXT PRIMARY KEY,
+      bio TEXT NOT NULL DEFAULT '',
+      tagline TEXT NOT NULL DEFAULT '',
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
     CREATE TABLE IF NOT EXISTS whitelist_entries (
       id BIGSERIAL PRIMARY KEY,
       roblox_user_id TEXT NOT NULL UNIQUE,
@@ -383,6 +389,74 @@ app.get("/api/group/members", requireLogin, async (_req, res) => {
   } catch (err) {
     console.error("Falha ao consultar membros do grupo Roblox:", err.message);
     res.status(502).json({ error: "Não foi possível carregar os membros. Verifique se a API Key tem permissão group:read para este grupo." });
+  }
+});
+
+app.get("/api/profile", requireLogin, async (req, res) => {
+  const user = req.session.user;
+  try {
+    const [settings, promotions, demotions, trainings, history] = await Promise.all([
+      pool.query("SELECT bio, tagline, updated_at FROM profile_settings WHERE roblox_user_id = $1", [user.robloxId]),
+      pool.query("SELECT COUNT(*)::int AS total, MAX(created_at) AS last_at FROM promotions WHERE target_user_id = $1", [user.robloxId]),
+      pool.query("SELECT COUNT(*)::int AS total FROM admin_requests WHERE target_user_id = $1 AND action IN ('demote','revoke') AND status = 'applied'", [user.robloxId]),
+      pool.query("SELECT COUNT(*)::int AS total FROM panel_records WHERE record_type = 'training' AND lower(data->>'person') = lower($1)", [user.username]),
+      pool.query(`
+        SELECT created_at, 'Promoção'::text AS title, from_role, to_role, reason
+          FROM promotions WHERE target_user_id = $1
+        UNION ALL
+        SELECT created_at,
+          CASE action WHEN 'demote' THEN 'Rebaixamento' WHEN 'revoke' THEN 'Revogação' ELSE 'Alteração de patente' END,
+          from_role, to_role, reason
+          FROM admin_requests WHERE target_user_id = $1 AND status = 'applied'
+        ORDER BY created_at DESC LIMIT 30
+      `, [user.robloxId])
+    ]);
+    let joinedAt = null;
+    try {
+      const membership = await getCloudMembership(user.robloxId);
+      joinedAt = membership?.createTime || membership?.createdAt || membership?.joinTime || null;
+    } catch (error) {
+      console.warn("Data de entrada no grupo indisponível:", error.message);
+    }
+    res.json({
+      profile: {
+        username: user.username, displayName: user.displayName, robloxId: user.robloxId,
+        avatar: user.avatar, groupId: user.groupId, roleName: user.groupRoleName,
+        roleId: user.groupRoleId, rank: user.groupRoleRank, joinedAt,
+        bio: settings.rows[0]?.bio || "", tagline: settings.rows[0]?.tagline || "",
+        updatedAt: settings.rows[0]?.updated_at || null,
+        stats: {
+          promotions: promotions.rows[0]?.total || 0,
+          lastPromotionAt: promotions.rows[0]?.last_at || null,
+          demotions: demotions.rows[0]?.total || 0,
+          trainings: trainings.rows[0]?.total || 0,
+          records: history.rows.length
+        },
+        history: history.rows
+      }
+    });
+  } catch (err) {
+    console.error("Falha ao carregar perfil:", err.message);
+    res.status(500).json({ error: "Não foi possível carregar os dados do perfil." });
+  }
+});
+app.put("/api/profile", requireLogin, requireCsrf, async (req, res) => {
+  const bio = String(req.body?.bio || "").trim();
+  const tagline = String(req.body?.tagline || "").trim();
+  if (bio.length > 300 || tagline.length > 80) {
+    return res.status(400).json({ error: "A biografia deve ter até 300 caracteres e a frase até 80." });
+  }
+  try {
+    await pool.query(
+      `INSERT INTO profile_settings (roblox_user_id, bio, tagline, updated_at)
+       VALUES ($1, $2, $3, NOW())
+       ON CONFLICT (roblox_user_id) DO UPDATE SET bio = EXCLUDED.bio, tagline = EXCLUDED.tagline, updated_at = NOW()`,
+      [req.session.user.robloxId, bio, tagline]
+    );
+    res.json({ ok: true, bio, tagline });
+  } catch (err) {
+    console.error("Falha ao salvar perfil:", err.message);
+    res.status(500).json({ error: "Não foi possível salvar sua apresentação." });
   }
 });
 
