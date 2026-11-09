@@ -1709,6 +1709,42 @@ html,body{font-family:var(--eb-text)!important}
  #dashboardApp *,#mobileBottomNav *{animation:none!important;transition:none!important}
 }
 </style>
+
+<style id="training-register-reference-style">
+#page-ranking .training-register-card{background:linear-gradient(145deg,#281064,#1b074d 70%,#23085d);color:#f5efff;border:1px solid #d9a91c;border-left:5px solid #d9a91c;border-right:5px solid #d9a91c;border-radius:0;box-shadow:0 16px 40px #13052e88;padding:24px}
+#page-ranking .training-register-form{display:grid;grid-template-columns:1fr;gap:26px}
+#page-ranking .training-register-form .field{min-width:0}
+#page-ranking .training-register-form label{color:#fff;font-weight:800}
+#page-ranking .training-add-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+#page-ranking .training-add-head label{font-size:17px;margin:0}
+#page-ranking .training-count{background:#190747;border:1px solid #52318d;color:#d9c9ff;border-radius:22px;padding:7px 13px;font-size:13px;white-space:nowrap}
+#page-ranking .training-count::first-letter{color:#ffe269}
+#page-ranking .training-add-row{display:flex;align-items:center;gap:12px;background:#190747;border:1px solid #55318f;border-radius:16px;padding:10px 12px}
+#page-ranking .training-add-icon{color:#d6c1ff;font-size:25px}
+#page-ranking .training-add-row input{background:transparent;border:0;box-shadow:none;color:white;min-width:0;flex:1;font-size:16px}
+#page-ranking .training-add-row input::placeholder{color:#9885c5}
+#page-ranking .training-add-button{width:68px;height:68px;min-width:68px;border-radius:18px;font-size:30px;padding:0;background:linear-gradient(#fff0a4 0%,#ffdf54 48%,#ffc928 100%);color:#2a0b68;border:1px solid #ffe99a;box-shadow:0 6px 0 #9e6900,inset 0 2px 2px #fff8}
+#page-ranking .training-people-list{margin-top:18px;min-height:108px;border:2px dashed #65469c;border-radius:24px;padding:18px;display:flex;align-content:flex-start;gap:9px;flex-wrap:wrap}
+#page-ranking .training-empty-people{width:100%;min-height:70px;display:grid;place-items:center;color:#d7c7f5;text-align:center}
+#page-ranking .training-person-chip{display:flex;align-items:center;gap:12px;padding:9px 12px;border:1px solid #7954b3;border-radius:14px;background:#351478;color:#fff}
+#page-ranking .training-person-chip button{border:0;background:transparent;color:#ffe269;font-size:22px}
+#page-ranking .training-details-label{text-align:center;color:#c6b4ec;padding:8px 0 0;border-top:1px solid #4b2b83}
+#page-ranking .training-register-form input:not([type=file]),#page-ranking .training-register-form textarea{background:#190747;border:1px solid #54328c;color:#fff;border-radius:15px;min-height:58px;padding:14px 16px;box-shadow:none}
+#page-ranking .training-register-form input::placeholder,#page-ranking .training-register-form textarea::placeholder{color:#9581c2}
+#page-ranking .training-register-form textarea{min-height:120px}
+#page-ranking .training-upload{min-height:230px;border:2px dashed #65469c;border-radius:20px;background:#210955;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:22px;cursor:pointer;color:#eee4ff!important}
+#page-ranking .training-upload-icon{font-size:42px;color:#d8c4ff}
+#page-ranking .training-upload strong{font-size:17px;font-weight:500}
+#page-ranking .training-upload small{font-size:14px;color:#b9a7e2}
+#page-ranking #trainingEvidencePreview{font-size:13px;color:#ffe269}
+#page-ranking .training-file-input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+#page-ranking .required-star{color:#ff6565}
+#page-ranking .training-submit{min-height:58px;width:100%;border-radius:16px;background:linear-gradient(#fff0a4,#ffda45 55%,#ffc52a);color:#280b67;border:1px solid #fff0a4;box-shadow:0 6px 0 #9e6900;font-weight:900}
+#page-ranking .training-submit:active,#page-ranking .training-add-button:active{transform:translateY(4px);box-shadow:0 2px 0 #9e6900}
+@media(max-width:600px){#page-ranking .training-register-card{padding:18px 14px}#page-ranking .training-add-button{width:58px;height:58px;min-width:58px}#page-ranking .training-upload{min-height:205px}}
+@media(prefers-reduced-motion:no-preference){#page-ranking .training-register-card{animation:trainingSobe .45s ease both}#page-ranking .training-upload{transition:background .2s,border-color .2s}#page-ranking .training-upload:active{background:#321078;border-color:#ffe269}}
+@keyframes trainingSobe{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+</style>
 </head>
 <body>
 <div id="publicHome" class="public-home hidden">
@@ -1970,7 +2006,27 @@ html,body{font-family:var(--eb-text)!important}
 </section>
 <section id="page-promocoes" class="page hidden"><div class="pagehead"><div><h1>Entregar patente</h1><p class="sub">A promoção só será aplicada após o envio da foto obrigatória.</p></div></div><div class="card"><form id="promotionForm" class="formgrid"><div class="field"><label>Nome do militar</label><input name="person" required placeholder="Nome no Roblox"></div><div class="field"><label>Usuário de quem promove</label><input name="author" required placeholder="Seu nome no Roblox"></div><div class="field"><label>Patente atual</label><select name="from" id="fromRank" required></select></div><div class="field"><label>Nova patente</label><select name="to" id="toRank" required></select></div><div class="field full"><label for="promotionEvidence">Foto EM CUNHA <span aria-hidden="true">*</span></label><input id="promotionEvidence" name="evidence" type="file" accept="image/jpeg,image/png,image/webp" required><small class="muted">Obrigatória para entregar a patente. Envie uma imagem JPG, PNG ou WEBP, de até 2 MB. A foto será anexada ao registro da promoção.</small><div id="promotionEvidencePreview" class="muted" aria-live="polite">Nenhuma foto selecionada.</div></div><div class="field full"><label>Motivo da promoção</label><textarea name="reason" required placeholder="Descreva o motivo..."></textarea></div><div class="field full"><button class="btn primary" type="submit">Entregar patente</button><p id="promotionStatus" class="muted" aria-live="polite"></p></div></form><div class="notice">O servidor exige e guarda a foto como comprovante. Sem ela, a promoção não será enviada ao Roblox.</div></div></section>
 <section id="page-logs" class="page hidden"><div class="pagehead"><div><h1>Histórico de operações</h1><p class="sub">Promoções, rebaixamentos e revogações aplicados no Roblox.</p></div><button class="btn" id="exportLogs">Exportar CSV</button></div><div class="card tablewrap"><table><thead><tr><th>Data</th><th>Operação</th><th>Militar</th><th>De</th><th>Para</th><th>Responsável</th><th>Motivo</th></tr></thead><tbody id="logsBody"></tbody></table><div id="logsEmpty" class="empty">Nenhuma operação registrada.</div></div></section>
-<section id="page-ranking" class="page hidden"><div class="pagehead"><div><h1>Ranking de treinamentos</h1><p class="sub">Acompanhe participações e resultados.</p></div></div><div class="card"><form id="trainingForm" class="formgrid"><div class="field"><label>Nome do militar</label><input name="person" required></div><div class="field"><label>Treinamento</label><input name="training" required placeholder="Ex.: Formação básica"></div><div class="field"><label>Pontuação</label><input name="score" type="number" min="0" max="100" required></div><div class="field"><label>Instrutor</label><input name="instructor" required></div><div class="field full"><button class="btn primary">Adicionar ao ranking</button></div></form></div><div class="card section tablewrap"><table><thead><tr><th>Posição</th><th>Militar</th><th>Treinamento</th><th>Pontos</th><th>Instrutor</th></tr></thead><tbody id="trainingBody"></tbody></table><div id="trainingEmpty" class="empty">Nenhum treinamento registrado.</div></div></section>
+<section id="page-ranking" class="page hidden">
+ <div class="pagehead"><div><h1>Registrar treinamento</h1><p class="sub">Registre o treinamento e anexe a cunha do STS como comprovante.</p></div></div>
+ <div class="card training-register-card">
+  <form id="trainingForm" class="formgrid training-register-form">
+   <div class="field full">
+    <div class="training-add-head"><label for="trainingPersonInput">Adicionar Militar</label><span id="trainingCount" class="training-count">0 / 15 (Mín: 2)</span></div>
+    <div class="training-add-row"><span class="training-add-icon" aria-hidden="true">♙+</span><input id="trainingPersonInput" autocomplete="off" placeholder="Digite um Nickname e adicione"><button id="addTrainingPerson" class="btn primary training-add-button" type="button" aria-label="Adicionar militar">＋</button></div>
+    <div id="trainingPeopleList" class="training-people-list"><div class="training-empty-people">♧ &nbsp; Nenhum militar adicionado.</div></div>
+   </div>
+   <div class="training-details-label">Detalhes do Relatório</div>
+   <div class="field full"><label for="trainingTypeInput">Tipo de Treinamento</label><input id="trainingTypeInput" name="training" required placeholder="Ex: Treino Básico, TAF, Instrução..."></div>
+   <div class="field full"><label for="trainingEvidence">Anexar Imagem (Cunha do STS) <span class="required-star">*</span></label>
+    <label class="training-upload" for="trainingEvidence"><span class="training-upload-icon">▧＋</span><strong>Clique ou arraste a imagem aqui</strong><small>PNG, JPG ou WEBP · Máx. 2MB</small><span id="trainingEvidencePreview">Nenhuma imagem selecionada.</span></label>
+    <input id="trainingEvidence" name="evidence" type="file" accept="image/jpeg,image/png,image/webp" required class="training-file-input">
+   </div>
+   <div class="field full"><label for="trainingNotes">Observações (Opcional)</label><textarea id="trainingNotes" name="notes" placeholder="Adicione informações complementares..."></textarea></div>
+   <div class="field full"><button class="btn primary training-submit" type="submit">Registrar treinamento</button><p id="trainingStatus" class="muted" aria-live="polite"></p></div>
+  </form>
+ </div>
+ <div class="card section"><h2>Treinamentos registrados</h2><div class="tablewrap"><table><thead><tr><th>Posição</th><th>Militar</th><th>Treinamento</th><th>Data</th></tr></thead><tbody id="trainingBody"></tbody></table><div id="trainingEmpty" class="empty">Nenhum treinamento registrado.</div></div></div>
+</section>
 
 <section id="page-negadas" class="page hidden"><div class="pagehead"><div><h1>Promoção negada</h1><p class="sub">Registre solicitações que não foram aprovadas.</p></div></div><div class="card"><form id="deniedForm" class="formgrid"><div class="field"><label>Nome do militar</label><input name="person" required></div><div class="field"><label>Patente solicitada</label><input name="rank" required></div><div class="field full"><label>Motivo da recusa</label><textarea name="reason" required></textarea></div><div class="field full"><button class="btn danger">Registrar recusa</button></div></form></div><div id="deniedList" class="card section empty">Nenhuma promoção negada registrada.</div></section>
 
@@ -2092,7 +2148,42 @@ document.getElementById('promotionForm').onsubmit=async e=>{
   }catch(error){status.textContent=error.message;alert(error.message)}
   finally{submit.disabled=false}
 }
-document.getElementById('trainingForm').onsubmit=async e=>{e.preventDefault();if(!csrfToken){alert('Entre com sua conta Roblox para continuar.');return}let f=new FormData(e.target);const r=await fetch('/api/records/training',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','x-csrf-token':csrfToken},body:JSON.stringify({person:f.get('person'),training:f.get('training'),score:Number(f.get('score')),instructor:f.get('instructor')})});const out=await r.json().catch(()=>({}));if(!r.ok){alert(out.error||'Não foi possível salvar.');return}e.target.reset();await loadServerRecords()};
+const trainingPeople=[];
+const trainingPersonInput=document.getElementById('trainingPersonInput');
+const trainingPeopleList=document.getElementById('trainingPeopleList');
+function renderTrainingPeople(){
+ document.getElementById('trainingCount').textContent=trainingPeople.length+' / 15 (Mín: 2)';
+ trainingPeopleList.innerHTML=trainingPeople.length?trainingPeople.map((name,index)=>'<div class="training-person-chip"><span>♙ '+esc(name)+'</span><button type="button" data-remove-training-person="'+index+'" aria-label="Remover '+esc(name)+'">×</button></div>').join(''):'<div class="training-empty-people">♧ &nbsp; Nenhum militar adicionado.</div>';
+}
+function addTrainingPerson(){
+ const name=trainingPersonInput.value.trim();
+ if(!name)return;
+ if(trainingPeople.length>=15){alert('O limite é de 15 militares por treinamento.');return}
+ if(trainingPeople.some(x=>x.toLowerCase()===name.toLowerCase())){alert('Esse militar já foi adicionado.');return}
+ trainingPeople.push(name);trainingPersonInput.value='';renderTrainingPeople();trainingPersonInput.focus();
+}
+document.getElementById('addTrainingPerson').addEventListener('click',addTrainingPerson);
+trainingPersonInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addTrainingPerson()}});
+trainingPeopleList.addEventListener('click',e=>{const b=e.target.closest('[data-remove-training-person]');if(!b)return;trainingPeople.splice(Number(b.dataset.removeTrainingPerson),1);renderTrainingPeople()});
+const trainingEvidenceInput=document.getElementById('trainingEvidence');
+trainingEvidenceInput.addEventListener('change',()=>{const file=trainingEvidenceInput.files?.[0];document.getElementById('trainingEvidencePreview').textContent=file?('Imagem selecionada: '+file.name):'Nenhuma imagem selecionada.'});
+document.getElementById('trainingForm').onsubmit=async e=>{
+ e.preventDefault();if(!csrfToken){alert('Entre com sua conta Roblox para continuar.');return}
+ const form=e.target,status=document.getElementById('trainingStatus'),submit=form.querySelector('button[type="submit"]');
+ if(trainingPeople.length<2){status.textContent='Adicione pelo menos 2 militares.';alert('Adicione pelo menos 2 militares.');return}
+ try{
+  submit.disabled=true;status.textContent='Preparando a imagem...';
+  const evidenceData=await preparePromotionEvidence(trainingEvidenceInput.files?.[0]);
+  const payload={people:trainingPeople,training:document.getElementById('trainingTypeInput').value.trim(),notes:document.getElementById('trainingNotes').value.trim(),evidenceData};
+  status.textContent='Registrando treinamento e comprovante...';
+  const response=await fetch('/api/records/training',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','x-csrf-token':csrfToken},body:JSON.stringify(payload)});
+  const out=await response.json().catch(()=>({}));if(!response.ok)throw new Error(out.error||'Não foi possível salvar o treinamento.');
+  form.reset();trainingPeople.length=0;renderTrainingPeople();document.getElementById('trainingEvidencePreview').textContent='Nenhuma imagem selecionada.';
+  status.textContent='Treinamento registrado com comprovante para '+payload.people.length+' militares.';
+  await loadServerRecords();
+ }catch(error){status.textContent=error.message;alert(error.message)}
+ finally{submit.disabled=false}
+};
 
 document.getElementById('deniedForm').onsubmit=async e=>{e.preventDefault();if(!csrfToken){alert('Entre com sua conta Roblox para continuar.');return}let f=new FormData(e.target);const r=await fetch('/api/records/denied',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','x-csrf-token':csrfToken},body:JSON.stringify({person:f.get('person'),rank:f.get('rank'),reason:f.get('reason')})});const out=await r.json().catch(()=>({}));if(!r.ok){alert(out.error||'Não foi possível salvar.');return}e.target.reset();await loadServerRecords()};
 document.getElementById('exportLogs').onclick=()=>{let rows=[['Data','Operação','Militar','De','Para','Responsável','Motivo'],...serverLogs.map(x=>[x.date,x.operation,x.person,x.from,x.to,x.author,x.reason])];let csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='logs-promocoes-eb.csv';a.click();URL.revokeObjectURL(a.href)};
