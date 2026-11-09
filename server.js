@@ -190,8 +190,36 @@ function roleRank(label) {
   const value = roleRanks[label];
   return Number.isInteger(value) ? value : null;
 }
+// Nomes alternativos retornados pelo Roblox são convertidos para a nomenclatura
+// oficial do EB Manager antes da consulta da regra. Isso não cria prazos novos.
+function normalizeCdpRoleName(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLocaleLowerCase("pt-BR")
+    .replace(/•/g, " ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, " ");
+}
+const CDP_ROLE_ALIASES = new Map([
+  ["t sgt terceiro sargento", "[3• SGT] Terceiro Sargento"],
+  ["terceiro sargento", "[3• SGT] Terceiro Sargento"],
+  ["s sgt segundo sargento", "[2• SGT] Segundo Sargento"],
+  ["segundo sargento", "[2• SGT] Segundo Sargento"],
+  ["p sgt primeiro sargento", "[1• SGT] Primeiro Sargento"],
+  ["primeiro sargento", "[1• SGT] Primeiro Sargento"],
+  ["cdt cadete", "[CT] Cadete"],
+  ["cadete", "[CT] Cadete"],
+  ["asp aspirante a oficial", "[ASP] Aspirante a Oficial"],
+  ["asp aspirante oficial", "[ASP] Aspirante a Oficial"],
+  ["aspirante a oficial", "[ASP] Aspirante a Oficial"]
+]);
 function getCdpRule(roleName) {
-  const key = Object.keys(cdpRules).find(name => name.trim().toLocaleLowerCase("pt-BR") === String(roleName || "").trim().toLocaleLowerCase("pt-BR"));
+  const normalized = normalizeCdpRoleName(roleName);
+  const canonicalName = CDP_ROLE_ALIASES.get(normalized);
+  const targetName = normalizeCdpRoleName(canonicalName || roleName);
+  const key = Object.keys(cdpRules).find(name => normalizeCdpRoleName(name) === targetName);
   if (!key) return null;
   const raw = cdpRules[key];
   if (Number.isFinite(Number(raw)) && typeof raw !== "object") {
