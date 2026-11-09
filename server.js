@@ -673,7 +673,20 @@ app.get("/api/profile", requireLogin, async (req, res) => {
           trainings: trainings.rows[0]?.total || 0,
           records: history.rows.length
         },
-        history: history.rows
+        history: history.rows,
+        cdp: await (async () => {
+          const rankSince = await ensureCdpMember(user.robloxId, user.username, user.groupRoleName, user.groupRoleRank);
+          const rule = getCdpRule(user.groupRoleName);
+          const elapsedHours = Math.max(0, (Date.now() - new Date(rankSince).getTime()) / 3600000);
+          return {
+            rankSince,
+            elapsedHours: Math.floor(elapsedHours * 10) / 10,
+            requiredHours: rule ? rule.hours : null,
+            ruleConfigured: Boolean(rule),
+            creatorOnly: Boolean(rule?.creatorOnly),
+            eligible: Boolean(rule && elapsedHours >= rule.hours)
+          };
+        })()
       }
     });
   } catch (err) {
