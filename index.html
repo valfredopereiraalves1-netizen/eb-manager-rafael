@@ -1824,6 +1824,38 @@ html,body{font-family:var(--eb-text)!important}
  #dashboardApp .menu-panel{bottom:calc(88px + env(safe-area-inset-bottom))!important}
 }
 </style>
+
+<style id="eb-bottom-nav-extra-compact">
+@media(max-width:600px){
+ #mobileBottomNav.mobile-bottom-nav{
+  height:66px!important;min-height:66px!important;
+  padding:14px 6px calc(5px + env(safe-area-inset-bottom))!important;
+  box-sizing:border-box!important
+ }
+ #mobileBottomNav button{
+  height:46px!important;min-height:46px!important;
+  gap:3px!important;font-size:10px!important;line-height:1!important;
+  padding:0 1px!important
+ }
+ #mobileBottomNav button .bottom-ico{
+  width:23px!important;height:23px!important
+ }
+ #mobileBottomNav button.active:not(.store-nav-item)::before{
+  top:-9px!important;width:34px!important;height:3px!important
+ }
+ #mobileBottomNav .store-nav-medallion{
+  width:52px!important;height:52px!important;top:-38px!important;
+  border-width:4px!important;outline-width:2px!important;
+  box-shadow:0 3px 0 #9e6900,0 5px 12px rgba(10,2,36,.35),inset 0 2px 2px rgba(255,255,255,.7)!important
+ }
+ #mobileBottomNav .store-nav-medallion .bottom-ico{
+  width:25px!important;height:25px!important
+ }
+ #mobileBottomNav .store-nav-item{gap:3px!important}
+ #dashboardApp .content{padding-bottom:calc(78px + env(safe-area-inset-bottom))!important}
+ #dashboardApp .menu-panel{bottom:calc(66px + env(safe-area-inset-bottom))!important}
+}
+</style>
 </head>
 <body>
 <div id="publicHome" class="public-home hidden">
