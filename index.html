@@ -402,7 +402,7 @@ body{background:var(--eb-bg);color:var(--eb-text)}
 
 </style></head>
 <body>
-<div id="publicHome" class="public-home">
+<div id="publicHome" class="public-home hidden">
   <header class="public-nav">
     <a class="public-brand" href="/">
       <span class="public-brand-mark">EB</span>
@@ -665,9 +665,10 @@ async function loadServerRecords(){
 async function checkRobloxSession(){
   const login=document.getElementById('robloxLogin');
   const userBox=document.getElementById('robloxUser');
+  const publicHome=document.getElementById('publicHome');
   try{
     const response=await fetch('/api/me',{credentials:'same-origin'});
-    if(!response.ok) return;
+    if(!response.ok){publicHome.classList.remove('hidden');return;}
     const data=await response.json();
     document.getElementById('publicHome').classList.add('hidden');
     document.getElementById('dashboardApp').classList.remove('hidden');
@@ -694,7 +695,10 @@ async function checkRobloxSession(){
     await loadServerPromotions();
     await loadServerLogs();
     await loadServerRecords();
-  }catch(error){console.warn('Não foi possível consultar a sessão Roblox.');}
+  }catch(error){
+    console.warn('Não foi possível consultar a sessão Roblox.');
+    publicHome.classList.remove('hidden');
+  }
 }
 document.getElementById('robloxLogout').onclick=async()=>{
   if(!csrfToken)return;
