@@ -1745,6 +1745,58 @@ html,body{font-family:var(--eb-text)!important}
 @media(prefers-reduced-motion:no-preference){#page-ranking .training-register-card{animation:trainingSobe .45s ease both}#page-ranking .training-upload{transition:background .2s,border-color .2s}#page-ranking .training-upload:active{background:#321078;border-color:#ffe269}}
 @keyframes trainingSobe{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 </style>
+
+<style id="eb-bottom-nav-reference-layout">
+@media(max-width:600px){
+ #mobileBottomNav.mobile-bottom-nav{
+  height:112px!important;box-sizing:border-box!important;
+  padding:27px 10px calc(12px + env(safe-area-inset-bottom))!important;
+  display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  align-items:end!important;gap:0!important;overflow:visible!important;
+  background:linear-gradient(180deg,rgba(63,18,153,.98) 0%,#2a0b78 48%,#1d0752 100%)!important;
+  border-top:2px solid rgba(255,226,105,.58)!important;
+  box-shadow:0 -8px 28px rgba(21,4,64,.48),inset 0 1px 0 rgba(255,255,255,.13)!important;
+  backdrop-filter:blur(18px)!important
+ }
+ #mobileBottomNav button{
+  position:relative!important;min-width:0!important;height:72px!important;min-height:72px!important;
+  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:flex-end!important;
+  gap:7px!important;padding:3px 1px 0!important;margin:0!important;border:0!important;border-radius:0!important;
+  background:transparent!important;color:#e6d9ff!important;
+  font:600 15px/1.1 var(--eb-text),Rubik,system-ui,sans-serif!important;
+  box-shadow:none!important
+ }
+ #mobileBottomNav button .bottom-ico{
+  width:37px!important;height:37px!important;display:block!important;flex:none!important;
+  fill:none!important;stroke:currentColor!important;stroke-width:1.9!important;
+  stroke-linecap:round!important;stroke-linejoin:round!important;font-size:initial!important
+ }
+ #mobileBottomNav button.active{
+  background:transparent!important;color:#ffe269!important;box-shadow:none!important
+ }
+ #mobileBottomNav button.active:not(.store-nav-item)::before{
+  content:"";position:absolute;top:-15px;left:50%;transform:translateX(-50%);
+  width:54px;height:5px;border-radius:0 0 8px 8px;background:#ffe269;
+  box-shadow:0 2px 8px rgba(255,226,105,.45)
+ }
+ #mobileBottomNav .store-nav-item{justify-content:flex-end!important;gap:7px!important;color:#ffe269!important}
+ #mobileBottomNav .store-nav-medallion{
+  position:absolute;left:50%;top:-66px;transform:translateX(-50%);
+  width:88px;height:88px;border-radius:50%;display:grid;place-items:center;
+  background:linear-gradient(145deg,#fff3bd 0%,#ffe269 48%,#f3b900 100%);
+  border:6px solid #3a176f;outline:3px solid rgba(231,162,0,.8);
+  box-shadow:0 5px 0 #9e6900,0 10px 22px rgba(10,2,36,.45),inset 0 3px 3px rgba(255,255,255,.8);
+  z-index:2
+ }
+ #mobileBottomNav .store-nav-medallion .bottom-ico{
+  width:43px!important;height:43px!important;color:#4811a5!important;stroke-width:2.2!important
+ }
+ #mobileBottomNav .store-nav-item>span:last-child{position:relative;z-index:3}
+ #dashboardApp .content{padding-bottom:calc(125px + env(safe-area-inset-bottom))!important}
+ #dashboardApp .menu-panel{bottom:calc(112px + env(safe-area-inset-bottom))!important}
+}
+@media(min-width:601px){#mobileBottomNav .store-nav-medallion{display:none}}
+</style>
 </head>
 <body>
 <div id="publicHome" class="public-home hidden">
@@ -1839,11 +1891,11 @@ html,body{font-family:var(--eb-text)!important}
 <div id="menuPanel" class="menu-panel hidden" aria-label="Atalhos adicionais"></div>
 <div class="sidefoot">Sistema de gestão militar<br><b>EB Manager · 2026</b></div></aside>
 <nav id="mobileBottomNav" class="mobile-bottom-nav" aria-label="Navegação inferior">
- <button type="button" class="active" data-page="inicio"><span class="bottom-ico" aria-hidden="true">⌂</span><span>Início</span></button>
- <button type="button" data-page="perfil"><span class="bottom-ico" aria-hidden="true">◉</span><span>Perfil</span></button>
- <button type="button" data-page="loja"><span class="bottom-ico" aria-hidden="true">◇</span><span>LOJA</span></button>
- <button type="button" data-page="hierarquia"><span class="bottom-ico" aria-hidden="true">♜</span><span>Patente</span></button>
- <button type="button" data-page="menu"><span class="bottom-ico" aria-hidden="true">☰</span><span>Menu</span></button>
+ <button type="button" class="active" data-page="inicio"><svg class="bottom-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg><span>Início</span></button>
+ <button type="button" data-page="perfil"><svg class="bottom-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg><span>Perfil</span></button>
+ <button type="button" class="store-nav-item" data-page="loja"><span class="store-nav-medallion"><svg class="bottom-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M17 6H9a3 3 0 0 0 0 6h6a3 3 0 0 1 0 6H6"/><circle cx="12" cy="12" r="10"/></svg></span><span>LOJA</span></button>
+ <button type="button" data-page="hierarquia"><svg class="bottom-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="5"/><path d="m8 12-2 10 6-4 6 4-2-10"/></svg><span>Patente</span></button>
+ <button type="button" data-page="menu"><svg class="bottom-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg><span>Menu</span></button>
 </nav>
 <main class="main"><header class="top"><div class="crumb">Painel / <b id="crumb">Visão geral</b></div><div class="user"><a class="btn primary" id="robloxLogin" href="/auth/roblox">Entrar com Roblox</a><div id="robloxUser" class="hidden"><div class="avatar" id="robloxAvatar">RB</div><span id="robloxUserLabel">Conectado</span><button class="btn" id="robloxLogout" type="button">Sair</button></div></div></header><div class="content">
 <section id="page-inicio" class="page">
