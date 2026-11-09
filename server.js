@@ -45,6 +45,16 @@ const CDP_DEFAULT_RULES = {
   "[1• TEN] Primeiro Tenente": 35,
   "[EM] Elite Militar": 125,
   "[ES] Elite Secreta": 140,
+  "[MR] Marechal": 100,
+  "[PRES] Presidente": 94,
+  "[V-PRES] Vice Presidente": 90,
+  "[CMT] Comandante": 84,
+  "[GEN-EX] General do Exército": 80,
+  "[GEN-DIV] General de Divisão": 74,
+  "[GEN-BDA] General de Brigada": 70,
+  "[CEL] Coronel": 60,
+  "[TEN-CEL] Tenente-Coronel": 52,
+  "[MAJ] Major": 45,
   "[S-CR] Sub Criador": { hours: 0, creatorOnly: true },
   "[ER] Elite Real": { hours: 0, creatorOnly: true }
 };
@@ -213,7 +223,22 @@ const CDP_ROLE_ALIASES = new Map([
   ["cadete", "[CT] Cadete"],
   ["asp aspirante a oficial", "[ASP] Aspirante a Oficial"],
   ["asp aspirante oficial", "[ASP] Aspirante a Oficial"],
-  ["aspirante a oficial", "[ASP] Aspirante a Oficial"]
+  ["aspirante a oficial", "[ASP] Aspirante a Oficial"],
+  ["marechal", "[MR] Marechal"],
+  ["presidente", "[PRES] Presidente"],
+  ["vice presidente", "[V-PRES] Vice Presidente"],
+  ["v pres vice presidente", "[V-PRES] Vice Presidente"],
+  ["comandante", "[CMT] Comandante"],
+  ["gen ex general do exercito", "[GEN-EX] General do Exército"],
+  ["general do exercito", "[GEN-EX] General do Exército"],
+  ["gen div general de divisao", "[GEN-DIV] General de Divisão"],
+  ["general de divisao", "[GEN-DIV] General de Divisão"],
+  ["gen bda general de brigada", "[GEN-BDA] General de Brigada"],
+  ["general de brigada", "[GEN-BDA] General de Brigada"],
+  ["coronel", "[CEL] Coronel"],
+  ["ten cel tenente coronel", "[TEN-CEL] Tenente-Coronel"],
+  ["tenente coronel", "[TEN-CEL] Tenente-Coronel"],
+  ["major", "[MAJ] Major"]
 ]);
 function getCdpRule(roleName) {
   const normalized = normalizeCdpRoleName(roleName);
