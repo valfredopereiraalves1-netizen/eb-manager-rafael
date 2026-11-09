@@ -96,12 +96,16 @@ async function initializeDatabase() {
       target_user_id TEXT NOT NULL,
       target_username TEXT NOT NULL,
       requested_role TEXT,
+      from_role TEXT,
+      to_role TEXT,
       reason TEXT NOT NULL,
       created_by TEXT NOT NULL,
       created_by_role TEXT NOT NULL,
       status TEXT NOT NULL DEFAULT 'pending',
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
+    ALTER TABLE admin_requests ADD COLUMN IF NOT EXISTS from_role TEXT;
+    ALTER TABLE admin_requests ADD COLUMN IF NOT EXISTS to_role TEXT;
     CREATE TABLE IF NOT EXISTS whitelist_entries (
       id BIGSERIAL PRIMARY KEY,
       roblox_user_id TEXT NOT NULL UNIQUE,
@@ -381,6 +385,31 @@ app.get("/api/group/members", requireLogin, async (_req, res) => {
   }
 });
 
+app.get("/api/logs", requireLogin, async (_req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT id, created_at, 'promotion'::TEXT AS action,
+        target_username, from_role, to_role, author_username AS author,
+        author_role AS author_role, reason, 'applied'::TEXT AS status
+      FROM promotions
+      UNION ALL
+      SELECT id, created_at, action::TEXT AS action,
+        target_username, from_role,
+        COALESCE(to_role, requested_role) AS to_role,
+        created_by AS author, created_by_role AS author_role,
+        reason, status
+      FROM admin_requests
+      WHERE status = 'applied'
+      ORDER BY created_at DESC
+      LIMIT 500
+    `);
+    res.json({ logs: result.rows });
+  } catch (err) {
+    console.error("Falha ao consultar histórico unificado:", err.message);
+    res.status(500).json({ error: "Não foi possível consultar o histórico." });
+  }
+});
+
 app.get("/api/promotions", requireLogin, async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM promotions ORDER BY id DESC LIMIT 300");
@@ -539,6 +568,7 @@ app.post("/api/admin/requests", requireLogin, requireCsrf, async (req, res) => {
     if (!process.env.ROBLOX_OPEN_CLOUD_API_KEY) return res.status(503).json({ error: "Configure ROBLOX_OPEN_CLOUD_API_KEY no Render antes de aplicar alterações." });
     const roleIds = JSON.parse(process.env.ROLE_IDS_JSON || "{}");
     let destinationRoleId = null;
+    let destinationLabel = requestedRole;
     if (action === "set_role") {
       destinationRoleId = roleIds[requestedRole];
       if (!destinationRoleId) return res.status(503).json({ error: "Falta mapear o ID real da patente em ROLE_IDS_JSON." });
@@ -547,7 +577,7 @@ app.post("/api/admin/requests", requireLogin, requireCsrf, async (req, res) => {
       const configured = Object.entries(roleRanks).filter(([, rank]) => Number.isInteger(rank)).sort((a,b) => b[1]-a[1]);
       const lower = configured.find(([, rank]) => rank < currentRank);
       const recruit = configured[configured.length - 1];
-      const destinationLabel = action === "revoke" ? recruit?.[0] : lower?.[0];
+      destinationLabel = action === "revoke" ? recruit?.[0] : lower?.[0];
       if (!destinationLabel) return res.status(400).json({ error: "Não foi possível determinar a patente de destino. Revise ROLE_RANKS_JSON." });
       destinationRoleId = roleIds[destinationLabel];
       if (!destinationRoleId) return res.status(503).json({ error: "Falta mapear a patente de destino em ROLE_IDS_JSON." });
@@ -556,9 +586,9 @@ app.post("/api/admin/requests", requireLogin, requireCsrf, async (req, res) => {
     if (currentRole.rank >= req.session.user.groupRoleRank && access !== "creator") return res.status(403).json({ error: "Você não pode alterar a patente de alguém de nível igual ou superior ao seu." });
     await assignCloudRole(target.id, String(destinationRoleId));
     await pool.query(
-      `INSERT INTO admin_requests (action, target_user_id, target_username, requested_role, reason, created_by, created_by_role, status)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, 'applied')`,
-      [action, target.id, target.name, requestedRole || (action === "revoke" ? "Revogado para patente inicial" : "Rebaixado uma patente"), reason, req.session.user.robloxId, access]
+      `INSERT INTO admin_requests (action, target_user_id, target_username, requested_role, from_role, to_role, reason, created_by, created_by_role, status)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 'applied')`,
+      [action, target.id, target.name, destinationLabel, currentRole.name, destinationLabel, reason, req.session.user.username, access]
     );
     res.status(201).json({ ok: true, status: "applied" });
   } catch (err) {
