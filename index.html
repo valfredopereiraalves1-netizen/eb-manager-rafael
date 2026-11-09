@@ -1309,6 +1309,60 @@ body{font-family:var(--ebx-text)}
 #dashboardApp #page-constituicao .card h2{margin-top:12px}
 @media(max-width:600px){#dashboardApp .nav{flex-wrap:nowrap}#dashboardApp .nav button{flex:0 0 auto}}
 </style>
+
+<style id="eb-manager-navigation-organization">
+/* Navegação reorganizada por áreas, sem alterar IDs, páginas ou eventos */
+#dashboardApp .side{
+ width:276px!important;min-width:276px!important;max-height:100vh;position:sticky;top:0;
+ display:flex;flex-direction:column;overflow:hidden;padding:20px 14px!important
+}
+#dashboardApp .side .brand{flex:0 0 auto;padding:4px 7px 20px!important}
+#dashboardApp .side .navlabel{display:none!important}
+#dashboardApp .side .nav{
+ display:flex;flex:1 1 auto;flex-direction:column;gap:12px!important;
+ min-height:0;overflow-y:auto;overflow-x:hidden;padding:0 2px 12px;
+ scrollbar-width:thin;scrollbar-color:rgba(228,216,255,.35) transparent
+}
+#dashboardApp .nav-group{display:flex;flex-direction:column;gap:4px}
+#dashboardApp .nav-group-title{
+ padding:9px 10px 5px;color:var(--ebx-gold-200);font-size:10px;
+ font-weight:800;letter-spacing:.13em;line-height:1.3
+}
+#dashboardApp .nav button{
+ width:100%!important;min-height:40px;flex:0 0 auto!important;
+ display:flex;align-items:center;gap:11px;padding:9px 11px!important;
+ margin:0!important;text-align:left;font-size:13px;font-weight:650;
+ border-radius:9px!important;white-space:normal
+}
+#dashboardApp .nav .ico{width:20px;min-width:20px;height:20px;font-size:16px}
+#dashboardApp .sidefoot{position:static!important;flex:0 0 auto;margin-top:8px}
+#dashboardApp .main{min-width:0;flex:1}
+#dashboardApp .content{max-width:1320px;padding:28px 32px}
+@media(max-width:900px){
+ #dashboardApp .shell{display:flex;flex-direction:column}
+ #dashboardApp .side{width:100%!important;min-width:0!important;max-height:none;position:relative;top:auto;overflow:visible;padding:12px 14px!important}
+ #dashboardApp .side .brand{padding:2px 6px 12px!important}
+ #dashboardApp .side .nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px!important;overflow:visible;padding:0}
+ #dashboardApp .nav-group{min-width:0;padding:5px;border:1px solid rgba(228,216,255,.14);border-radius:12px;background:rgba(255,255,255,.035)}
+ #dashboardApp .nav-group-title{padding:6px 7px 7px}
+ #dashboardApp .nav button{font-size:12px;min-height:38px;padding:8px!important;gap:7px}
+ #dashboardApp .sidefoot{display:none}
+ #dashboardApp .top{position:sticky;top:0;z-index:20}
+}
+@media(max-width:520px){
+ #dashboardApp .side{padding:10px!important}
+ #dashboardApp .side .nav{grid-template-columns:1fr}
+ #dashboardApp .nav-group{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;padding:7px}
+ #dashboardApp .nav-group-title{grid-column:1/-1}
+ #dashboardApp .nav button{font-size:11px;min-height:36px;padding:7px!important}
+ #dashboardApp .nav .ico{width:17px;min-width:17px}
+ #dashboardApp .top{height:auto;min-height:60px;gap:8px;padding:9px 12px!important}
+ #dashboardApp .crumb{font-size:11px}
+ #dashboardApp .user{gap:6px;font-size:11px}
+ #dashboardApp .user .btn{padding:7px 9px;font-size:11px}
+ #dashboardApp .content{padding:16px 11px!important}
+}
+</style>
 </head>
 <body>
 <div id="publicHome" class="public-home hidden">
@@ -1373,16 +1427,31 @@ body{font-family:var(--ebx-text)}
 <aside class="side"><div class="brand"><div class="crest">EB</div><div><b>EXÉRCITO BRASILEIRO</b><small>Sistema de Gestão Militar</small></div></div>
 <div class="navlabel">PAINEL PRINCIPAL</div>
 <nav class="nav" id="nav" aria-label="Navegação principal">
-<button class="active" data-page="inicio"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></span>Início</button>
-<button data-page="perfil"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span>Perfil</button>
-<button data-page="loja"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 9h18l-1.5 12h-15zM5 9l2-6h10l2 6M9 13v4M15 13v4"/></svg></span>LOJA</button>
-<button data-page="hierarquia"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="9" y="2.5" width="6" height="5" rx="1"/><rect x="2.5" y="17" width="6" height="5" rx="1"/><rect x="15.5" y="17" width="6" height="5" rx="1"/><path d="M12 7.5v5M5.5 17v-4.5h13V17"/></svg></span>Patente</button>
-<button data-page="ranking-mensal"><span class="ico">🏆</span>Ranking mensal</button>
-<button data-page="notificacoes"><span class="ico">🔔</span>Notificações</button>
-<button data-page="estatisticas"><span class="ico">▥</span>Estatísticas</button>
-<button data-page="constituicao"><span class="ico">📜</span>Constituição</button>
-<button data-page="divisoes"><span class="ico">▦</span>Divisões</button>
-<button type="button" id="menuToggle" data-page="menu"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>Menu</button>
+ <div class="nav-group"><div class="nav-group-title">VISÃO GERAL</div>
+  <button class="active" data-page="inicio"><span class="ico" aria-hidden="true">⌂</span>Início</button>
+  <button data-page="perfil"><span class="ico" aria-hidden="true">◉</span>Meu perfil</button>
+ </div>
+ <div class="nav-group"><div class="nav-group-title">GESTÃO MILITAR</div>
+  <button id="promotionNav" data-page="promocoes"><span class="ico" aria-hidden="true">↗</span>Promoções</button>
+  <button data-page="membros"><span class="ico" aria-hidden="true">♙</span>Membros</button>
+  <button data-page="ranking"><span class="ico" aria-hidden="true">▤</span>Treinamentos</button>
+  <button data-page="cdp"><span class="ico" aria-hidden="true">◷</span>Controle de patente (CDP)</button>
+  <button data-page="divisoes"><span class="ico" aria-hidden="true">▦</span>Divisões</button>
+  <button data-page="formularios"><span class="ico" aria-hidden="true">☷</span>Formulários</button>
+ </div>
+ <div class="nav-group"><div class="nav-group-title">CONSULTA E RELATÓRIOS</div>
+  <button data-page="hierarquia"><span class="ico" aria-hidden="true">⌘</span>Hierarquia</button>
+  <button data-page="ranking-mensal"><span class="ico" aria-hidden="true">🏆</span>Ranking mensal</button>
+  <button data-page="estatisticas"><span class="ico" aria-hidden="true">▥</span>Estatísticas gerais</button>
+  <button data-page="notificacoes"><span class="ico" aria-hidden="true">♧</span>Notificações</button>
+  <button data-page="logs"><span class="ico" aria-hidden="true">≡</span>Histórico de ações</button>
+  <button data-page="negadas"><span class="ico" aria-hidden="true">⊘</span>Promoções negadas</button>
+  <button data-page="constituicao"><span class="ico" aria-hidden="true">▣</span>Constituição</button>
+ </div>
+ <div class="nav-group"><div class="nav-group-title">OUTROS</div>
+  <button data-page="loja"><span class="ico" aria-hidden="true">◇</span>Loja</button>
+  <button id="menuToggle" data-page="menu"><span class="ico" aria-hidden="true">☰</span>Menu e atalhos</button>
+ </div>
 </nav>
 <div id="menuPanel" class="menu-panel hidden" aria-label="Atalhos adicionais"></div>
 <div class="sidefoot">Sistema de gestão militar<br><b>EB Manager · 2026</b></div></aside>
