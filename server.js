@@ -405,11 +405,19 @@ app.get("/api/profile", requireLogin, async (req, res) => {
           FROM promotions WHERE target_user_id = $1
         UNION ALL
         SELECT created_at,
-          CASE action WHEN 'demote' THEN 'Rebaixamento' WHEN 'revoke' THEN 'Revogação' ELSE 'Alteração de patente' END,
+          CASE action WHEN 'demote' THEN 'Rebaixamento' WHEN 'revoke' THEN 'Revogação' ELSE 'Alteração de patente' END AS title,
           from_role, to_role, reason
           FROM admin_requests WHERE target_user_id = $1 AND status = 'applied'
+        UNION ALL
+        SELECT created_at, ('Treinamento: ' || COALESCE(data->>'training', 'Concluído')) AS title,
+          NULL::text AS from_role, NULL::text AS to_role,
+          CONCAT_WS(' · ',
+            CASE WHEN data->>'score' IS NOT NULL THEN ('Pontuação: ' || (data->>'score')) END,
+            CASE WHEN data->>'instructor' IS NOT NULL THEN ('Instrutor: ' || (data->>'instructor')) END) AS reason
+          FROM panel_records
+          WHERE record_type = 'training' AND lower(data->>'person') = lower($2)
         ORDER BY created_at DESC LIMIT 30
-      `, [user.robloxId])
+      `, [user.robloxId, user.username])
     ]);
     let joinedAt = null;
     try {
