@@ -1190,6 +1190,49 @@ body{font-family:var(--ebx-text)}
  #dashboardApp *,#dashboardApp *:before,#dashboardApp *:after,#publicHome *,#publicHome *:before,#publicHome *:after{animation:none!important;transition:none!important}
 }
 </style>
+<style id="ebcaxias-button-finish">
+/* ACABAMENTO DOS CONTROLES — somente aparência; mantém classes, IDs e eventos */
+#dashboardApp button:not(.nav button){
+ font-family:var(--ebx-text)!important;font-weight:700;
+ border-radius:11px;transition:transform .18s ease,filter .18s ease,box-shadow .18s ease,background .18s ease,border-color .18s ease;
+}
+#dashboardApp #menuToggle{
+ background:linear-gradient(145deg,#5420bd,#2a0b78)!important;
+ color:#fff!important;border:1px solid #9352f7!important;
+ box-shadow:0 4px 0 #150440,0 7px 14px rgba(21,4,64,.18)!important;
+}
+#dashboardApp .menu-shortcut{
+ border-radius:13px!important;box-shadow:0 4px 12px rgba(42,11,120,.07)!important;
+}
+#dashboardApp .menu-shortcut:hover{
+ transform:translateY(-2px);box-shadow:0 8px 18px rgba(42,11,120,.13)!important;
+}
+#dashboardApp .menu-upgrade{
+ border:1px solid var(--ebx-gold-700)!important;border-radius:11px!important;
+ box-shadow:0 5px 0 var(--ebx-gold-700),0 9px 18px rgba(21,4,64,.16),inset 0 2px 0 rgba(255,255,255,.65)!important;
+ font-family:var(--ebx-text)!important;font-weight:800!important;
+}
+#dashboardApp .profile-tab{
+ background:#fff!important;color:var(--ebx-purple-800)!important;
+ border:1px solid #cdb9ff!important;border-radius:10px 10px 0 0!important;
+ font-family:var(--ebx-text)!important;font-weight:700!important;
+ transition:background .18s ease,color .18s ease,border-color .18s ease!important;
+}
+#dashboardApp .profile-tab:hover{background:var(--ebx-lilac-100)!important}
+#dashboardApp .profile-tab.active{
+ background:linear-gradient(180deg,#ffec94,var(--ebx-gold-200))!important;
+ color:var(--ebx-purple-900)!important;border-color:var(--ebx-gold-500)!important;
+ box-shadow:inset 0 2px 0 rgba(255,255,255,.7)!important;
+}
+#dashboardApp button:focus-visible{
+ outline:3px solid rgba(94,31,213,.35)!important;outline-offset:3px!important
+}
+#dashboardApp button:disabled{opacity:.55;cursor:not-allowed;filter:saturate(.55)}
+#dashboardApp button:not(:disabled):active{transform:translateY(1px) scale(.985)}
+@media(max-width:600px){
+ #dashboardApp .profile-tab{border-radius:9px!important}
+}
+</style>
 </head>
 <body>
 <div id="publicHome" class="public-home hidden">
