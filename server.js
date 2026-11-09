@@ -134,6 +134,12 @@ async function initializeDatabase() {
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       created_by TEXT NOT NULL
     );
+    CREATE TABLE IF NOT EXISTS training_evidence (
+      record_id BIGINT PRIMARY KEY REFERENCES panel_records(id) ON DELETE CASCADE,
+      mime_type TEXT NOT NULL CHECK (mime_type IN ('image/jpeg','image/png','image/webp')),
+      image_data BYTEA NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
     CREATE INDEX IF NOT EXISTS panel_records_type_created_idx
       ON panel_records(record_type, created_at DESC);
     CREATE TABLE IF NOT EXISTS admin_requests (
@@ -841,23 +847,38 @@ app.post("/api/records/:type", requireLogin, requireCsrf, async (req, res) => {
   if (!recordTypes.has(type)) return res.status(404).json({ error: "Tipo de registro inválido." });
   if (req.session.user.groupRoleRank < MIN_RECORD_RANK) return res.status(403).json({ error: "Permissão negada: seu cargo no grupo não pode criar registros administrativos." });
   const data = req.body || {};
-  const required = type === "training" ? ["person", "training", "score", "instructor"]
+  const required = type === "training" ? ["people", "training", "evidenceData"]
     : type === "cpd" ? ["person", "type", "description"] : ["person", "rank", "reason"];
   if (!required.every(key => data[key] !== undefined && String(data[key]).trim() !== "")) {
     return res.status(400).json({ error: "Preencha todos os campos obrigatórios." });
   }
   if (JSON.stringify(data).length > 5000) return res.status(400).json({ error: "Registro muito grande." });
+  let trainingEvidence = null;
   if (type === "training") {
-    const score = Number(data.score);
-    if (!Number.isFinite(score) || score < 0 || score > 100) return res.status(400).json({ error: "A pontuação deve ficar entre 0 e 100." });
-    data.score = score;
+    if (!Array.isArray(data.people) || data.people.length < 2 || data.people.length > 15 || data.people.some(x => typeof x !== "string" || !x.trim()) || new Set(data.people.map(x => x.trim().toLowerCase())).size !== data.people.length) {
+      return res.status(400).json({ error: "Adicione entre 2 e 15 militares diferentes." });
+    }
+    const match = typeof data.evidenceData === "string" && data.evidenceData.match(/^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/]+={0,2})$/);
+    if (!match) return res.status(400).json({ error: "A imagem da cunha do STS é obrigatória e deve ser JPG, PNG ou WEBP." });
+    const buffer = Buffer.from(match[2], "base64");
+    if (!buffer.length || buffer.length > 2 * 1024 * 1024) return res.status(400).json({ error: "A imagem deve ter no máximo 2 MB." });
+    const valid = (match[1] === "image/jpeg" && buffer.subarray(0,3).equals(Buffer.from([0xff,0xd8,0xff]))) ||
+      (match[1] === "image/png" && buffer.subarray(0,8).equals(Buffer.from([0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a]))) ||
+      (match[1] === "image/webp" && buffer.toString("ascii",0,4) === "RIFF" && buffer.toString("ascii",8,12) === "WEBP");
+    if (!valid) return res.status(400).json({ error: "O arquivo enviado não é uma imagem válida." });
+    trainingEvidence = { mime: match[1], buffer };
+    data = { people: data.people.map(x => x.trim()), person: data.people.join(", "), training: String(data.training).trim(), notes: String(data.notes || "").trim() };
   }
   try {
     const result = await pool.query(
       "INSERT INTO panel_records (record_type, data, created_by) VALUES ($1, $2::jsonb, $3) RETURNING id, data, created_at",
       [type, JSON.stringify(data), req.session.user.robloxId]
     );
-    res.status(201).json({ record: result.rows[0] });
+    if (trainingEvidence) await pool.query(
+      "INSERT INTO training_evidence (record_id, mime_type, image_data) VALUES ($1, $2, $3)",
+      [result.rows[0].id, trainingEvidence.mime, trainingEvidence.buffer]
+    );
+    res.status(201).json({ record: result.rows[0], evidenceSaved: Boolean(trainingEvidence) });
   } catch (err) {
     console.error("Falha ao salvar registro:", err.message);
     res.status(500).json({ error: "Não foi possível salvar no banco de dados." });
