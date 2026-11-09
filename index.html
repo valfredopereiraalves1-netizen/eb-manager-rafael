@@ -1296,6 +1296,19 @@ body{font-family:var(--ebx-text)}
  #publicHome .public-cta{width:100%;justify-content:center}
 }
 </style>
+
+<style>
+/* Novas áreas de gestão — componentes adicionais isolados */
+#dashboardApp .nav{flex-wrap:wrap}
+#dashboardApp .nav button{flex:0 0 auto}
+#dashboardApp #page-ranking-mensal .grid,#dashboardApp #page-estatisticas .grid{margin-bottom:16px}
+#dashboardApp #page-notificacoes .rank{gap:16px;align-items:center}
+#dashboardApp #page-notificacoes .rank>div{min-width:0}
+#dashboardApp #page-notificacoes .rank small{display:block}
+#dashboardApp #page-divisoes .grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+#dashboardApp #page-constituicao .card h2{margin-top:12px}
+@media(max-width:600px){#dashboardApp .nav{flex-wrap:nowrap}#dashboardApp .nav button{flex:0 0 auto}}
+</style>
 </head>
 <body>
 <div id="publicHome" class="public-home hidden">
@@ -1364,6 +1377,11 @@ body{font-family:var(--ebx-text)}
 <button data-page="perfil"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span>Perfil</button>
 <button data-page="loja"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 9h18l-1.5 12h-15zM5 9l2-6h10l2 6M9 13v4M15 13v4"/></svg></span>LOJA</button>
 <button data-page="hierarquia"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="9" y="2.5" width="6" height="5" rx="1"/><rect x="2.5" y="17" width="6" height="5" rx="1"/><rect x="15.5" y="17" width="6" height="5" rx="1"/><path d="M12 7.5v5M5.5 17v-4.5h13V17"/></svg></span>Patente</button>
+<button data-page="ranking-mensal"><span class="ico">🏆</span>Ranking mensal</button>
+<button data-page="notificacoes"><span class="ico">🔔</span>Notificações</button>
+<button data-page="estatisticas"><span class="ico">▥</span>Estatísticas</button>
+<button data-page="constituicao"><span class="ico">📜</span>Constituição</button>
+<button data-page="divisoes"><span class="ico">▦</span>Divisões</button>
 <button type="button" id="menuToggle" data-page="menu"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>Menu</button>
 </nav>
 <div id="menuPanel" class="menu-panel hidden" aria-label="Atalhos adicionais"></div>
@@ -1533,6 +1551,38 @@ body{font-family:var(--ebx-text)}
 
 <section id="page-negadas" class="page hidden"><div class="pagehead"><div><h1>Promoção negada</h1><p class="sub">Registre solicitações que não foram aprovadas.</p></div></div><div class="card"><form id="deniedForm" class="formgrid"><div class="field"><label>Nome do militar</label><input name="person" required></div><div class="field"><label>Patente solicitada</label><input name="rank" required></div><div class="field full"><label>Motivo da recusa</label><textarea name="reason" required></textarea></div><div class="field full"><button class="btn danger">Registrar recusa</button></div></form></div><div id="deniedList" class="card section empty">Nenhuma promoção negada registrada.</div></section>
 
+
+<section id="page-ranking-mensal" class="page hidden">
+ <div class="pagehead"><div><h1>Ranking mensal</h1><p class="sub">Classificação de treinamentos registrados no mês atual, calculada com os dados do servidor.</p></div><span class="tag" id="monthlyPeriod"></span></div>
+ <div class="grid"><div class="card stat"><small>Participações no mês</small><strong id="monthlyTotal">0</strong><span>Treinamentos registrados</span></div><div class="card stat"><small>Militares participantes</small><strong id="monthlyPeople">0</strong><span>Usuários únicos</span></div><div class="card stat"><small>Média de pontuação</small><strong id="monthlyAverage">—</strong><span>Somente registros do mês</span></div><div class="card stat"><small>Melhor pontuação</small><strong id="monthlyBest">—</strong><span>Maior nota registrada</span></div></div>
+ <div class="card section"><h2>Classificação do mês</h2><p class="muted">Ordenado pela soma das pontuações por militar. Empates mantêm a mesma pontuação.</p><div class="tablewrap"><table><thead><tr><th>Posição</th><th>Militar</th><th>Treinamentos</th><th>Pontos totais</th><th>Média</th></tr></thead><tbody id="monthlyRankingBody"></tbody></table></div><div id="monthlyRankingEmpty" class="empty">Nenhum treinamento registrado neste mês.</div></div>
+</section>
+<section id="page-notificacoes" class="page hidden">
+ <div class="pagehead"><div><h1>Central de notificações</h1><p class="sub">Movimentações e registros recentes já existentes no EB Manager.</p></div><button class="btn" type="button" id="refreshNotifications">Atualizar</button></div>
+ <div class="notice">Esta central reúne eventos do histórico e dos formulários. Não envia notificações push nem cria avisos administrativos novos.</div>
+ <div class="card section"><div id="notificationsList" class="ranklist"></div><div id="notificationsEmpty" class="empty">Entre com Roblox e aguarde o carregamento dos registros.</div></div>
+</section>
+<section id="page-estatisticas" class="page hidden">
+ <div class="pagehead"><div><h1>Estatísticas gerais</h1><p class="sub">Indicadores calculados a partir dos registros e membros retornados pelo servidor.</p></div><button class="btn primary" type="button" id="refreshGeneralStats">Atualizar dados</button></div>
+ <div class="grid">
+  <div class="card stat"><small>Membros carregados</small><strong id="generalMembers">—</strong><span>Consulta do grupo Roblox</span></div>
+  <div class="card stat"><small>Promoções aplicadas</small><strong id="generalPromotions">0</strong><span>Histórico do servidor</span></div>
+  <div class="card stat"><small>Treinamentos registrados</small><strong id="generalTrainings">0</strong><span>Registros do servidor</span></div>
+  <div class="card stat"><small>Promoções negadas</small><strong id="generalDenied">0</strong><span>Registros do servidor</span></div>
+ </div>
+ <div class="card section"><h2>Resumo dos registros</h2><div class="ranklist" id="generalSummary"></div><p class="muted" id="generalStatsStatus">Os números são atualizados quando os dados do servidor são carregados.</p></div>
+</section>
+<section id="page-constituicao" class="page hidden">
+ <div class="pagehead"><div><h1>Constituição e regulamentos</h1><p class="sub">Espaço institucional para consulta das normas oficiais do grupo.</p></div></div>
+ <div class="card"><span class="tag">DOCUMENTO OFICIAL</span><h2>Constituição do Exército Brasileiro</h2><p class="muted">O texto oficial da Constituição e dos regulamentos internos ainda precisa ser fornecido ou validado pela direção. Para evitar publicar regras incorretas, esta página não inventa artigos, punições ou competências.</p><div class="notice">Envie o documento aprovado ou o texto oficial para que ele seja publicado aqui, mantendo a versão e a data de atualização.</div></div>
+ <div class="grid section"><div class="card"><h2>Regulamento disciplinar</h2><p class="muted">Aguardando conteúdo oficial validado.</p></div><div class="card"><h2>Hierarquia e atribuições</h2><p class="muted">Consulte a página Hierarquia para ver as patentes atualmente configuradas.</p><button class="btn" type="button" data-go="hierarquia">Abrir hierarquia</button></div><div class="card"><h2>Normas de conduta</h2><p class="muted">Aguardando conteúdo oficial validado.</p></div></div>
+</section>
+<section id="page-divisoes" class="page hidden">
+ <div class="pagehead"><div><h1>Central de divisões</h1><p class="sub">Visão das divisões cadastradas e seus integrantes, quando esses dados estiverem disponíveis.</p></div><button class="btn primary" type="button" id="refreshDivisions">Sincronizar membros</button></div>
+ <div class="notice">A API atual do grupo fornece usuário e patente, mas não disponibiliza um cadastro oficial de divisões. A tela identifica divisões apenas se o servidor retornar esse campo; não atribui militares automaticamente.</div>
+ <div class="grid" id="divisionCards"></div><div id="divisionsEmpty" class="empty">Entre com Roblox para consultar os dados. Se nenhuma divisão aparecer, será necessário cadastrar a estrutura oficial das divisões.</div>
+ <div class="card section"><h2>Lista de integrantes</h2><div class="tablewrap"><table><thead><tr><th>Divisão</th><th>Militar</th><th>Patente</th></tr></thead><tbody id="divisionMembersBody"></tbody></table></div></div>
+</section>
 </div></main></div>
 <script>
 const ranks=['[CR] Criador','[S-CR] Sub Criador','[ADM-G] Administrador Geral','[ADM] Administrador','[MOD] Moderador','[CGEx] Corregedoria Geral do Exército','[ER] Elite Real','[ES] Elite Secreta','[EM] Elite Militar','[MR] Marechal','[PRES] Presidente','[V-PRES] Vice Presidente','[CMT] Comandante','[S-CMT] Sub Comandante','[GEN-EX] General do Exército','[GEN-DIV] General de Divisão','[GEN-BDA] General de Brigada','[CEL] Coronel','[TEN-CEL] Tenente-Coronel','[MAJ] Major','[CAP] Capitão','[1• TEN] Primeiro Tenente','[2• TEN] Segundo Tenente','[ASP] Aspirante a Oficial','[CT] Cadete','[ST] Subtenente','[1• SGT] Primeiro Sargento','[2• SGT] Segundo Sargento','[3• SGT] Terceiro Sargento','[CB] Cabo','[SLD] Soldado','[REC] Recrutamento'];
@@ -1546,6 +1596,11 @@ if(p==="promocoes"&&!currentUserCanPromote){alert("Somente Aspirante a Oficial o
 if(p==="perfil"&&typeof loadProfileData==="function"&&csrfToken)loadProfileData();
 if(p==="logs"&&typeof loadServerLogs==="function")loadServerLogs();
 if(p==="cdp"&&typeof loadCdp==="function")loadCdp();
+if(p==="ranking-mensal")renderMonthlyRanking();
+if(p==="notificacoes")renderNotifications();
+if(p==="estatisticas")renderGeneralStats();
+if(p==="divisoes"){renderDivisions();if(csrfToken&&!groupMembers.length)loadGroupMembers();}
+
 document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));
 const target=document.getElementById('page-'+p);
 if(!target){console.warn('Página não encontrada:',p);return;}
@@ -1713,7 +1768,7 @@ async function loadServerRecords(){
     for(let i=0;i<types.length;i++){
       if(!results[i].ok)continue;
       const data=await results[i].json();
-      serverRecords[types[i]]=(data.records||[]).map(row=>row.data||{});
+      serverRecords[types[i]]=(data.records||[]).map(row=>({...((row.data&&typeof row.data==='object')?row.data:{}),_createdAt:row.created_at||null}));
     }
     refresh();
   }catch(error){console.warn('Não foi possível carregar os registros do servidor.');}
@@ -1825,5 +1880,54 @@ document.getElementById('robloxLogout').onclick=async()=>{
   const response=await fetch('/auth/logout',{method:'POST',headers:{'x-csrf-token':csrfToken},credentials:'same-origin'});
   if(response.ok) location.reload();
 };
+
+function currentMonthTraining(){
+ const now=new Date(),y=now.getFullYear(),m=now.getMonth();
+ return (serverRecords.training||[]).filter(x=>{const d=x._createdAt?new Date(x._createdAt):null;return d&&!Number.isNaN(d.getTime())&&d.getFullYear()===y&&d.getMonth()===m;});
+}
+function renderMonthlyRanking(){
+ const rows=currentMonthTraining(),groups=new Map();
+ rows.forEach(x=>{const name=String(x.person||'Militar não identificado').trim();if(!groups.has(name))groups.set(name,{name,total:0,count:0});const g=groups.get(name);g.total+=Number(x.score)||0;g.count++;});
+ const ranking=[...groups.values()].sort((a,b)=>b.total-a.total||a.name.localeCompare(b.name,'pt-BR'));
+ const average=rows.length?rows.reduce((sum,x)=>sum+(Number(x.score)||0),0)/rows.length:null;
+ document.getElementById('monthlyPeriod').textContent=new Date().toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+ document.getElementById('monthlyTotal').textContent=rows.length;
+ document.getElementById('monthlyPeople').textContent=groups.size;
+ document.getElementById('monthlyAverage').textContent=average===null?'—':average.toFixed(1);
+ document.getElementById('monthlyBest').textContent=rows.length?Math.max(...rows.map(x=>Number(x.score)||0)):'—';
+ document.getElementById('monthlyRankingBody').innerHTML=ranking.map((x,i)=>'<tr><td>#'+(i+1)+'</td><td>'+esc(x.name)+'</td><td>'+x.count+'</td><td>'+x.total+'</td><td>'+(x.total/x.count).toFixed(1)+'</td></tr>').join('');
+ document.getElementById('monthlyRankingEmpty').classList.toggle('hidden',ranking.length>0);
+}
+function renderNotifications(){
+ const items=[
+  ...(serverLogs||[]).map(x=>({date:x.date,title:x.operation+' registrada',detail:(x.person||'Militar')+' · '+(x.from||'—')+' → '+(x.to||'—'),kind:'HISTÓRICO'})),
+  ...(serverRecords.training||[]).map(x=>({date:x._createdAt?new Date(x._createdAt).toLocaleString('pt-BR'):'Data não disponível',title:'Treinamento registrado',detail:(x.person||'Militar')+' · '+(x.training||'Treinamento')+' · '+(Number(x.score)||0)+' pontos',kind:'TREINAMENTO'})),
+  ...(serverRecords.denied||[]).map(x=>({date:x._createdAt?new Date(x._createdAt).toLocaleString('pt-BR'):'Data não disponível',title:'Promoção negada registrada',detail:(x.person||'Militar')+' · '+(x.rank||'Patente não informada'),kind:'ADMINISTRATIVO'}))
+ ].slice(0,100);
+ document.getElementById('notificationsList').innerHTML=items.map(x=>'<div class="rank"><div><span class="tag">'+esc(x.kind)+'</span><b style="display:block;margin-top:5px">'+esc(x.title)+'</b><small>'+esc(x.detail)+'</small></div><small>'+esc(x.date)+'</small></div>').join('');
+ document.getElementById('notificationsEmpty').classList.toggle('hidden',items.length>0);
+}
+function renderGeneralStats(){
+ document.getElementById('generalMembers').textContent=groupMembers.length?groupMembers.length:'—';
+ document.getElementById('generalPromotions').textContent=serverPromotions.length;
+ document.getElementById('generalTrainings').textContent=serverRecords.training.length;
+ document.getElementById('generalDenied').textContent=serverRecords.denied.length;
+ document.getElementById('generalSummary').innerHTML=[
+  ['Patentes configuradas',ranks.length],['Registros de promoção',serverPromotions.length],['Treinamentos',serverRecords.training.length],['Registros CDP',serverRecords.cpd.length],['Promoções negadas',serverRecords.denied.length],['Eventos no histórico',serverLogs.length]
+ ].map(x=>'<div class="rank"><b>'+esc(x[0])+'</b><small>'+x[1]+'</small></div>').join('');
+ document.getElementById('generalStatsStatus').textContent=csrfToken?'Dados referentes aos registros disponíveis no servidor.':'Entre com Roblox para carregar dados atualizados.';
+}
+function renderDivisions(){
+ const grouped=new Map();
+ (groupMembers||[]).forEach(m=>{const name=m.divisionName||m.division||m.department;if(!name)return;if(!grouped.has(name))grouped.set(name,[]);grouped.get(name).push(m);});
+ const names=[...grouped.entries()];
+ document.getElementById('divisionCards').innerHTML=names.map(([name,members])=>'<article class="card"><span class="tag">DIVISÃO</span><h2>'+esc(name)+'</h2><strong style="font-size:26px;color:#17452f">'+members.length+'</strong><p class="muted">Integrante(s) identificados pela API</p></article>').join('');
+ document.getElementById('divisionsEmpty').classList.toggle('hidden',names.length>0);
+ document.getElementById('divisionMembersBody').innerHTML=names.flatMap(([name,members])=>members.map(m=>'<tr><td>'+esc(name)+'</td><td>'+esc(m.username||m.displayName||'—')+'</td><td>'+esc(m.roleName||'—')+'</td></tr>')).join('');
+}
+document.getElementById('refreshNotifications').addEventListener('click',async()=>{await loadServerLogs();await loadServerRecords();renderNotifications();});
+document.getElementById('refreshGeneralStats').addEventListener('click',async()=>{await loadServerPromotions();await loadServerLogs();await loadServerRecords();if(!groupMembers.length)await loadGroupMembers();renderGeneralStats();});
+document.getElementById('refreshDivisions').addEventListener('click',async()=>{await loadGroupMembers(true);renderDivisions();});
+
 checkRobloxSession();
 </script><script src="/access.js"></script></body></html>
