@@ -19,6 +19,69 @@
 @media(max-width:850px){.side{width:210px}.grid{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}}
 @media(max-width:600px){.shell{display:block}.side{width:auto;padding:12px;border:0;border-bottom:1px solid var(--line)}.brand{padding:3px 5px 10px}.nav{display:flex;overflow:auto;gap:4px}.navlabel,.sidefoot{display:none}.nav button{white-space:nowrap;width:auto;font-size:12px;padding:9px}.top{height:55px;padding:0 16px}.content{padding:20px 14px}.grid{gap:9px}.card{padding:13px}.stat strong{font-size:23px}.pagehead h1{font-size:21px}.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}}
 
+/* Redesign completo do painel interno: identidade institucional verde, dourado e branco */
+#dashboardApp{background:#f1f4f1;color:#203329}
+#dashboardApp .side{background:#123d2c;border:0;color:#fff;padding:25px 16px;box-shadow:5px 0 24px rgba(13,45,31,.10)}
+#dashboardApp .brand{padding:4px 8px 28px;border-bottom:1px solid rgba(255,255,255,.15);margin-bottom:14px}
+#dashboardApp .crest{background:linear-gradient(145deg,#d8b85d,#98752a);color:#153c2c;border:2px solid #f2dfa0;border-radius:10px}
+#dashboardApp .brand b{color:#fff;font-size:12px;letter-spacing:.07em}
+#dashboardApp .brand small{color:#c6d8cb}
+#dashboardApp .navlabel{color:#b6cbbb;font-size:10px;letter-spacing:.17em}
+#dashboardApp .nav button{color:#d6e3da;border-radius:8px;padding:12px 13px;font-weight:600;transition:background .18s ease}
+#dashboardApp .nav button.active,#dashboardApp .nav button:hover{background:#f0d58b;color:#183b2b}
+#dashboardApp .nav .ico{font-size:16px}
+#dashboardApp .sidefoot{border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:#d0ded4}
+#dashboardApp .main{background:#f1f4f1}
+#dashboardApp .top{height:78px;background:#fff;border-bottom:1px solid #dfe7e0;padding:0 34px;box-shadow:0 3px 12px rgba(24,54,37,.035)}
+#dashboardApp .crumb{color:#78877d}
+#dashboardApp .crumb b{color:#1b3f2d}
+#dashboardApp .user{color:#1c3d2c}
+#dashboardApp .avatar{background:#e6eee7;color:#1d5739;border:1px solid #d3e1d5}
+#dashboardApp .content{max-width:1400px;padding:34px}
+#dashboardApp .pagehead{align-items:center;margin-bottom:26px}
+#dashboardApp .pagehead h1{font-size:29px;color:#173d2b;letter-spacing:-.025em}
+#dashboardApp .sub{color:#75847a}
+#dashboardApp .tag{background:#e7f0e8;color:#286342;border:1px solid #d4e4d6;font-weight:750;letter-spacing:.04em}
+#dashboardApp .card{background:#fff;border:1px solid #e0e8e1;border-radius:13px;box-shadow:0 5px 18px rgba(23,55,35,.045);padding:21px}
+#dashboardApp .card h2{color:#1b432f;font-size:16px}
+#dashboardApp .stat{position:relative;overflow:hidden;min-height:132px}
+#dashboardApp .stat:after{content:"";position:absolute;width:5px;left:0;top:0;bottom:0;background:#c6a34d}
+#dashboardApp .stat small{color:#718176;font-weight:650}
+#dashboardApp .stat strong{color:#17452f;font-size:32px}
+#dashboardApp .stat span{color:#7d8b80}
+#dashboardApp .btn{background:#f5f7f4;border:1px solid #d9e3da;color:#294735;border-radius:8px;font-weight:650}
+#dashboardApp .btn:hover{background:#eaf1eb}
+#dashboardApp .btn.primary{background:#1c6542;border-color:#1c6542;color:#fff}
+#dashboardApp .btn.primary:hover{background:#154d32}
+#dashboardApp .btn.danger{background:#fff1ef;border-color:#f0d0ca;color:#9b3f34}
+#dashboardApp .rank{background:#f7f9f6;border:1px solid #e2e9e2;color:#294735}
+#dashboardApp .rank b{color:#234832}
+#dashboardApp .rank small{color:#77877b}
+#dashboardApp th{color:#718176;background:#f7f9f6}
+#dashboardApp td{color:#31483a;border-color:#e7ece7}
+#dashboardApp table{border-collapse:separate;border-spacing:0}
+#dashboardApp .field label{color:#526b59;font-weight:650}
+#dashboardApp .field input,#dashboardApp .field select,#dashboardApp .field textarea{background:#fbfcfa;color:#20392b;border:1px solid #d8e2d9;border-radius:8px}
+#dashboardApp .field input:focus,#dashboardApp .field select:focus,#dashboardApp .field textarea:focus{outline:2px solid #b7d5bf;border-color:#4e8b62}
+#dashboardApp .notice{background:#fff8e8;border:1px solid #ead8a8;color:#725b28}
+#dashboardApp .empty{color:#7b8b7e}
+#dashboardApp .hero-gallery{gap:18px}
+#dashboardApp .hero-photo{border-radius:13px;border-color:#dce6dc;box-shadow:0 5px 18px rgba(23,55,35,.06)}
+#dashboardApp .hero-caption{background:linear-gradient(transparent,rgba(9,35,23,.88))}
+@media(max-width:850px){#dashboardApp .side{width:220px}#dashboardApp .content{padding:24px}}
+@media(max-width:600px){
+ #dashboardApp .side{background:#123d2c;padding:12px}
+ #dashboardApp .brand{padding:3px 5px 12px;margin-bottom:8px}
+ #dashboardApp .nav{padding-bottom:2px}
+ #dashboardApp .nav button{background:rgba(255,255,255,.07)}
+ #dashboardApp .nav button.active{background:#f0d58b;color:#183b2b}
+ #dashboardApp .top{height:auto;min-height:60px;padding:10px 14px}
+ #dashboardApp .content{padding:19px 13px}
+ #dashboardApp .pagehead h1{font-size:23px}
+ #dashboardApp .card{padding:15px}
+ #dashboardApp .stat{min-height:116px}
+}
+
 /* Landing page institucional inspirada na organização visual da referência */
 .public-home{min-height:100vh;background:#f4f6f8;color:#172333;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}
 .public-nav{height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(18px,5vw,76px);background:#fff;border-bottom:1px solid #e4e9ef;position:sticky;top:0;z-index:20}
