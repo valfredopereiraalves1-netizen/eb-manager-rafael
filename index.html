@@ -117,6 +117,22 @@
 .public-login-note{font-size:12px;color:#e3e9e5;margin-top:16px}
 .public-footer{background:#101e1a;color:#c7d2cc;padding:25px 28px;text-align:center;font-size:12px}
 @media(max-width:760px){.public-nav{height:auto;min-height:68px;padding:12px 16px;flex-wrap:wrap;gap:12px}.public-links{gap:13px;flex-wrap:wrap}.public-links a{font-size:12px}.public-links .public-cta{padding:9px 12px}.public-hero{min-height:460px}.public-hero-inner{padding:58px 20px}.public-features{grid-template-columns:1fr}.public-stats-inner{grid-template-columns:1fr;gap:24px}.public-section{padding:48px 18px}}
+
+/* Correção do layout mobile do painel interno */
+@media(max-width:600px){
+  #dashboardApp.shell{display:block;width:100%;min-width:0}
+  #dashboardApp .side{display:block;width:100%;max-width:none;min-width:0;padding:12px 14px}
+  #dashboardApp .brand{width:100%;max-width:100%;align-items:center}
+  #dashboardApp .nav{display:flex;width:100%;max-width:100%;overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap;gap:6px;scrollbar-width:thin}
+  #dashboardApp .nav button{flex:0 0 auto;width:auto;white-space:nowrap}
+  #dashboardApp .main{display:block;width:100%;min-width:0}
+  #dashboardApp .top{width:100%;min-width:0;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
+  #dashboardApp .crumb{min-width:0;overflow-wrap:anywhere}
+  #dashboardApp .user{max-width:100%;min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+  #dashboardApp #robloxUser{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+  #dashboardApp .content{width:100%;max-width:100%;min-width:0}
+}
+
 </style></head>
 <body>
 <div id="publicHome" class="public-home">
