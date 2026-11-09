@@ -188,7 +188,7 @@
 <button class="active" data-page="inicio"><span class="ico">▦</span>Visão geral</button>
 <button data-page="membros"><span class="ico">♟</span>Membros do grupo</button>
 <button data-page="hierarquia"><span class="ico">♜</span>Hierarquia</button>
-<button data-page="promocoes"><span class="ico">⬆</span>Promoções</button>
+<button data-page="promocoes" id="promotionNav"><span class="ico">⬆</span>Promoções</button>
 <button data-page="logs"><span class="ico">▤</span>Logs de promoção</button>
 <button data-page="ranking"><span class="ico">★</span>Ranking de treinamentos</button>
 <button data-page="cpd"><span class="ico">◈</span>CPD</button>
@@ -226,7 +226,8 @@ const ranks=['[CR] Criador','[S-CR] Sub Criador','[ADM-G] Administrador Geral','
 let serverPromotions=[];
 let serverRecords={training:[],cpd:[],denied:[]};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function page(p){document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));document.getElementById('page-'+p).classList.remove('hidden');document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===p));document.getElementById('crumb').textContent=document.querySelector('[data-page="'+p+'"]').textContent.trim()}
+let currentUserCanPromote=false;
+function page(p){if(p==="promocoes"&&!currentUserCanPromote){alert("Somente Aspirante a Oficial ou patente superior pode promover.");return;}document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));document.getElementById('page-'+p).classList.remove('hidden');document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===p));document.getElementById('crumb').textContent=document.querySelector('[data-page="'+p+'"]').textContent.trim()}
 document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>page(b.dataset.page));document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>page(b.dataset.go));
 document.getElementById('ranks').innerHTML=ranks.map((r,i)=>'<div class="rank"><b>'+(i+1)+'. '+esc(r)+'</b><small>'+(i===0?'Maior cargo':i===ranks.length-1?'Entrada':'Cargo / patente')+'</small></div>').join('');
 ['fromRank','toRank'].forEach(id=>document.getElementById(id).innerHTML=ranks.map(r=>'<option>'+esc(r)+'</option>').join(''));
@@ -322,6 +323,9 @@ async function checkRobloxSession(){
     document.getElementById('publicHome').classList.add('hidden');
     document.getElementById('dashboardApp').classList.remove('hidden');
     csrfToken=data.csrfToken;
+    currentUserCanPromote=Boolean(data.permissions?.canPromote);
+    const promotionNav=document.getElementById('promotionNav');
+    if(promotionNav)promotionNav.classList.toggle('hidden',!currentUserCanPromote);
     login.classList.add('hidden');
     userBox.classList.remove('hidden');
     document.getElementById('robloxUserLabel').textContent='@'+data.user.username+' · '+data.user.groupRoleName;
