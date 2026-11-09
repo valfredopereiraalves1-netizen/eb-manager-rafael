@@ -34,8 +34,17 @@ catch { throw new Error("ROLE_RANKS_JSON precisa conter um JSON válido."); }
 const CDP_DEFAULT_RULES = {
   "[CR] Criador": 0,
   "[SLD] Soldado": 0,
-  "[ES] Elite Secreta": 140,
+  "[CB] Cabo": 2,
+  "[3• SGT] Terceiro Sargento": 5.67,
+  "[2• SGT] Segundo Sargento": 6.85,
+  "[1• SGT] Primeiro Sargento": 8.5,
+  "[ST] Subtenente": 11,
+  "[CT] Cadete": 15,
+  "[ASP] Aspirante a Oficial": 20,
+  "[2• TEN] Segundo Tenente": 26,
+  "[1• TEN] Primeiro Tenente": 35,
   "[EM] Elite Militar": 125,
+  "[ES] Elite Secreta": 140,
   "[S-CR] Sub Criador": { hours: 0, creatorOnly: true },
   "[ER] Elite Real": { hours: 0, creatorOnly: true }
 };
