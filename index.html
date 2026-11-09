@@ -381,6 +381,25 @@ body{background:var(--eb-bg);color:var(--eb-text)}
   #dashboardApp *,#dashboardApp *:before,#dashboardApp *:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
 }
 
+
+/* Área de acesso Roblox: destaque visual sem alterar o fluxo OAuth */
+.public-hero-inner{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);align-items:center;gap:clamp(28px,6vw,76px)}
+.public-hero-copy{min-width:0}
+.public-login-card{width:100%;max-width:390px;justify-self:end;padding:27px;border:1px solid rgba(255,255,255,.2);border-radius:18px;background:rgba(13,30,24,.76);box-shadow:0 22px 60px rgba(0,0,0,.28);backdrop-filter:blur(14px);color:#fff}
+.public-login-card-top{display:flex;align-items:center;gap:13px;margin-bottom:21px}
+.public-login-mark{width:48px;height:48px;flex:0 0 48px;display:grid;place-items:center;border-radius:14px;background:#f0d58b;color:#173b2b;font-size:22px;font-weight:950;letter-spacing:-.08em;box-shadow:inset 0 0 0 1px rgba(255,255,255,.45)}
+.public-login-card-top strong{display:block;font-size:14px;letter-spacing:.02em}
+.public-login-card-top small{display:block;margin-top:3px;color:#cbd9d0;font-size:11px}
+.public-login-card h2{margin:0 0 8px;font-size:23px;line-height:1.2;color:#fff}
+.public-login-card p{margin:0 0 20px;color:#d2dfd7;font-size:13px;line-height:1.65}
+.public-login-button{width:100%;min-height:49px;display:flex;align-items:center;justify-content:center;gap:10px;border-radius:9px;background:#f0d58b;color:#183b2b!important;text-decoration:none;font-size:14px;font-weight:850;transition:transform .18s ease,background .18s ease,box-shadow .18s ease;box-shadow:0 8px 20px rgba(0,0,0,.18)}
+.public-login-button:hover{background:#f7e4ae;transform:translateY(-2px);box-shadow:0 12px 25px rgba(0,0,0,.24)}
+.public-login-button:focus-visible{outline:3px solid #fff;outline-offset:4px}
+.public-login-security{display:flex;align-items:flex-start;gap:8px;margin-top:15px;color:#c9d9ce;font-size:11px;line-height:1.5}
+.public-login-security span{color:#f0d58b;font-weight:900}
+@media(max-width:760px){.public-hero-inner{grid-template-columns:1fr;gap:30px;padding:48px 20px}.public-login-card{justify-self:stretch;max-width:none;padding:22px}.public-hero{min-height:0}.public-hero h1{font-size:clamp(32px,9vw,46px)}.public-login-card h2{font-size:21px}}
+@media(prefers-reduced-motion:reduce){.public-login-button{transition:none}}
+
 </style></head>
 <body>
 <div id="publicHome" class="public-home">
@@ -401,11 +420,17 @@ body{background:var(--eb-bg);color:var(--eb-text)}
         <span class="public-eyebrow">Organização • Transparência • Gestão</span>
         <h1>O gerenciamento do grupo em um só lugar.</h1>
         <p>Acesse o painel do EB Manager Rafael com sua conta Roblox. Consulte a hierarquia, acompanhe registros e utilize as ferramentas administrativas conforme suas permissões.</p>
-        <div class="public-hero-actions">
-          <a class="public-cta" href="/auth/roblox">Entrar com Roblox</a>
-          <a class="public-cta secondary" href="#recursos">Conhecer recursos</a>
+      </div>
+      <aside class="public-login-card" aria-label="Acesso ao painel">
+        <div class="public-login-card-top">
+          <span class="public-login-mark" aria-hidden="true">R</span>
+          <span><strong>ACESSO AO PAINEL</strong><small>Autenticação oficial Roblox</small></span>
         </div>
-        <div class="public-login-note">A entrada é validada pela sua conta Roblox e pela sua participação no grupo configurado.</div>
+        <h2>Entre com sua conta Roblox</h2>
+        <p>Conecte sua conta para acessar o EB Manager e visualizar as ferramentas liberadas para sua patente.</p>
+        <a class="public-login-button" href="/auth/roblox"><span aria-hidden="true">↗</span> Entrar com Roblox</a>
+        <div class="public-login-security"><span aria-hidden="true">✓</span><span style="color:inherit;font-weight:400">A autenticação acontece pelo Roblox. Sua senha não é solicitada nem armazenada pelo EB Manager.</span></div>
+      </aside>
       </div>
     </section>
     <section id="recursos" class="public-section">
