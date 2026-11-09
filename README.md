@@ -1,9 +1,9 @@
-# EB Caxias — EB Manager
+# EB Manager — EB Manager
 
 Portal web de gestão da comunidade do Exército Brasileiro no Roblox.
 
 - **Aplicação:** EB Manager
-- **Identidade institucional:** EB Caxias
+- **Identidade institucional:** EB Manager
 - **Grupo Roblox:** 241982252
 - **Site:** https://eb-manager-rafael1.onrender.com
 - **Tecnologias:** Node.js 22, Express 5, PostgreSQL, HTML, CSS e JavaScript.
@@ -11,7 +11,7 @@ Portal web de gestão da comunidade do Exército Brasileiro no Roblox.
 ## Estrutura atual
 
 ### Portal público
-- Apresentação institucional EB Caxias.
+- Apresentação institucional EB Manager.
 - Acesso ao fluxo OAuth do Roblox.
 - Seções de recursos e indicadores de referência da comunidade.
 - Layout responsivo para desktop e celular.
