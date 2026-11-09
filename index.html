@@ -215,7 +215,7 @@
 <div class="notice">A lista atualiza automaticamente a cada 60 segundos enquanto o painel estiver aberto. A API Key fica somente no servidor; nunca coloque a chave no HTML.</div>
 </section>
 <section id="page-promocoes" class="page hidden"><div class="pagehead"><div><h1>Registrar promoção</h1><p class="sub">Registre uma alteração de patente para auditoria.</p></div></div><div class="card"><form id="promotionForm" class="formgrid"><div class="field"><label>Nome do militar</label><input name="person" required placeholder="Nome no Roblox"></div><div class="field"><label>Usuário de quem promove</label><input name="author" required placeholder="Seu nome no Roblox"></div><div class="field"><label>Patente atual</label><select name="from" id="fromRank" required></select></div><div class="field"><label>Nova patente</label><select name="to" id="toRank" required></select></div><div class="field full"><label>Motivo da promoção</label><textarea name="reason" required placeholder="Descreva o motivo..."></textarea></div><div class="field full"><button class="btn primary" type="submit">Registrar promoção</button></div></form><div class="notice">As promoções são verificadas no servidor com a API do Roblox. O mapeamento das patentes e os níveis de permissão precisam corresponder aos cargos reais do grupo.</div></div></section>
-<section id="page-logs" class="page hidden"><div class="pagehead"><div><h1>Logs de promoção</h1><p class="sub">Histórico dos registros feitos neste navegador.</p></div><button class="btn" id="exportLogs">Exportar CSV</button></div><div class="card tablewrap"><table><thead><tr><th>Data</th><th>Militar</th><th>De</th><th>Para</th><th>Responsável</th><th>Motivo</th></tr></thead><tbody id="logsBody"></tbody></table><div id="logsEmpty" class="empty">Nenhuma promoção registrada.</div></div></section>
+<section id="page-logs" class="page hidden"><div class="pagehead"><div><h1>Histórico de operações</h1><p class="sub">Promoções, rebaixamentos e revogações aplicados no Roblox.</p></div><button class="btn" id="exportLogs">Exportar CSV</button></div><div class="card tablewrap"><table><thead><tr><th>Data</th><th>Operação</th><th>Militar</th><th>De</th><th>Para</th><th>Responsável</th><th>Motivo</th></tr></thead><tbody id="logsBody"></tbody></table><div id="logsEmpty" class="empty">Nenhuma operação registrada.</div></div></section>
 <section id="page-ranking" class="page hidden"><div class="pagehead"><div><h1>Ranking de treinamentos</h1><p class="sub">Acompanhe participações e resultados.</p></div></div><div class="card"><form id="trainingForm" class="formgrid"><div class="field"><label>Nome do militar</label><input name="person" required></div><div class="field"><label>Treinamento</label><input name="training" required placeholder="Ex.: Formação básica"></div><div class="field"><label>Pontuação</label><input name="score" type="number" min="0" max="100" required></div><div class="field"><label>Instrutor</label><input name="instructor" required></div><div class="field full"><button class="btn primary">Adicionar ao ranking</button></div></form></div><div class="card section tablewrap"><table><thead><tr><th>Posição</th><th>Militar</th><th>Treinamento</th><th>Pontos</th><th>Instrutor</th></tr></thead><tbody id="trainingBody"></tbody></table><div id="trainingEmpty" class="empty">Nenhum treinamento registrado.</div></div></section>
 <section id="page-cpd" class="page hidden"><div class="pagehead"><div><h1>CPD</h1><p class="sub">Controle de pendências e acompanhamento disciplinar.</p></div></div><div class="card"><form id="cpdForm" class="formgrid"><div class="field"><label>Nome do militar</label><input name="person" required></div><div class="field"><label>Tipo de registro</label><select name="type"><option>Advertência</option><option>Orientação</option><option>Pendência</option><option>Observação</option></select></div><div class="field full"><label>Descrição</label><textarea name="description" required></textarea></div><div class="field full"><button class="btn primary">Adicionar registro</button></div></form></div><div id="cpdList" class="card section empty">Nenhum registro no CPD.</div></section>
 <section id="page-negadas" class="page hidden"><div class="pagehead"><div><h1>Promoção negada</h1><p class="sub">Registre solicitações que não foram aprovadas.</p></div></div><div class="card"><form id="deniedForm" class="formgrid"><div class="field"><label>Nome do militar</label><input name="person" required></div><div class="field"><label>Patente solicitada</label><input name="rank" required></div><div class="field full"><label>Motivo da recusa</label><textarea name="reason" required></textarea></div><div class="field full"><button class="btn danger">Registrar recusa</button></div></form></div><div id="deniedList" class="card section empty">Nenhuma promoção negada registrada.</div></section>
@@ -224,6 +224,7 @@
 <script>
 const ranks=['[CR] Criador','[S-CR] Sub Criador','[ADM-G] Administrador Geral','[ADM] Administrador','[MOD] Moderador','[CGEx] Corregedoria Geral do Exército','[ER] Elite Real','[ES] Elite Secreta','[EM] Elite Militar','[MR] Marechal','[PRES] Presidente','[V-PRES] Vice Presidente','[CMT] Comandante','[S-CMT] Sub Comandante','[GEN-EX] General do Exército','[GEN-DIV] General de Divisão','[GEN-BDA] General de Brigada','[CEL] Coronel','[TEN-CEL] Tenente-Coronel','[MAJ] Major','[CAP] Capitão','[1• TEN] Primeiro Tenente','[2• TEN] Segundo Tenente','[ASP] Aspirante a Oficial','[CT] Cadete','[ST] Subtenente','[1• SGT] Primeiro Sargento','[2• SGT] Segundo Sargento','[3• SGT] Terceiro Sargento','[CB] Cabo','[SLD] Soldado','[REC] Recrutamento'];
 let serverPromotions=[];
+let serverLogs=[];
 let serverRecords={training:[],cpd:[],denied:[]};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let currentUserCanPromote=false;
@@ -232,18 +233,20 @@ document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>page(b.dataset
 document.getElementById('ranks').innerHTML=ranks.map((r,i)=>'<div class="rank"><b>'+(i+1)+'. '+esc(r)+'</b><small>'+(i===0?'Maior cargo':i===ranks.length-1?'Entrada':'Cargo / patente')+'</small></div>').join('');
 ['fromRank','toRank'].forEach(id=>document.getElementById(id).innerHTML=ranks.map(r=>'<option>'+esc(r)+'</option>').join(''));
 function refresh(){let p=serverPromotions,d=serverRecords.denied,t=serverRecords.training,c=serverRecords.cpd;document.getElementById('stat-prom').textContent=p.length;document.getElementById('stat-neg').textContent=d.length;document.getElementById('stat-treino').textContent=t.length;document.getElementById('stat-ranks').textContent=ranks.length;
-document.getElementById('logsBody').innerHTML=p.map(x=>'<tr><td>'+esc(x.date)+'</td><td>'+esc(x.person)+'</td><td>'+esc(x.from)+'</td><td>'+esc(x.to)+'</td><td>'+esc(x.author)+'</td><td>'+esc(x.reason)+'</td></tr>').join('');document.getElementById('logsEmpty').classList.toggle('hidden',p.length>0);
-document.getElementById('recent').innerHTML=p.length?'<div class="rank"><b>'+esc(p[p.length-1].person)+'</b><small>Promoção registrada</small></div>':'Nenhuma atividade registrada ainda.';
+document.getElementById('logsBody').innerHTML=serverLogs.map(x=>'<tr><td>'+esc(x.date)+'</td><td><span class="tag">'+esc(x.operation)+'</span></td><td>'+esc(x.person)+'</td><td>'+esc(x.from)+'</td><td>'+esc(x.to)+'</td><td>'+esc(x.author)+'</td><td>'+esc(x.reason)+'</td></tr>').join('');
+document.getElementById('logsEmpty').classList.toggle('hidden',serverLogs.length>0);
+document.getElementById('recent').innerHTML=serverLogs.length?'<div class="rank"><b>'+esc(serverLogs[0].person)+'</b><small>'+esc(serverLogs[0].operation)+' · '+esc(serverLogs[0].date)+'</small></div>':'Nenhuma atividade registrada ainda.';
 document.getElementById('trainingBody').innerHTML=[...t].sort((a,b)=>b.score-a.score).map((x,i)=>'<tr><td>#'+(i+1)+'</td><td>'+esc(x.person)+'</td><td>'+esc(x.training)+'</td><td>'+esc(x.score)+'</td><td>'+esc(x.instructor)+'</td></tr>').join('');document.getElementById('trainingEmpty').classList.toggle('hidden',t.length>0);
 document.getElementById('cpdList').innerHTML=c.length?c.map(x=>'<div class="rank"><b>'+esc(x.person)+' · '+esc(x.type)+'</b><small>'+esc(x.description)+'</small></div>').join(''):'Nenhum registro no CPD.';
 document.getElementById('deniedList').innerHTML=d.length?d.map(x=>'<div class="rank"><b>'+esc(x.person)+' · '+esc(x.rank)+'</b><small>'+esc(x.reason)+'</small></div>').join(''):'Nenhuma promoção negada registrada.'}
 document.getElementById('promotionForm').onsubmit=async e=>{e.preventDefault();if(!csrfToken){alert('O login Roblox ainda não está ativo. O backend precisa ser hospedado e configurado antes de registrar promoções oficiais.');return}let f=new FormData(e.target);const response=await fetch('/api/promotions',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','x-csrf-token':csrfToken},body:JSON.stringify({targetUsername:f.get('person'),fromRole:f.get('from'),toRole:f.get('to'),reason:f.get('reason')})});const result=await response.json().catch(()=>({}));if(!response.ok){alert(result.error||'Não foi possível registrar a promoção.');return}e.target.reset();await loadServerPromotions();
+    await loadServerLogs();
     await loadServerRecords();
     await loadGroupMembers();page('logs')}
 document.getElementById('trainingForm').onsubmit=async e=>{e.preventDefault();if(!csrfToken){alert('Entre com sua conta Roblox para continuar.');return}let f=new FormData(e.target);const r=await fetch('/api/records/training',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','x-csrf-token':csrfToken},body:JSON.stringify({person:f.get('person'),training:f.get('training'),score:Number(f.get('score')),instructor:f.get('instructor')})});const out=await r.json().catch(()=>({}));if(!r.ok){alert(out.error||'Não foi possível salvar.');return}e.target.reset();await loadServerRecords()};
 document.getElementById('cpdForm').onsubmit=async e=>{e.preventDefault();if(!csrfToken){alert('Entre com sua conta Roblox para continuar.');return}let f=new FormData(e.target);const r=await fetch('/api/records/cpd',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','x-csrf-token':csrfToken},body:JSON.stringify({person:f.get('person'),type:f.get('type'),description:f.get('description')})});const out=await r.json().catch(()=>({}));if(!r.ok){alert(out.error||'Não foi possível salvar.');return}e.target.reset();await loadServerRecords()};
 document.getElementById('deniedForm').onsubmit=async e=>{e.preventDefault();if(!csrfToken){alert('Entre com sua conta Roblox para continuar.');return}let f=new FormData(e.target);const r=await fetch('/api/records/denied',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','x-csrf-token':csrfToken},body:JSON.stringify({person:f.get('person'),rank:f.get('rank'),reason:f.get('reason')})});const out=await r.json().catch(()=>({}));if(!r.ok){alert(out.error||'Não foi possível salvar.');return}e.target.reset();await loadServerRecords()};
-document.getElementById('exportLogs').onclick=()=>{let rows=[['Data','Militar','De','Para','Responsável','Motivo'],...serverPromotions.map(x=>[x.date,x.person,x.from,x.to,x.author,x.reason])];let csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='logs-promocoes-eb.csv';a.click();URL.revokeObjectURL(a.href)};
+document.getElementById('exportLogs').onclick=()=>{let rows=[['Data','Operação','Militar','De','Para','Responsável','Motivo'],...serverLogs.map(x=>[x.date,x.operation,x.person,x.from,x.to,x.author,x.reason])];let csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='logs-promocoes-eb.csv';a.click();URL.revokeObjectURL(a.href)};
 
 refresh();
 
@@ -294,11 +297,26 @@ async function loadServerPromotions(){
   if(!csrfToken)return;
   try{
     const response=await fetch('/api/promotions',{credentials:'same-origin'});
-    if(!response.ok)return;
+    if(!response.ok)throw new Error('Falha ao carregar promoções.');
     const data=await response.json();
     serverPromotions=(data.promotions||[]).map(x=>({date:new Date(x.created_at).toLocaleString('pt-BR'),person:x.target_username,from:x.from_role,to:x.to_role,author:x.author_username,reason:x.reason}));
     refresh();
-  }catch(error){console.warn('Não foi possível carregar os registros do servidor.');}
+  }catch(error){console.warn('Não foi possível carregar as promoções.');}
+}
+async function loadServerLogs(){
+  if(!csrfToken)return;
+  try{
+    const response=await fetch('/api/logs',{credentials:'same-origin'});
+    const data=await response.json().catch(()=>({}));
+    if(!response.ok)throw new Error(data.error||'Falha ao carregar histórico.');
+    serverLogs=(data.logs||[]).map(x=>({
+      date:new Date(x.created_at).toLocaleString('pt-BR'),
+      operation:x.action==='promotion'?'Promoção':x.action==='demote'?'Rebaixamento':x.action==='revoke'?'Revogação':'Alteração de patente',
+      person:x.target_username||'—',from:x.from_role||'—',to:x.to_role||'—',
+      author:x.author||'—',reason:x.reason||'—'
+    }));
+    refresh();
+  }catch(error){console.warn('Não foi possível carregar o histórico do servidor:',error.message);}
 }
 async function loadServerRecords(){
   if(!csrfToken)return;
@@ -333,6 +351,7 @@ async function checkRobloxSession(){
     if(data.user.avatar){avatar.innerHTML='<img alt="" src="'+esc(data.user.avatar)+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';}
     else avatar.textContent='RB';
     await loadServerPromotions();
+    await loadServerLogs();
     await loadServerRecords();
   }catch(error){console.warn('Não foi possível consultar a sessão Roblox.');}
 }
