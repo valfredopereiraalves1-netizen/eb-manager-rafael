@@ -106,6 +106,7 @@ async function initializeDatabase() {
     );
     ALTER TABLE admin_requests ADD COLUMN IF NOT EXISTS from_role TEXT;
     ALTER TABLE admin_requests ADD COLUMN IF NOT EXISTS to_role TEXT;
+    ALTER TABLE admin_requests ADD COLUMN IF NOT EXISTS created_by_username TEXT;
     CREATE TABLE IF NOT EXISTS whitelist_entries (
       id BIGSERIAL PRIMARY KEY,
       roblox_user_id TEXT NOT NULL UNIQUE,
@@ -396,7 +397,7 @@ app.get("/api/logs", requireLogin, async (_req, res) => {
       SELECT id, created_at, action::TEXT AS action,
         target_username, from_role,
         COALESCE(to_role, requested_role) AS to_role,
-        created_by AS author, created_by_role AS author_role,
+        COALESCE(created_by_username, created_by) AS author, created_by_role AS author_role,
         reason, status
       FROM admin_requests
       WHERE status = 'applied'
@@ -586,9 +587,9 @@ app.post("/api/admin/requests", requireLogin, requireCsrf, async (req, res) => {
     if (currentRole.rank >= req.session.user.groupRoleRank && access !== "creator") return res.status(403).json({ error: "Você não pode alterar a patente de alguém de nível igual ou superior ao seu." });
     await assignCloudRole(target.id, String(destinationRoleId));
     await pool.query(
-      `INSERT INTO admin_requests (action, target_user_id, target_username, requested_role, from_role, to_role, reason, created_by, created_by_role, status)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 'applied')`,
-      [action, target.id, target.name, destinationLabel, currentRole.name, destinationLabel, reason, req.session.user.username, access]
+      `INSERT INTO admin_requests (action, target_user_id, target_username, requested_role, from_role, to_role, reason, created_by, created_by_username, created_by_role, status)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 'applied')`,
+      [action, target.id, target.name, destinationLabel, currentRole.name, destinationLabel, reason, req.session.user.robloxId, req.session.user.username, access]
     );
     res.status(201).json({ ok: true, status: "applied" });
   } catch (err) {
