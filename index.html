@@ -625,6 +625,36 @@ body{background:#0b0c10;color:#fff}
 @media(max-width:600px){#dashboardApp .overview-hero{padding:22px 20px;border-radius:15px}#dashboardApp .overview-hero-mark{width:70px;height:70px;flex-basis:70px;border-radius:18px}#dashboardApp .overview-hero-mark span{font-size:28px}#dashboardApp .overview-hero-mark small{font-size:7px}#dashboardApp .overview-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}#dashboardApp .overview-stats .stat{padding:15px 13px;min-height:135px}#dashboardApp .overview-stats .stat strong{font-size:25px}#dashboardApp .overview-lower{grid-template-columns:1fr}#dashboardApp .overview-heading{align-items:flex-start;flex-direction:column}.public-stats-inner{gap:20px}.public-trust-line{font-size:10px}}
 @media(prefers-reduced-motion:reduce){#dashboardApp .page:not(.hidden),#dashboardApp .pagehead,#dashboardApp .stat{animation:none!important}#dashboardApp *,#publicHome *{scroll-behavior:auto!important;transition:none!important}}
 
+ 
+/* Perfil militar completo */
+#dashboardApp .profile-hero{display:flex;align-items:center;gap:20px;position:relative;overflow:hidden;background:linear-gradient(120deg,#17251d,#203d2c)!important;color:#f4f7f2;border:1px solid #31543b!important}
+#dashboardApp .profile-avatar{width:88px;height:88px;flex:0 0 88px;border-radius:50%;display:grid;place-items:center;overflow:hidden;background:#d9bd76;color:#173b29;font-size:24px;font-weight:900;border:3px solid #d9bd76}
+#dashboardApp .profile-avatar img{width:100%;height:100%;object-fit:cover}
+#dashboardApp .profile-identity{min-width:0;flex:1}.profile-identity h2{font-size:24px;margin:8px 0 2px;color:#fff!important;overflow-wrap:anywhere}
+#dashboardApp .profile-identity p{margin:0 0 5px;color:#cbd8ce}.profile-identity strong{display:block;color:#f0d58b}
+#dashboardApp .profile-identity small{display:block;color:#d4dfd6;margin-top:8px}
+#dashboardApp .profile-verified{font-size:9px;letter-spacing:.09em;color:#d8e8dc;font-weight:800;white-space:nowrap}
+#dashboardApp .profile-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#61d394;margin-right:6px}
+#dashboardApp .profile-tabs{display:flex;gap:7px;overflow:auto;margin:20px 0 16px;padding-bottom:3px}
+#dashboardApp .profile-tab{flex:0 0 auto;border:1px solid var(--eb-line,#30363d);border-radius:9px;padding:10px 14px;background:var(--eb-card,#161b22);color:var(--eb-muted,#8b949e);font-weight:700}
+#dashboardApp .profile-tab.active{background:#234a32;color:#fff;border-color:#43885a}
+#dashboardApp .profile-stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+#dashboardApp .profile-stat small{display:block;color:var(--eb-muted,#8b949e);font-size:11px}
+#dashboardApp .profile-stat strong{display:block;color:#e8d18c;font-size:27px;margin-top:8px}
+#dashboardApp .profile-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+#dashboardApp .profile-details{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:0}
+#dashboardApp .profile-details div{min-width:0;padding-bottom:9px;border-bottom:1px solid var(--eb-line,#30363d)}
+#dashboardApp .profile-details dt{font-size:11px;color:var(--eb-muted,#8b949e);margin-bottom:4px}
+#dashboardApp .profile-details dd{margin:0;color:var(--eb-text,#f0f6fc);font-size:13px;font-weight:650;overflow-wrap:anywhere}
+#dashboardApp .profile-status{color:#6ed69a}
+#dashboardApp .profile-timeline{display:grid;gap:0;margin-top:10px}
+#dashboardApp .profile-event{position:relative;padding:0 0 20px 25px;border-left:2px solid #315b3e;margin-left:7px}
+#dashboardApp .profile-event:before{content:"";position:absolute;left:-6px;top:3px;width:10px;height:10px;border-radius:50%;background:#d9bd76;border:2px solid #1b2b20}
+#dashboardApp .profile-event strong{display:block;color:var(--eb-text,#f0f6fc);font-size:13px}
+#dashboardApp .profile-event small{display:block;color:var(--eb-muted,#8b949e);margin:3px 0}
+#dashboardApp .profile-event p{margin:4px 0 0;color:var(--eb-muted,#8b949e);font-size:12px}
+@media(max-width:850px){#dashboardApp .profile-stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#dashboardApp .profile-columns{grid-template-columns:1fr}}
+@media(max-width:600px){#dashboardApp .profile-hero{align-items:flex-start;flex-wrap:wrap;padding:16px}#dashboardApp .profile-avatar{width:68px;height:68px;flex-basis:68px}#dashboardApp .profile-verified{width:100%}#dashboardApp .profile-details{grid-template-columns:1fr 1fr}#dashboardApp .profile-tab{padding:9px 11px;font-size:12px}}
 </style></head>
 <body>
 <div id="publicHome" class="public-home hidden">
@@ -765,11 +795,48 @@ body{background:#0b0c10;color:#fff}
 <div class="notice">Os formulários exigem login Roblox. As operações de patente também dependem das permissões e dos mapeamentos configurados no servidor.</div>
 </section>
 <section id="page-perfil" class="page hidden">
-<div class="pagehead"><div><h1>Meu perfil</h1><p class="sub">Informações da sua conta Roblox conectada.</p></div></div>
-<div class="card" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">
-<div class="avatar" id="profileAvatar" style="width:76px;height:76px;font-size:22px">RB</div>
-<div><h2 id="profileUsername" style="margin:0 0 5px">Conta Roblox</h2><p class="muted" id="profileRole" style="margin:0">Patente não carregada</p></div>
+<div class="pagehead"><div><h1>Meu perfil</h1><p class="sub">Sua identidade e trajetória militar no EB Manager.</p></div><button class="btn" id="refreshProfile" type="button">Atualizar perfil</button></div>
+<div class="profile-hero card">
+  <div class="profile-avatar" id="profileAvatar">RB</div>
+  <div class="profile-identity"><span class="tag">MILITAR DO GRUPO</span><h2 id="profileUsername">Conta Roblox</h2><p id="profileDisplayName">Nome de exibição</p><strong id="profileRole">Patente não carregada</strong><small id="profileTagline">Sua apresentação aparecerá aqui.</small></div>
+  <div class="profile-verified"><span class="profile-dot"></span> CONTA ROBLOX CONECTADA</div>
 </div>
+<div class="profile-tabs" role="tablist" aria-label="Seções do perfil">
+  <button class="profile-tab active" type="button" data-profile-tab="overview">Visão geral</button>
+  <button class="profile-tab" type="button" data-profile-tab="career">Carreira militar</button>
+  <button class="profile-tab" type="button" data-profile-tab="stats">Estatísticas</button>
+  <button class="profile-tab" type="button" data-profile-tab="history">Histórico</button>
+</div>
+<div id="profile-panel-overview" class="profile-panel">
+  <div class="profile-stats-grid">
+    <div class="card profile-stat"><small>Promoções recebidas</small><strong id="profilePromotions">—</strong></div>
+    <div class="card profile-stat"><small>Treinamentos registrados</small><strong id="profileTrainings">—</strong></div>
+    <div class="card profile-stat"><small>Rebaixamentos</small><strong id="profileDemotions">—</strong></div>
+    <div class="card profile-stat"><small>Registros de carreira</small><strong id="profileRecords">—</strong></div>
+  </div>
+  <div class="profile-columns">
+    <div class="card"><h2>Informações da conta</h2><dl class="profile-details">
+      <div><dt>Usuário Roblox</dt><dd id="profileHandle">—</dd></div><div><dt>ID da conta</dt><dd id="profileId">—</dd></div>
+      <div><dt>Grupo</dt><dd id="profileGroup">—</dd></div><div><dt>ID da patente</dt><dd id="profileRoleId">—</dd></div>
+      <div><dt>Entrada no grupo</dt><dd id="profileJoined">Não disponibilizada pela API</dd></div><div><dt>Situação</dt><dd><span class="profile-status">Conectado</span></dd></div>
+    </dl></div>
+    <div class="card"><h2>Apresentação pessoal</h2><form id="profileBioForm" class="formgrid">
+      <div class="field full"><label for="profileTaglineInput">Frase de apresentação</label><input id="profileTaglineInput" maxlength="80" placeholder="Uma frase que representa você"></div>
+      <div class="field full"><label for="profileBioInput">Biografia</label><textarea id="profileBioInput" maxlength="300" rows="4" placeholder="Conte um pouco sobre sua trajetória..."></textarea><small class="muted">Até 300 caracteres.</small></div>
+      <div class="field full"><button class="btn primary" type="submit">Salvar apresentação</button><p id="profileSaveStatus" class="muted" aria-live="polite"></p></div>
+    </form></div>
+  </div>
+</div>
+<div id="profile-panel-career" class="profile-panel hidden"><div class="card"><h2>Carreira militar</h2><dl class="profile-details">
+  <div><dt>Patente atual</dt><dd id="careerRole">—</dd></div><div><dt>Rank no grupo</dt><dd id="careerRank">—</dd></div>
+  <div><dt>Última promoção registrada</dt><dd id="careerLastPromotion">Nenhuma registrada</dd></div><div><dt>Tempo de serviço</dt><dd id="careerService">Indisponível sem data de entrada confirmada</dd></div>
+  <div><dt>Divisão</dt><dd>Não informada pelo grupo</dd></div><div><dt>Atividade</dt><dd>Conta autenticada; atividade recente não equivale a status oficial</dd></div>
+</dl></div></div>
+<div id="profile-panel-stats" class="profile-panel hidden"><div class="profile-stats-grid">
+  <div class="card profile-stat"><small>Promoções recebidas</small><strong id="profilePromotions2">0</strong></div><div class="card profile-stat"><small>Treinamentos</small><strong id="profileTrainings2">0</strong></div>
+  <div class="card profile-stat"><small>Rebaixamentos</small><strong id="profileDemotions2">0</strong></div><div class="card profile-stat"><small>Registros recentes</small><strong id="profileRecords2">0</strong></div>
+</div><div class="card section"><h2>Última promoção</h2><p id="profileLastPromotion" class="muted">Nenhuma promoção registrada.</p></div></div>
+<div id="profile-panel-history" class="profile-panel hidden"><div class="card"><h2>Linha do tempo</h2><div id="profileTimeline" class="profile-timeline"><div class="empty">Carregando histórico...</div></div></div></div>
 </section>
 <section id="page-loja" class="page hidden">
 <div class="pagehead"><div><h1>Loja</h1><p class="sub">Informações sobre opções disponíveis no EB Manager.</p></div></div>
@@ -829,6 +896,7 @@ document.getElementById('deniedList').innerHTML=d.length?d.map(x=>'<div class="r
 document.getElementById('promotionForm').onsubmit=async e=>{e.preventDefault();if(!csrfToken){alert('O login Roblox ainda não está ativo. O backend precisa ser hospedado e configurado antes de registrar promoções oficiais.');return}let f=new FormData(e.target);const response=await fetch('/api/promotions',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','x-csrf-token':csrfToken},body:JSON.stringify({targetUsername:f.get('person'),fromRole:f.get('from'),toRole:f.get('to'),reason:f.get('reason')})});const result=await response.json().catch(()=>({}));if(!response.ok){alert(result.error||'Não foi possível registrar a promoção.');return}e.target.reset();await loadServerPromotions();
     await loadServerLogs();
     await loadServerRecords();
+    await loadProfileData();
     await loadGroupMembers();page('logs')}
 document.getElementById('trainingForm').onsubmit=async e=>{e.preventDefault();if(!csrfToken){alert('Entre com sua conta Roblox para continuar.');return}let f=new FormData(e.target);const r=await fetch('/api/records/training',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','x-csrf-token':csrfToken},body:JSON.stringify({person:f.get('person'),training:f.get('training'),score:Number(f.get('score')),instructor:f.get('instructor')})});const out=await r.json().catch(()=>({}));if(!r.ok){alert(out.error||'Não foi possível salvar.');return}e.target.reset();await loadServerRecords()};
 
@@ -918,6 +986,60 @@ async function loadServerRecords(){
     refresh();
   }catch(error){console.warn('Não foi possível carregar os registros do servidor.');}
 }
+async function loadProfileData(){
+  if(!csrfToken)return;
+  const status=document.getElementById('profileSaveStatus');
+  try{
+    const response=await fetch('/api/profile',{credentials:'same-origin'});
+    const data=await response.json().catch(()=>({}));
+    if(!response.ok)throw new Error(data.error||'Não foi possível carregar o perfil.');
+    const p=data.profile||{},stats=p.stats||{};
+    document.getElementById('profileUsername').textContent='@'+(p.username||'');
+    document.getElementById('profileDisplayName').textContent=p.displayName||p.username||'—';
+    document.getElementById('profileRole').textContent=p.roleName||'Patente não informada';
+    document.getElementById('profileTagline').textContent=p.tagline||'Adicione uma frase de apresentação no seu perfil.';
+    document.getElementById('profileHandle').textContent='@'+(p.username||'—');
+    document.getElementById('profileId').textContent=p.robloxId||'—';
+    document.getElementById('profileGroup').textContent=p.groupId||'—';
+    document.getElementById('profileRoleId').textContent=p.roleId||'—';
+    const joined=p.joinedAt?new Date(p.joinedAt):null;
+    document.getElementById('profileJoined').textContent=joined&&!Number.isNaN(joined.getTime())?joined.toLocaleDateString('pt-BR'):'Não disponibilizada pela API';
+    const avatar=document.getElementById('profileAvatar');
+    avatar.innerHTML=p.avatar?'<img alt="Foto de perfil Roblox" src="'+esc(p.avatar)+'">':'RB';
+    ['profilePromotions','profilePromotions2'].forEach(id=>document.getElementById(id).textContent=stats.promotions??0);
+    ['profileTrainings','profileTrainings2'].forEach(id=>document.getElementById(id).textContent=stats.trainings??0);
+    ['profileDemotions','profileDemotions2'].forEach(id=>document.getElementById(id).textContent=stats.demotions??0);
+    ['profileRecords','profileRecords2'].forEach(id=>document.getElementById(id).textContent=stats.records??0);
+    document.getElementById('careerRole').textContent=p.roleName||'—';
+    document.getElementById('careerRank').textContent=p.rank??'—';
+    document.getElementById('careerLastPromotion').textContent=stats.lastPromotionAt?new Date(stats.lastPromotionAt).toLocaleString('pt-BR'):'Nenhuma registrada';
+    document.getElementById('profileLastPromotion').textContent=stats.lastPromotionAt?new Date(stats.lastPromotionAt).toLocaleString('pt-BR'):'Nenhuma promoção registrada.';
+    document.getElementById('careerService').textContent=joined&&!Number.isNaN(joined.getTime())?Math.max(0,Math.floor((Date.now()-joined.getTime())/86400000))+' dias':'Indisponível sem data confirmada';
+    document.getElementById('profileBioInput').value=p.bio||'';
+    document.getElementById('profileTaglineInput').value=p.tagline||'';
+    const events=(p.history||[]);
+    const timeline=document.getElementById('profileTimeline');
+    timeline.innerHTML=(joined?[{title:'Entrada no grupo',created_at:p.joinedAt,reason:'Ingresso confirmado pela API do grupo.'}]:[]).concat(events).map(item=>'<div class="profile-event"><strong>'+esc(item.title||'Alteração de carreira')+'</strong><small>'+esc(new Date(item.created_at).toLocaleString('pt-BR'))+'</small><p>'+esc([item.from_role,item.to_role].filter(Boolean).join(' → '))+(item.reason?' · '+esc(item.reason):'')+'</p></div>').join('')||'<div class="empty">Ainda não há eventos de carreira registrados para esta conta.</div>';
+    if(status)status.textContent='';
+  }catch(error){if(status)status.textContent=error.message;console.warn(error);}
+}
+document.querySelectorAll('[data-profile-tab]').forEach(button=>button.addEventListener('click',()=>{
+  const tab=button.dataset.profileTab;
+  document.querySelectorAll('[data-profile-tab]').forEach(x=>x.classList.toggle('active',x===button));
+  document.querySelectorAll('.profile-panel').forEach(x=>x.classList.toggle('hidden',x.id!=='profile-panel-'+tab));
+}));
+document.getElementById('profileBioForm').addEventListener('submit',async e=>{
+  e.preventDefault();const status=document.getElementById('profileSaveStatus');
+  status.textContent='Salvando...';
+  try{
+    const response=await fetch('/api/profile',{method:'PUT',credentials:'same-origin',headers:{'Content-Type':'application/json','x-csrf-token':csrfToken},body:JSON.stringify({bio:document.getElementById('profileBioInput').value,tagline:document.getElementById('profileTaglineInput').value})});
+    const result=await response.json().catch(()=>({}));
+    if(!response.ok)throw new Error(result.error||'Não foi possível salvar.');
+    status.textContent='Apresentação salva com sucesso.';
+    document.getElementById('profileTagline').textContent=result.tagline||'Adicione uma frase de apresentação no seu perfil.';
+  }catch(error){status.textContent=error.message;}
+});
+document.getElementById('refreshProfile').addEventListener('click',loadProfileData);
 async function checkRobloxSession(){
   const login=document.getElementById('robloxLogin');
   const userBox=document.getElementById('robloxUser');
