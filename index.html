@@ -400,6 +400,68 @@ body{background:var(--eb-bg);color:var(--eb-text)}
 @media(max-width:760px){.public-hero-inner{grid-template-columns:1fr;gap:30px;padding:48px 20px}.public-login-card{justify-self:stretch;max-width:none;padding:22px}.public-hero{min-height:0}.public-hero h1{font-size:clamp(32px,9vw,46px)}.public-login-card h2{font-size:21px}}
 @media(prefers-reduced-motion:reduce){.public-login-button{transition:none}}
 
+
+/* Tema delicado: verde-sálvia, menta e dourado suave */
+#dashboardApp{
+  --cute-ink:#244333;
+  --cute-muted:#7b8d80;
+  --cute-line:#e3ece3;
+  --cute-mint:#eaf4ec;
+  --cute-sage:#dcebdd;
+  --cute-gold:#ead9a6;
+}
+#dashboardApp .main,#dashboardApp .content{background:#f7faf6}
+#dashboardApp .side{background:linear-gradient(165deg,#174b35 0%,#103b2a 100%)}
+#dashboardApp .brand .crest{border-radius:14px;background:linear-gradient(145deg,#f5e6b8,#d5b86d);box-shadow:0 5px 14px rgba(0,0,0,.12)}
+#dashboardApp .nav button{border:1px solid transparent;border-radius:14px;padding:12px 14px;margin:4px 0}
+#dashboardApp .nav button.active{background:#f5e8bd;color:#244331;box-shadow:0 5px 14px rgba(7,28,17,.13);border-color:#ead9a6}
+#dashboardApp .nav button:hover:not(.active){background:rgba(255,255,255,.13);color:#fff;transform:translateX(2px)}
+#dashboardApp .nav button.active:before{display:none}
+#dashboardApp .top{background:rgba(255,255,255,.94);border-bottom-color:#e7eee7}
+#dashboardApp .card{border-radius:19px;border-color:#e5eee5;box-shadow:0 7px 22px rgba(44,83,53,.055)}
+#dashboardApp .stat{background:linear-gradient(145deg,#fff 0%,#f7fbf6 100%)}
+#dashboardApp .stat:after{width:5px;background:linear-gradient(#d9c17d,#b5cdaF);border-radius:0 5px 5px 0}
+#dashboardApp .tag{background:#edf5e9;color:#39704b;border-color:#dcebd9;border-radius:999px;padding:5px 10px}
+#dashboardApp .btn{
+  min-height:42px;padding:10px 17px;border-radius:14px;
+  background:#f0f6ef;border:1px solid #dce9dc;color:#315640;
+  font-weight:750;letter-spacing:.01em;
+  box-shadow:0 3px 9px rgba(48,86,56,.055);
+}
+#dashboardApp .btn:hover{background:#e5f1e5;border-color:#c9dfcb;transform:translateY(-2px);box-shadow:0 7px 16px rgba(48,86,56,.11)}
+#dashboardApp .btn.primary{
+  background:linear-gradient(135deg,#2d8054,#1d6542);border-color:#28764d;color:#fff;
+  box-shadow:0 5px 13px rgba(36,111,69,.19)
+}
+#dashboardApp .btn.primary:hover{background:linear-gradient(135deg,#246f49,#175638);box-shadow:0 8px 18px rgba(36,111,69,.24)}
+#dashboardApp .btn.danger{background:#fff0ed;border-color:#f2d7d1;color:#a34e43}
+#dashboardApp .btn.danger:hover{background:#ffe7e2;border-color:#eabeb5}
+#dashboardApp .actions{gap:10px}
+#dashboardApp .field input,#dashboardApp .field select,#dashboardApp .field textarea{
+  border-radius:13px;background:#fff;border-color:#dfe9df;padding:12px 13px
+}
+#dashboardApp .field input:focus,#dashboardApp .field select:focus,#dashboardApp .field textarea:focus{
+  outline:0;border-color:#8dbb96;box-shadow:0 0 0 4px rgba(115,166,123,.15)
+}
+#dashboardApp .rank{border-radius:13px;background:#f8fbf7;border-color:#e5eee4;padding:13px 15px}
+#dashboardApp .notice{border-radius:14px}
+#dashboardApp .hero-photo{border-radius:18px;overflow:hidden}
+#dashboardApp .avatar{background:#e9f3e9;border-color:#d8e8d9;color:#286344}
+#dashboardApp .pagehead h1{color:#204b34}
+#dashboardApp .sub{color:#829184}
+#dashboardApp .tablewrap{border-radius:14px}
+#dashboardApp th:first-child{border-radius:10px 0 0 0}
+#dashboardApp th:last-child{border-radius:0 10px 0 0}
+#dashboardApp button:focus-visible,#dashboardApp a:focus-visible{
+  outline:3px solid #d7bd72;outline-offset:3px
+}
+#dashboardApp .btn:disabled{opacity:.58;cursor:not-allowed;transform:none;box-shadow:none}
+@media(max-width:600px){
+  #dashboardApp .nav button{border-radius:13px;padding:10px 13px}
+  #dashboardApp .btn{min-height:43px;border-radius:13px}
+  #dashboardApp .card{border-radius:16px}
+  #dashboardApp .pagehead{gap:10px}
+}
 </style></head>
 <body>
 <div id="publicHome" class="public-home hidden">
