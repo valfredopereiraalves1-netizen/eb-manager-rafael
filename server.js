@@ -31,6 +31,23 @@ let roleRanks = {};
 try { roleRanks = JSON.parse(process.env.ROLE_RANKS_JSON || "{}"); }
 catch { throw new Error("ROLE_RANKS_JSON precisa conter um JSON válido."); }
 
+const CDP_DEFAULT_RULES = {
+  "[CR] Criador": 0,
+  "[SLD] Soldado": 0,
+  "[ES] Elite Secreta": 140,
+  "[EM] Elite Militar": 125,
+  "[S-CR] Sub Criador": { hours: 0, creatorOnly: true },
+  "[ER] Elite Real": { hours: 0, creatorOnly: true }
+};
+let cdpRules = { ...CDP_DEFAULT_RULES };
+try {
+  const overrides = JSON.parse(process.env.CDP_RULES_JSON || "{}");
+  if (!overrides || typeof overrides !== "object" || Array.isArray(overrides)) throw new Error("invalid");
+  cdpRules = { ...cdpRules, ...overrides };
+} catch {
+  throw new Error("CDP_RULES_JSON precisa conter um objeto JSON válido.");
+}
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: isProduction ? { rejectUnauthorized: false } : undefined,
@@ -127,6 +144,22 @@ async function initializeDatabase() {
       created_by TEXT NOT NULL,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
+    CREATE TABLE IF NOT EXISTS rank_service (
+      roblox_user_id TEXT PRIMARY KEY,
+      username TEXT NOT NULL,
+      role_name TEXT NOT NULL,
+      role_rank INTEGER NOT NULL,
+      rank_since TIMESTAMPTZ NOT NULL,
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+    CREATE INDEX IF NOT EXISTS rank_service_rank_idx ON rank_service(role_name, rank_since);
+    CREATE TABLE IF NOT EXISTS app_settings (
+      setting_key TEXT PRIMARY KEY,
+      setting_value TEXT NOT NULL
+    );
+    INSERT INTO app_settings (setting_key, setting_value)
+      VALUES ('cdp_activated_at', NOW()::text)
+      ON CONFLICT (setting_key) DO NOTHING;
   `);
 }
 
@@ -147,6 +180,91 @@ function requireLogin(req, res, next) {
 function roleRank(label) {
   const value = roleRanks[label];
   return Number.isInteger(value) ? value : null;
+}
+function getCdpRule(roleName) {
+  const key = Object.keys(cdpRules).find(name => name.trim().toLocaleLowerCase("pt-BR") === String(roleName || "").trim().toLocaleLowerCase("pt-BR"));
+  if (!key) return null;
+  const raw = cdpRules[key];
+  if (Number.isFinite(Number(raw)) && typeof raw !== "object") {
+    const hours = Number(raw);
+    return hours >= 0 ? { hours, creatorOnly: false } : null;
+  }
+  if (!raw || typeof raw !== "object" || !Number.isFinite(Number(raw.hours)) || Number(raw.hours) < 0) return null;
+  return { hours: Number(raw.hours), creatorOnly: Boolean(raw.creatorOnly) };
+}
+async function getCdpActivationAt() {
+  const result = await pool.query("SELECT setting_value FROM app_settings WHERE setting_key = 'cdp_activated_at'");
+  return result.rows[0]?.setting_value || new Date().toISOString();
+}
+async function syncCdpMembers(members) {
+  if (!members.length) return;
+  const activationAt = await getCdpActivationAt();
+  await pool.query(
+    `INSERT INTO rank_service (roblox_user_id, username, role_name, role_rank, rank_since)
+     SELECT * FROM UNNEST($1::text[], $2::text[], $3::text[], $4::int[], $5::timestamptz[])
+     ON CONFLICT (roblox_user_id) DO UPDATE SET
+       username = EXCLUDED.username,
+       rank_since = CASE
+         WHEN rank_service.role_name IS DISTINCT FROM EXCLUDED.role_name
+           OR rank_service.role_rank IS DISTINCT FROM EXCLUDED.role_rank
+         THEN NOW() ELSE rank_service.rank_since END,
+       role_name = EXCLUDED.role_name,
+       role_rank = EXCLUDED.role_rank,
+       updated_at = NOW()`,
+    [
+      members.map(m => String(m.userId)),
+      members.map(m => String(m.username)),
+      members.map(m => String(m.roleName)),
+      members.map(m => Number(m.rank || 0)),
+      members.map(() => activationAt)
+    ]
+  );
+}
+async function ensureCdpMember(userId, username, roleName, rank) {
+  const activationAt = await getCdpActivationAt();
+  await pool.query(
+    `INSERT INTO rank_service (roblox_user_id, username, role_name, role_rank, rank_since)
+     VALUES ($1, $2, $3, $4, $5)
+     ON CONFLICT (roblox_user_id) DO UPDATE SET
+       username = EXCLUDED.username,
+       rank_since = CASE
+         WHEN rank_service.role_name IS DISTINCT FROM EXCLUDED.role_name
+           OR rank_service.role_rank IS DISTINCT FROM EXCLUDED.role_rank
+         THEN NOW() ELSE rank_service.rank_since END,
+       role_name = EXCLUDED.role_name,
+       role_rank = EXCLUDED.role_rank,
+       updated_at = NOW()`,
+    [String(userId), String(username), String(roleName), Number(rank || 0), activationAt]
+  );
+  const result = await pool.query("SELECT rank_since FROM rank_service WHERE roblox_user_id = $1", [String(userId)]);
+  return result.rows[0]?.rank_since || activationAt;
+}
+async function checkCdpEligibility(target, currentRole, destinationRole, actorAccess) {
+  const currentRule = getCdpRule(currentRole.name);
+  if (!currentRule) {
+    return { ok: false, error: "O tempo mínimo desta patente ainda não foi configurado no CDP. A promoção está bloqueada até a regra ser cadastrada." };
+  }
+  const destinationRule = getCdpRule(destinationRole);
+  if (destinationRule?.creatorOnly && actorAccess !== "creator") {
+    return { ok: false, error: "Esta patente só pode ser concedida pelo Criador." };
+  }
+  const rankSince = await ensureCdpMember(target.id, target.name, currentRole.name, currentRole.rank);
+  const elapsedHours = Math.max(0, (Date.now() - new Date(rankSince).getTime()) / 3600000);
+  if (elapsedHours < currentRule.hours) {
+    const remaining = Math.ceil((currentRule.hours - elapsedHours) * 10) / 10;
+    return { ok: false, error: `Promoção bloqueada pelo CDP: são necessárias ${currentRule.hours} horas nesta patente. Faltam aproximadamente ${remaining} horas.` };
+  }
+  return { ok: true };
+}
+async function resetCdpMember(userId, username, roleName, rank) {
+  await pool.query(
+    `INSERT INTO rank_service (roblox_user_id, username, role_name, role_rank, rank_since)
+     VALUES ($1, $2, $3, $4, NOW())
+     ON CONFLICT (roblox_user_id) DO UPDATE SET
+       username = EXCLUDED.username, role_name = EXCLUDED.role_name,
+       role_rank = EXCLUDED.role_rank, rank_since = NOW(), updated_at = NOW()`,
+    [String(userId), String(username), String(roleName), Number(rank || 0)]
+  );
 }
 
 function minimumPromoterRank() {
@@ -390,11 +508,44 @@ app.get("/api/group/members", requireLogin, async (_req, res) => {
   }
   try {
     const members = await listGroupMembersFromCloud();
+    await syncCdpMembers(members);
     groupMembersCache = { at: Date.now(), members };
     res.json({ groupId: GROUP_ID, updatedAt: new Date(groupMembersCache.at).toISOString(), members });
   } catch (err) {
     console.error("Falha ao consultar membros do grupo Roblox:", err.message);
     res.status(502).json({ error: "Não foi possível carregar os membros. Verifique se a API Key tem permissão group:read para este grupo." });
+  }
+});
+app.get("/api/cdp", requireLogin, async (_req, res) => {
+  try {
+    let members = groupMembersCache.members;
+    if (!members || Date.now() - groupMembersCache.at >= 60_000) {
+      members = await listGroupMembersFromCloud();
+      groupMembersCache = { at: Date.now(), members };
+    }
+    await syncCdpMembers(members);
+    const result = await pool.query("SELECT roblox_user_id, username, role_name, role_rank, rank_since FROM rank_service ORDER BY role_rank DESC, username ASC");
+    const now = Date.now();
+    const tracked = result.rows.map(row => {
+      const rule = getCdpRule(row.role_name);
+      const elapsedHours = Math.max(0, (now - new Date(row.rank_since).getTime()) / 3600000);
+      return {
+        userId: row.roblox_user_id,
+        username: row.username,
+        roleName: row.role_name,
+        rank: row.role_rank,
+        rankSince: row.rank_since,
+        elapsedHours: Math.floor(elapsedHours * 10) / 10,
+        requiredHours: rule ? rule.hours : null,
+        ruleConfigured: Boolean(rule),
+        creatorOnly: Boolean(rule?.creatorOnly),
+        eligible: Boolean(rule && elapsedHours >= rule.hours)
+      };
+    });
+    res.json({ activationAt: await getCdpActivationAt(), members: tracked });
+  } catch (err) {
+    console.error("Falha ao consultar CDP:", err.message);
+    res.status(502).json({ error: "Não foi possível carregar o CDP. Verifique a integração do grupo Roblox." });
   }
 });
 
@@ -557,11 +708,14 @@ app.post("/api/promotions", requireLogin, requireCsrf, async (req, res) => {
     const targetRole = await getGroupRole(target.id);
     if (!targetRole) return res.status(400).json({ error: "O militar informado não pertence ao grupo." });
     if (targetRole.rank !== fromRank) return res.status(409).json({ error: "A patente atual informada não corresponde à função real do militar no grupo." });
+    const cdpCheck = await checkCdpEligibility(target, targetRole, toRole.trim(), req.session.specialAccess);
+    if (!cdpCheck.ok) return res.status(403).json({ error: cdpCheck.error });
     if (!process.env.ROBLOX_OPEN_CLOUD_API_KEY) return res.status(503).json({ error: "A integração Open Cloud ainda não foi configurada no Render." });
     const roleIds = JSON.parse(process.env.ROLE_IDS_JSON || "{}");
     const targetRoleId = roleIds[toRole.trim()];
     if (!targetRoleId) return res.status(503).json({ error: "Falta mapear o ID real da patente de destino em ROLE_IDS_JSON." });
     await assignCloudRole(target.id, String(targetRoleId));
+    await resetCdpMember(target.id, target.name, toRole.trim(), toRank);
     const saved = await pool.query(
       `INSERT INTO promotions (created_at, target_user_id, target_username, from_role, to_role, author_user_id, author_username, author_role, reason)
        VALUES (NOW(), $1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
@@ -684,6 +838,10 @@ app.post("/api/admin/requests", requireLogin, requireCsrf, async (req, res) => {
     if (!target) return res.status(404).json({ error: "Usuário Roblox não encontrado." });
     const currentRole = await getGroupRole(target.id);
     if (!currentRole) return res.status(400).json({ error: "O usuário não pertence ao grupo EB configurado." });
+    if (action === "set_role") {
+      const cdpCheck = await checkCdpEligibility(target, currentRole, requestedRole, access);
+      if (!cdpCheck.ok) return res.status(403).json({ error: cdpCheck.error });
+    }
     if (!process.env.ROBLOX_OPEN_CLOUD_API_KEY) return res.status(503).json({ error: "Configure ROBLOX_OPEN_CLOUD_API_KEY no Render antes de aplicar alterações." });
     const roleIds = JSON.parse(process.env.ROLE_IDS_JSON || "{}");
     let destinationRoleId = null;
@@ -711,6 +869,7 @@ app.post("/api/admin/requests", requireLogin, requireCsrf, async (req, res) => {
       return res.status(400).json({ error: "O painel ADM só pode atribuir uma patente superior à patente atual. Use o painel CGEx para rebaixamento ou revogação." });
     }
     await assignCloudRole(target.id, String(destinationRoleId));
+    await resetCdpMember(target.id, target.name, destinationLabel, roleRank(destinationLabel) ?? currentRole.rank);
     await pool.query(
       `INSERT INTO admin_requests (action, target_user_id, target_username, requested_role, from_role, to_role, reason, created_by, created_by_username, created_by_role, status)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 'applied')`,
