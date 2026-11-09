@@ -858,7 +858,7 @@ body{background:#0b0c10;color:#fff}
 </div>
 <div class="notice">A lista atualiza automaticamente a cada 60 segundos enquanto o painel estiver aberto. A API Key fica somente no servidor; nunca coloque a chave no HTML.</div>
 </section>
-<section id="page-promocoes" class="page hidden"><div class="pagehead"><div><h1>Registrar promoção</h1><p class="sub">Registre uma alteração de patente para auditoria.</p></div></div><div class="card"><form id="promotionForm" class="formgrid"><div class="field"><label>Nome do militar</label><input name="person" required placeholder="Nome no Roblox"></div><div class="field"><label>Usuário de quem promove</label><input name="author" required placeholder="Seu nome no Roblox"></div><div class="field"><label>Patente atual</label><select name="from" id="fromRank" required></select></div><div class="field"><label>Nova patente</label><select name="to" id="toRank" required></select></div><div class="field full"><label>Motivo da promoção</label><textarea name="reason" required placeholder="Descreva o motivo..."></textarea></div><div class="field full"><button class="btn primary" type="submit">Registrar promoção</button></div></form><div class="notice">As promoções são verificadas no servidor com a API do Roblox. O mapeamento das patentes e os níveis de permissão precisam corresponder aos cargos reais do grupo.</div></div></section>
+<section id="page-promocoes" class="page hidden"><div class="pagehead"><div><h1>Entregar patente</h1><p class="sub">A promoção só será aplicada após o envio da foto obrigatória.</p></div></div><div class="card"><form id="promotionForm" class="formgrid"><div class="field"><label>Nome do militar</label><input name="person" required placeholder="Nome no Roblox"></div><div class="field"><label>Usuário de quem promove</label><input name="author" required placeholder="Seu nome no Roblox"></div><div class="field"><label>Patente atual</label><select name="from" id="fromRank" required></select></div><div class="field"><label>Nova patente</label><select name="to" id="toRank" required></select></div><div class="field full"><label for="promotionEvidence">Foto EM CUNHA <span aria-hidden="true">*</span></label><input id="promotionEvidence" name="evidence" type="file" accept="image/jpeg,image/png,image/webp" required><small class="muted">Obrigatória para entregar a patente. Envie uma imagem JPG, PNG ou WEBP, de até 2 MB. A foto será anexada ao registro da promoção.</small><div id="promotionEvidencePreview" class="muted" aria-live="polite">Nenhuma foto selecionada.</div></div><div class="field full"><label>Motivo da promoção</label><textarea name="reason" required placeholder="Descreva o motivo..."></textarea></div><div class="field full"><button class="btn primary" type="submit">Entregar patente</button><p id="promotionStatus" class="muted" aria-live="polite"></p></div></form><div class="notice">O servidor exige e guarda a foto como comprovante. Sem ela, a promoção não será enviada ao Roblox.</div></div></section>
 <section id="page-logs" class="page hidden"><div class="pagehead"><div><h1>Histórico de operações</h1><p class="sub">Promoções, rebaixamentos e revogações aplicados no Roblox.</p></div><button class="btn" id="exportLogs">Exportar CSV</button></div><div class="card tablewrap"><table><thead><tr><th>Data</th><th>Operação</th><th>Militar</th><th>De</th><th>Para</th><th>Responsável</th><th>Motivo</th></tr></thead><tbody id="logsBody"></tbody></table><div id="logsEmpty" class="empty">Nenhuma operação registrada.</div></div></section>
 <section id="page-ranking" class="page hidden"><div class="pagehead"><div><h1>Ranking de treinamentos</h1><p class="sub">Acompanhe participações e resultados.</p></div></div><div class="card"><form id="trainingForm" class="formgrid"><div class="field"><label>Nome do militar</label><input name="person" required></div><div class="field"><label>Treinamento</label><input name="training" required placeholder="Ex.: Formação básica"></div><div class="field"><label>Pontuação</label><input name="score" type="number" min="0" max="100" required></div><div class="field"><label>Instrutor</label><input name="instructor" required></div><div class="field full"><button class="btn primary">Adicionar ao ranking</button></div></form></div><div class="card section tablewrap"><table><thead><tr><th>Posição</th><th>Militar</th><th>Treinamento</th><th>Pontos</th><th>Instrutor</th></tr></thead><tbody id="trainingBody"></tbody></table><div id="trainingEmpty" class="empty">Nenhum treinamento registrado.</div></div></section>
 
@@ -894,11 +894,37 @@ document.getElementById('recent').innerHTML=serverLogs.length?'<div class="rank"
 document.getElementById('trainingBody').innerHTML=[...t].sort((a,b)=>b.score-a.score).map((x,i)=>'<tr><td>#'+(i+1)+'</td><td>'+esc(x.person)+'</td><td>'+esc(x.training)+'</td><td>'+esc(x.score)+'</td><td>'+esc(x.instructor)+'</td></tr>').join('');document.getElementById('trainingEmpty').classList.toggle('hidden',t.length>0);
 
 document.getElementById('deniedList').innerHTML=d.length?d.map(x=>'<div class="rank"><b>'+esc(x.person)+' · '+esc(x.rank)+'</b><small>'+esc(x.reason)+'</small></div>').join(''):'Nenhuma promoção negada registrada.'}
-document.getElementById('promotionForm').onsubmit=async e=>{e.preventDefault();if(!csrfToken){alert('O login Roblox ainda não está ativo. O backend precisa ser hospedado e configurado antes de registrar promoções oficiais.');return}let f=new FormData(e.target);const response=await fetch('/api/promotions',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','x-csrf-token':csrfToken},body:JSON.stringify({targetUsername:f.get('person'),fromRole:f.get('from'),toRole:f.get('to'),reason:f.get('reason')})});const result=await response.json().catch(()=>({}));if(!response.ok){alert(result.error||'Não foi possível registrar a promoção.');return}e.target.reset();await loadServerPromotions();
-    await loadServerLogs();
-    await loadServerRecords();
-    await loadProfileData();
-    await loadGroupMembers();page('logs')}
+const promotionEvidenceInput=document.getElementById('promotionEvidence');
+promotionEvidenceInput.addEventListener('change',()=>{const file=promotionEvidenceInput.files?.[0];document.getElementById('promotionEvidencePreview').textContent=file?('Foto selecionada: '+file.name):'Nenhuma foto selecionada.'});
+async function preparePromotionEvidence(file){
+  if(!file)throw new Error('Envie a foto EM CUNHA para continuar.');
+  if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw new Error('A foto precisa estar em JPG, PNG ou WEBP.');
+  if(file.size>2*1024*1024)throw new Error('A foto deve ter no máximo 2 MB.');
+  let bitmap;
+  try{bitmap=await createImageBitmap(file)}catch{throw new Error('Não foi possível abrir a imagem. Envie uma foto JPG, PNG ou WEBP.')}
+  const scale=Math.min(1,1600/Math.max(bitmap.width,bitmap.height));
+  const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(bitmap.width*scale));canvas.height=Math.max(1,Math.round(bitmap.height*scale));
+  canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close?.();
+  const dataUrl=canvas.toDataURL('image/jpeg',0.82);
+  if(dataUrl.length>3_000_000)throw new Error('A imagem ficou muito grande. Escolha uma foto menor.');
+  return dataUrl;
+}
+document.getElementById('promotionForm').onsubmit=async e=>{
+  e.preventDefault();
+  if(!csrfToken){alert('Entre com sua conta Roblox para continuar.');return}
+  const form=e.target;const f=new FormData(form);const status=document.getElementById('promotionStatus');const submit=form.querySelector('button[type="submit"]');
+  try{
+    status.textContent='Preparando a foto obrigatória...';submit.disabled=true;
+    const evidenceData=await preparePromotionEvidence(f.get('evidence'));
+    status.textContent='Enviando promoção e comprovante...';
+    const response=await fetch('/api/promotions',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','x-csrf-token':csrfToken},body:JSON.stringify({targetUsername:f.get('person'),fromRole:f.get('from'),toRole:f.get('to'),reason:f.get('reason'),evidenceData})});
+    const result=await response.json().catch(()=>({}));
+    if(!response.ok)throw new Error(result.error||'Não foi possível registrar a promoção.');
+    form.reset();document.getElementById('promotionEvidencePreview').textContent='Nenhuma foto selecionada.';status.textContent='Promoção registrada com foto EM CUNHA.';
+    await loadServerPromotions();await loadServerLogs();await loadServerRecords();await loadProfileData();await loadGroupMembers();page('logs');
+  }catch(error){status.textContent=error.message;alert(error.message)}
+  finally{submit.disabled=false}
+}
 document.getElementById('trainingForm').onsubmit=async e=>{e.preventDefault();if(!csrfToken){alert('Entre com sua conta Roblox para continuar.');return}let f=new FormData(e.target);const r=await fetch('/api/records/training',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','x-csrf-token':csrfToken},body:JSON.stringify({person:f.get('person'),training:f.get('training'),score:Number(f.get('score')),instructor:f.get('instructor')})});const out=await r.json().catch(()=>({}));if(!r.ok){alert(out.error||'Não foi possível salvar.');return}e.target.reset();await loadServerRecords()};
 
 document.getElementById('deniedForm').onsubmit=async e=>{e.preventDefault();if(!csrfToken){alert('Entre com sua conta Roblox para continuar.');return}let f=new FormData(e.target);const r=await fetch('/api/records/denied',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','x-csrf-token':csrfToken},body:JSON.stringify({person:f.get('person'),rank:f.get('rank'),reason:f.get('reason')})});const out=await r.json().catch(()=>({}));if(!r.ok){alert(out.error||'Não foi possível salvar.');return}e.target.reset();await loadServerRecords()};
