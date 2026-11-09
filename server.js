@@ -526,7 +526,8 @@ app.get("/api/cdp", requireLogin, async (_req, res) => {
     await syncCdpMembers(members);
     const result = await pool.query("SELECT roblox_user_id, username, role_name, role_rank, rank_since FROM rank_service ORDER BY role_rank DESC, username ASC");
     const now = Date.now();
-    const tracked = result.rows.map(row => {
+    const currentIds = new Set(members.map(member => String(member.userId)));
+    const tracked = result.rows.filter(row => currentIds.has(String(row.roblox_user_id))).map(row => {
       const rule = getCdpRule(row.role_name);
       const elapsedHours = Math.max(0, (now - new Date(row.rank_since).getTime()) / 3600000);
       return {
