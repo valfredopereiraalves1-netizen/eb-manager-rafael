@@ -1002,7 +1002,195 @@ body{background:var(--eb-soft-bg);color:var(--eb-soft-ink)}
  #dashboardApp *,#publicHome *{transition:none!important;animation:none!important}
 }
 
-</style></head>
+</style><style id="ebcaxias-visual-only">
+/* EB CAXIAS — camada exclusivamente visual aplicada ao EB Manager Rafael.
+   Não altera HTML funcional, eventos, formulários, rotas, autenticação ou chamadas de API. */
+@import url('https://fonts.googleapis.com/css2?family=Lilita+One&family=Rubik:wght@400;500;600;700&display=swap');
+:root{
+ --ebx-purple-950:#150440;--ebx-purple-900:#1D0752;--ebx-purple-800:#2A0B78;
+ --ebx-purple-600:#4811BE;--ebx-purple-500:#5E1FD5;--ebx-purple-300:#9352F7;
+ --ebx-lilac-200:#CDB9FF;--ebx-lilac-100:#E4D8FF;--ebx-lilac-50:#F4EFFF;
+ --ebx-gold-100:#FFF3BD;--ebx-gold-200:#FFE269;--ebx-gold-500:#E7A200;--ebx-gold-700:#9E6900;
+ --ebx-ink:#22095E;--ebx-ink-soft:#4A3880;
+ --ebx-display:'Lilita One','Arial Rounded MT Bold',system-ui,sans-serif;
+ --ebx-text:'Rubik',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+body{font-family:var(--ebx-text)}
+#dashboardApp{background:var(--ebx-lilac-50)!important;color:var(--ebx-ink)!important}
+#dashboardApp .side{
+ background:linear-gradient(180deg,var(--ebx-purple-800),var(--ebx-purple-950))!important;
+ border-right:1px solid rgba(205,185,255,.22)!important;box-shadow:8px 0 28px rgba(21,4,64,.18)!important
+}
+#dashboardApp .brand{border-bottom:1px solid rgba(205,185,255,.22)!important}
+#dashboardApp .crest{
+ background:linear-gradient(145deg,var(--ebx-gold-100),var(--ebx-gold-500))!important;
+ color:var(--ebx-purple-800)!important;border:2px solid var(--ebx-gold-200)!important;
+ box-shadow:0 5px 18px rgba(10,2,36,.28)!important
+}
+#dashboardApp .brand b{font-family:var(--ebx-display);font-size:17px!important;letter-spacing:.04em!important;color:#fff!important}
+#dashboardApp .brand small,#dashboardApp .navlabel{color:var(--ebx-lilac-200)!important}
+#dashboardApp .nav button{color:var(--ebx-lilac-100)!important;border:1px solid transparent}
+#dashboardApp .nav button.active,#dashboardApp .nav button:hover{
+ background:linear-gradient(180deg,var(--ebx-gold-100),var(--ebx-gold-200))!important;
+ color:var(--ebx-purple-900)!important;border-color:var(--ebx-gold-500)!important;
+ box-shadow:0 4px 13px rgba(10,2,36,.2)
+}
+#dashboardApp .nav button.active:before{background:var(--ebx-purple-500)!important}
+#dashboardApp .sidefoot{background:rgba(255,255,255,.07)!important;border-color:rgba(205,185,255,.25)!important;color:var(--ebx-lilac-200)!important}
+#dashboardApp .main,#dashboardApp .content{background:var(--ebx-lilac-50)!important}
+#dashboardApp .top{background:rgba(255,255,255,.94)!important;border-bottom:1px solid #e4d8ff!important;box-shadow:0 5px 20px rgba(42,11,120,.07)!important;backdrop-filter:blur(14px)}
+#dashboardApp .crumb{color:#78649f!important}
+#dashboardApp .crumb b,#dashboardApp .user{color:var(--ebx-ink)!important}
+#dashboardApp .avatar{background:var(--ebx-purple-800)!important;color:var(--ebx-gold-200)!important;border:2px solid var(--ebx-gold-500)!important}
+#dashboardApp .pagehead h1,#dashboardApp .pagehead h2,#dashboardApp .card h2,#dashboardApp .card h3{font-family:var(--ebx-display)!important;font-weight:400!important;color:var(--ebx-ink)!important}
+#dashboardApp .pagehead h1{font-size:clamp(27px,3vw,36px)!important}
+#dashboardApp .sub{color:var(--ebx-ink-soft)!important}
+#dashboardApp .card{
+ background:linear-gradient(180deg,#fff,#fcfaff)!important;border:1px solid #e4d8ff!important;
+ border-radius:16px!important;box-shadow:0 9px 26px rgba(42,11,120,.08)!important;color:var(--ebx-ink)!important
+}
+#dashboardApp .stat{background:linear-gradient(145deg,#fff,var(--ebx-lilac-50))!important}
+#dashboardApp .stat:after{background:linear-gradient(180deg,var(--ebx-gold-200),var(--ebx-gold-500))!important}
+#dashboardApp .stat small,#dashboardApp .stat span{color:#78649f!important}
+#dashboardApp .stat strong{font-family:var(--ebx-display)!important;color:var(--ebx-purple-800)!important}
+#dashboardApp .stat-icon{color:var(--ebx-purple-500)!important}
+#dashboardApp .tag{background:var(--ebx-lilac-100)!important;border:1px solid #cdb9ff!important;color:var(--ebx-purple-800)!important}
+#dashboardApp .btn{
+ background:linear-gradient(180deg,#fff,var(--ebx-lilac-50))!important;border:1px solid #cdb9ff!important;
+ color:var(--ebx-purple-800)!important;border-radius:11px!important
+}
+#dashboardApp .btn:hover{background:var(--ebx-lilac-100)!important;border-color:var(--ebx-purple-300)!important}
+#dashboardApp .btn.primary{
+ background:linear-gradient(180deg,#ffec94 0%,var(--ebx-gold-200) 35%,#f5b90c 72%,var(--ebx-gold-500) 100%)!important;
+ border-color:var(--ebx-gold-700)!important;color:var(--ebx-purple-800)!important;font-weight:800!important;
+ box-shadow:0 5px 0 var(--ebx-gold-700),0 10px 20px rgba(21,4,64,.15),inset 0 2px 0 rgba(255,255,255,.7)!important
+}
+#dashboardApp .btn.primary:hover{filter:brightness(1.06);transform:translateY(-1px)}
+#dashboardApp .btn.danger{background:#fff0f0!important;border-color:#efc4c4!important;color:#9b2638!important}
+#dashboardApp .rank{background:#fbf9ff!important;border:1px solid #e4d8ff!important;color:var(--ebx-ink)!important}
+#dashboardApp .rank b{color:var(--ebx-purple-800)!important}
+#dashboardApp .rank small,#dashboardApp th{color:#78649f!important}
+#dashboardApp th{background:var(--ebx-lilac-100)!important}
+#dashboardApp td{color:var(--ebx-ink-soft)!important;border-color:#e4d8ff!important}
+#dashboardApp table tbody tr:hover{background:#f4efff!important}
+#dashboardApp .field label{color:var(--ebx-ink-soft)!important}
+#dashboardApp .field input,#dashboardApp .field select,#dashboardApp .field textarea{
+ background:#fff!important;color:var(--ebx-ink)!important;border:1px solid #cdb9ff!important;border-radius:10px!important
+}
+#dashboardApp .field input::placeholder,#dashboardApp .field textarea::placeholder{color:#9583b7!important}
+#dashboardApp .field input:focus,#dashboardApp .field select:focus,#dashboardApp .field textarea:focus{
+ outline:3px solid rgba(94,31,213,.14)!important;border-color:var(--ebx-purple-500)!important;box-shadow:0 0 0 3px rgba(94,31,213,.08)!important
+}
+#dashboardApp .notice{background:#fff8df!important;border:1px solid #f0d98a!important;color:#76520b!important}
+#dashboardApp .empty{color:#78649f!important}
+#dashboardApp .overview-hero{
+ background:radial-gradient(circle at 86% 15%,rgba(255,226,105,.23),transparent 32%),linear-gradient(120deg,var(--ebx-purple-800),var(--ebx-purple-950))!important;
+ border:1px solid rgba(205,185,255,.5)!important;box-shadow:0 16px 38px rgba(21,4,64,.2)!important
+}
+#dashboardApp .overview-hero h1,#dashboardApp .overview-hero h2{color:#fff!important}
+#dashboardApp .overview-hero p{color:var(--ebx-lilac-100)!important}
+#dashboardApp .overview-eyebrow,#dashboardApp .section-kicker{color:var(--ebx-gold-200)!important}
+#dashboardApp .overview-hero-mark{border-color:rgba(255,226,105,.4)!important;color:var(--ebx-gold-200)!important}
+#dashboardApp .status-dot,#dashboardApp .public-live-dot{background:#7bd8a2!important}
+#dashboardApp .card-heading h2{color:var(--ebx-ink)!important}
+#dashboardApp .card-heading-icon,#dashboardApp .shortcut-icon{background:var(--ebx-lilac-100)!important;color:var(--ebx-purple-600)!important}
+#dashboardApp .quick-action{background:#fff!important;border-color:#e4d8ff!important;color:var(--ebx-ink)!important}
+#dashboardApp .quick-action:hover{background:var(--ebx-lilac-50)!important}
+#dashboardApp .quick-action-icon{color:var(--ebx-purple-500)!important}
+#dashboardApp .overview-security{background:#f4efff!important;border:1px solid #cdb9ff!important;color:var(--ebx-ink-soft)!important}
+#dashboardApp .security-check{color:#23865a!important}
+#dashboardApp .menu-welcome{background:linear-gradient(135deg,var(--ebx-purple-800),var(--ebx-purple-950))!important;border:1px solid var(--ebx-purple-500)!important;color:#fff!important}
+#dashboardApp .menu-brandline strong,#dashboardApp .menu-userinfo strong{color:#fff!important}
+#dashboardApp .menu-brandline small,#dashboardApp .menu-userinfo span{color:var(--ebx-lilac-200)!important}
+#dashboardApp .menu-brandmark,#dashboardApp .menu-useravatar{background:linear-gradient(145deg,var(--ebx-gold-100),var(--ebx-gold-500))!important;color:var(--ebx-purple-800)!important;border:1px solid var(--ebx-gold-200)!important}
+#dashboardApp .menu-usercard{background:rgba(21,4,64,.24)!important;border:1px solid rgba(205,185,255,.25)!important}
+#dashboardApp .menu-online{color:#a5edbd!important}
+#dashboardApp .menu-promo-card{background:linear-gradient(135deg,#4b16ae,#2a0b78)!important;border:1px solid #9352f7!important;color:#fff!important}
+#dashboardApp .menu-promo-card h2,#dashboardApp .menu-promo-card p{color:#fff!important}
+#dashboardApp .menu-promo-top,#dashboardApp .menu-crown{color:var(--ebx-gold-200)!important}
+#dashboardApp .menu-price-row strong{color:var(--ebx-gold-200)!important}
+#dashboardApp .menu-upgrade{background:linear-gradient(180deg,var(--ebx-gold-100),var(--ebx-gold-500))!important;color:var(--ebx-purple-800)!important}
+#dashboardApp .menu-disclaimer{color:var(--ebx-lilac-200)!important}
+#dashboardApp .menu-shortcuts-head h2{color:var(--ebx-ink)!important}
+#dashboardApp .menu-shortcuts-head p{color:var(--ebx-ink-soft)!important}
+#dashboardApp .menu-shortcut{background:#fff!important;border:1px solid #e4d8ff!important;color:var(--ebx-ink)!important}
+#dashboardApp .menu-shortcut:hover{background:var(--ebx-lilac-50)!important;border-color:var(--ebx-purple-300)!important}
+#dashboardApp .menu-shortcut strong{color:var(--ebx-purple-800)!important}
+#dashboardApp .menu-shortcut small{color:#78649f!important}
+#dashboardApp .hero-photo{border-color:#cdb9ff!important;box-shadow:0 8px 24px rgba(42,11,120,.12)!important}
+#dashboardApp .hero-caption{background:linear-gradient(transparent,rgba(21,4,64,.94))!important}
+#dashboardApp .profile-event{border-left-color:var(--ebx-purple-300)!important}
+#dashboardApp .profile-event:before{background:var(--ebx-gold-200)!important;border-color:var(--ebx-purple-800)!important}
+#dashboardApp .profile-event strong{color:var(--ebx-ink)!important}
+#dashboardApp .profile-event small,#dashboardApp .profile-event p{color:#78649f!important}
+#dashboardApp .cdp-pending{background:#fff5d6!important;border-color:#f0d98a!important;color:#76520b!important}
+#dashboardApp .cdp-ready{background:#e4f8eb!important;border-color:#a9dfba!important;color:#17633f!important}
+#dashboardApp .page a:not(.btn){color:var(--ebx-purple-600)!important}
+#dashboardApp .page a:not(.btn):hover{color:var(--ebx-purple-800)!important}
+#dashboardApp .mobilebar{background:var(--ebx-purple-950)!important;border-color:rgba(205,185,255,.25)!important}
+#publicHome{background:var(--ebx-purple-900)!important;color:#fff!important;font-family:var(--ebx-text)!important}
+#publicHome .public-nav{background:rgba(21,4,64,.96)!important;border-color:rgba(205,185,255,.2)!important;backdrop-filter:blur(14px)}
+#publicHome .public-brand{color:#fff!important}
+#publicHome .public-brand-mark{background:linear-gradient(145deg,var(--ebx-gold-100),var(--ebx-gold-500))!important;color:var(--ebx-purple-800)!important;border-color:var(--ebx-gold-200)!important}
+#publicHome .public-brand small{color:var(--ebx-lilac-200)!important}
+#publicHome .public-links a{color:var(--ebx-lilac-100)!important}
+#publicHome .public-links a:hover{color:var(--ebx-gold-200)!important}
+#publicHome .public-hero{
+ background-image:linear-gradient(90deg,rgba(21,4,64,.93),rgba(42,11,120,.68)),url('https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cc/06_11_2021_5%C2%BA_Esquadr%C3%A3o_de_Cavalaria_Mecanizado%2C_cerim%C3%B4nia_de_hasteamento_da_Bandeira_e_formatura_militar_de_apresenta%C3%A7%C3%A3o_da_tropa_%2851659209742%29.jpg/1280px-06_11_2021_5%C2%BA_Esquadr%C3%A3o_de_Cavalaria_Mecanizado%2C_cerim%C3%B4nia_de_hasteamento_da_Bandeira_e_formatura_militar_de_apresenta%C3%A7%C3%A3o_da_tropa_%2851659209742%29.jpg')!important;
+}
+#publicHome .public-eyebrow{color:var(--ebx-gold-200)!important}
+#publicHome .public-hero h1{font-family:var(--ebx-display)!important;color:#fff!important}
+#publicHome .public-hero p{color:var(--ebx-lilac-100)!important}
+#publicHome .public-cta{
+ background:linear-gradient(180deg,#ffec94 0%,var(--ebx-gold-200) 35%,#f5b90c 72%,var(--ebx-gold-500) 100%)!important;
+ color:var(--ebx-purple-800)!important;border:1px solid var(--ebx-gold-700)!important;
+ box-shadow:0 6px 0 var(--ebx-gold-700),0 12px 24px rgba(10,2,36,.28),inset 0 2px 0 rgba(255,255,255,.7)!important
+}
+#publicHome .public-cta:hover{filter:brightness(1.06);transform:translateY(-2px)}
+#publicHome .public-cta.secondary{background:rgba(21,4,64,.35)!important;border:1px solid rgba(255,226,105,.55)!important;color:#fff!important;box-shadow:none!important}
+#publicHome .public-login-card{background:linear-gradient(145deg,#3b1197,#21075f)!important;border:1px solid rgba(205,185,255,.5)!important;box-shadow:0 22px 58px rgba(10,2,36,.42)!important;color:#fff!important}
+#publicHome .public-login-card h2{font-family:var(--ebx-display)!important;color:#fff!important}
+#publicHome .public-login-card p,#publicHome .public-login-card small{color:var(--ebx-lilac-100)!important}
+#publicHome .public-login-mark{background:linear-gradient(145deg,var(--ebx-gold-100),var(--ebx-gold-500))!important;color:var(--ebx-purple-800)!important}
+#publicHome .public-login-security{background:rgba(21,4,64,.4)!important;border-color:rgba(205,185,255,.3)!important;color:var(--ebx-lilac-100)!important}
+#publicHome .public-section{background:var(--ebx-lilac-50)!important}
+#publicHome .public-section-head h2{font-family:var(--ebx-display)!important;color:var(--ebx-ink)!important}
+#publicHome .public-section-head p{color:var(--ebx-ink-soft)!important}
+#publicHome .public-section-head small{color:var(--ebx-purple-600)!important}
+#publicHome .public-feature{background:#fff!important;border:1px solid #e4d8ff!important;box-shadow:0 8px 24px rgba(42,11,120,.08)!important}
+#publicHome .public-feature h3{font-family:var(--ebx-display)!important;color:var(--ebx-purple-800)!important}
+#publicHome .public-feature p{color:var(--ebx-ink-soft)!important}
+#publicHome .public-feature-icon{background:var(--ebx-lilac-100)!important;color:var(--ebx-purple-600)!important}
+#publicHome .public-stats{background:var(--ebx-purple-800)!important;border-top:1px solid var(--ebx-purple-500)!important;border-bottom:1px solid var(--ebx-purple-500)!important}
+#publicHome .public-stat strong{font-family:var(--ebx-display)!important;color:var(--ebx-gold-200)!important}
+#publicHome .public-stat span,#publicHome .public-stats-note{color:var(--ebx-lilac-100)!important}
+#publicHome .public-final-cta{background:linear-gradient(125deg,var(--ebx-purple-800),var(--ebx-purple-950))!important;border-top:1px solid rgba(205,185,255,.25)!important}
+#publicHome .public-final-cta h2{font-family:var(--ebx-display)!important;color:#fff!important}
+#publicHome .public-final-cta p{color:var(--ebx-lilac-100)!important}
+#publicHome .public-footer{background:var(--ebx-purple-950)!important;border-top:1px solid rgba(205,185,255,.2)!important;color:var(--ebx-lilac-200)!important}
+#publicHome .public-footer strong{color:var(--ebx-gold-200)!important}
+@media(max-width:850px){
+ #dashboardApp .content{padding:22px}
+}
+@media(max-width:600px){
+ #dashboardApp .side{background:linear-gradient(180deg,var(--ebx-purple-800),var(--ebx-purple-950))!important}
+ #dashboardApp .nav button{background:rgba(255,255,255,.07)!important;border-color:rgba(205,185,255,.12)!important}
+ #dashboardApp .nav button.active{background:linear-gradient(180deg,var(--ebx-gold-100),var(--ebx-gold-200))!important;color:var(--ebx-purple-900)!important}
+ #dashboardApp .top{background:rgba(21,4,64,.96)!important}
+ #dashboardApp .crumb,#dashboardApp .crumb b,#dashboardApp .user{color:#fff!important}
+ #dashboardApp .avatar{background:var(--ebx-gold-200)!important;color:var(--ebx-purple-800)!important}
+ #dashboardApp .content{padding:17px 12px}
+ #dashboardApp .card{padding:15px}
+ #dashboardApp .overview-hero{padding:22px 18px}
+ #dashboardApp .overview-hero h1{font-size:26px}
+ #dashboardApp .stat{min-height:112px}
+ #dashboardApp .stat strong{font-size:25px}
+}
+@media(prefers-reduced-motion:reduce){
+ #dashboardApp *,#dashboardApp *:before,#dashboardApp *:after,#publicHome *,#publicHome *:before,#publicHome *:after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
 <body>
 <div id="publicHome" class="public-home hidden">
   <header class="public-nav">
