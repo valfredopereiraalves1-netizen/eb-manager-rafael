@@ -1525,6 +1525,190 @@ body{font-family:var(--ebx-text)}
  .mobile-bottom-nav button.active{background:rgba(16,185,129,.15)!important;color:#65d6a3!important}
 }
 </style>
+<style id="ebcaxias-reference-finish">
+/* Identidade visual baseada no arquivo de referência EB Caxias:
+   roxos profundos, lilás claro, dourado em relevo, Lilita One + Rubik,
+   botões com profundidade e entradas animadas. */
+@import url('https://fonts.googleapis.com/css2?family=Lilita+One&family=Rubik:wght@400;500;600;700&display=swap');
+:root{
+ --roxo-950:#150440;--roxo-900:#1D0752;--roxo-800:#2A0B78;
+ --roxo-600:#4811BE;--roxo-500:#5E1FD5;--roxo-300:#9352F7;
+ --lilas-200:#CDB9FF;--lilas-100:#E4D8FF;--lilas-50:#F4EFFF;
+ --ouro-100:#FFF3BD;--ouro-200:#FFE269;--ouro-500:#E7A200;--ouro-700:#9E6900;
+ --tinta:#22095E;--tinta-suave:#4A3880;
+ --eb-display:'Lilita One','Arial Rounded MT Bold',system-ui,sans-serif;
+ --eb-text:'Rubik',system-ui,-apple-system,'Segoe UI',sans-serif
+}
+html,body{font-family:var(--eb-text)!important}
+#dashboardApp{background:var(--lilas-50)!important;color:var(--tinta)!important}
+#dashboardApp .side{
+ background:linear-gradient(180deg,var(--roxo-800) 0%,var(--roxo-900) 58%,var(--roxo-950) 100%)!important;
+ border-right:1px solid rgba(205,185,255,.24)!important;
+ box-shadow:8px 0 28px rgba(21,4,64,.18)!important;color:#fff!important
+}
+#dashboardApp .brand{border-bottom:1px solid rgba(205,185,255,.24)!important}
+#dashboardApp .crest{
+ background:linear-gradient(180deg,#fff3bd 0%,#ffe269 38%,#f5b90c 70%,#e7a200 100%)!important;
+ color:var(--roxo-800)!important;border:2px solid var(--ouro-200)!important;
+ box-shadow:0 5px 0 var(--ouro-700),0 9px 18px rgba(10,2,36,.3),inset 0 2px 0 rgba(255,255,255,.8)!important
+}
+#dashboardApp .brand b{font-family:var(--eb-display)!important;color:#fff!important;letter-spacing:.035em!important}
+#dashboardApp .brand small,#dashboardApp .navlabel{color:var(--lilas-200)!important}
+#dashboardApp .nav-group-title{color:rgba(228,216,255,.7)!important}
+#dashboardApp .nav button{
+ color:var(--lilas-100)!important;border:1px solid transparent!important;
+ border-radius:10px!important;transition:background .2s ease,color .2s ease,transform .2s ease,box-shadow .2s ease!important
+}
+#dashboardApp .nav button:hover{background:rgba(205,185,255,.13)!important;color:#fff!important;transform:translateX(2px)}
+#dashboardApp .nav button.active{
+ background:linear-gradient(180deg,#fff3bd 0%,#ffe269 45%,#f5b90c 100%)!important;
+ color:var(--roxo-900)!important;border-color:var(--ouro-500)!important;
+ box-shadow:0 3px 0 var(--ouro-700),0 6px 13px rgba(10,2,36,.2),inset 0 1px 0 rgba(255,255,255,.8)!important
+}
+#dashboardApp .nav button.active .ico{color:var(--roxo-800)!important}
+#dashboardApp .sidefoot{background:rgba(255,255,255,.07)!important;border-color:rgba(205,185,255,.25)!important;color:var(--lilas-200)!important}
+#dashboardApp .main,#dashboardApp .content{background:var(--lilas-50)!important}
+#dashboardApp .top{
+ background:rgba(255,255,255,.96)!important;border-bottom:1px solid var(--lilas-100)!important;
+ box-shadow:0 5px 20px rgba(42,11,120,.07)!important;backdrop-filter:blur(14px)
+}
+#dashboardApp .crumb{color:#78649f!important}
+#dashboardApp .crumb b,#dashboardApp .user{color:var(--tinta)!important}
+#dashboardApp .avatar{background:var(--roxo-800)!important;color:var(--ouro-200)!important;border:2px solid var(--ouro-500)!important}
+#dashboardApp .pagehead h1,#dashboardApp .pagehead h2,#dashboardApp .card h2,#dashboardApp .card h3{
+ font-family:var(--eb-display)!important;font-weight:400!important;color:var(--tinta)!important
+}
+#dashboardApp .pagehead h1{font-size:clamp(27px,3vw,36px)!important}
+#dashboardApp .sub{color:var(--tinta-suave)!important}
+#dashboardApp .card{
+ background:linear-gradient(180deg,#fff 0%,#fcfaff 100%)!important;
+ border:1px solid var(--lilas-100)!important;border-radius:16px!important;
+ box-shadow:0 9px 26px rgba(42,11,120,.08)!important;color:var(--tinta)!important
+}
+#dashboardApp .stat{background:linear-gradient(145deg,#fff,var(--lilas-50))!important}
+#dashboardApp .stat:after{background:linear-gradient(180deg,var(--ouro-200),var(--ouro-500))!important}
+#dashboardApp .stat small,#dashboardApp .stat span{color:#78649f!important}
+#dashboardApp .stat strong{font-family:var(--eb-display)!important;color:var(--roxo-800)!important}
+#dashboardApp .stat-icon{background:var(--lilas-100)!important;color:var(--roxo-500)!important;border:1px solid #cdb9ff!important;border-radius:12px!important}
+#dashboardApp .tag{background:var(--lilas-100)!important;border:1px solid var(--lilas-200)!important;color:var(--roxo-800)!important}
+#dashboardApp .btn{
+ background:linear-gradient(180deg,#fff 0%,var(--lilas-50) 100%)!important;
+ border:1px solid var(--lilas-200)!important;color:var(--roxo-800)!important;
+ border-radius:11px!important;font-weight:700!important;
+ box-shadow:0 3px 0 #b7a2e5,0 6px 12px rgba(21,4,64,.08),inset 0 1px 0 #fff!important;
+ transition:filter .16s ease,transform .16s ease,box-shadow .16s ease!important
+}
+#dashboardApp .btn:hover{filter:brightness(1.04)!important;transform:translateY(-1px)}
+#dashboardApp .btn:active{transform:translateY(2px)!important;box-shadow:0 1px 0 #b7a2e5,inset 0 1px 2px rgba(21,4,64,.12)!important}
+#dashboardApp .btn.primary{
+ background:linear-gradient(180deg,#ffec94 0%,var(--ouro-200) 28%,#f5b90c 67%,var(--ouro-500) 100%)!important;
+ border:1px solid var(--ouro-700)!important;color:var(--roxo-800)!important;font-weight:800!important;
+ box-shadow:0 5px 0 var(--ouro-700),0 10px 20px rgba(21,4,64,.15),inset 0 2px 0 rgba(255,255,255,.75)!important
+}
+#dashboardApp .btn.primary:active{transform:translateY(4px)!important;box-shadow:0 1px 0 var(--ouro-700),inset 0 2px 0 rgba(255,255,255,.35)!important}
+#dashboardApp .btn.danger{background:linear-gradient(180deg,#fff,#fff0f0)!important;border-color:#efc4c4!important;color:#9b2638!important;box-shadow:0 3px 0 #d9a4a4!important}
+#dashboardApp .rank{background:#fbf9ff!important;border:1px solid var(--lilas-100)!important;color:var(--tinta)!important;border-radius:12px!important}
+#dashboardApp .rank b{color:var(--roxo-800)!important}
+#dashboardApp .rank small,#dashboardApp th{color:#78649f!important}
+#dashboardApp th{background:var(--lilas-100)!important}
+#dashboardApp td{color:var(--tinta-suave)!important;border-color:var(--lilas-100)!important}
+#dashboardApp table tbody tr:hover{background:#f4efff!important}
+#dashboardApp .field label{color:var(--tinta-suave)!important}
+#dashboardApp .field input,#dashboardApp .field select,#dashboardApp .field textarea{
+ background:#fff!important;color:var(--tinta)!important;border:1px solid var(--lilas-200)!important;border-radius:10px!important
+}
+#dashboardApp .field input:focus,#dashboardApp .field select:focus,#dashboardApp .field textarea:focus{
+ outline:3px solid rgba(147,82,247,.18)!important;border-color:var(--roxo-300)!important
+}
+#dashboardApp .notice{background:#fff8df!important;border:1px solid #f0d58b!important;color:#75510a!important}
+#dashboardApp .empty{color:#9583b7!important}
+#dashboardApp .overview-hero{
+ background:radial-gradient(circle at 90% 12%,rgba(255,226,105,.24),transparent 27%),linear-gradient(125deg,#2a0b78 0%,#4811be 58%,#5e1fd5 100%)!important;
+ border:1px solid rgba(205,185,255,.42)!important;border-radius:22px!important;
+ box-shadow:0 14px 32px rgba(42,11,120,.2)!important
+}
+#dashboardApp .overview-eyebrow,#dashboardApp .section-kicker{color:var(--ouro-200)!important}
+#dashboardApp .overview-hero h1{font-family:var(--eb-display)!important;color:#fff!important}
+#dashboardApp .overview-hero p{color:#e4d8ff!important}
+#dashboardApp .overview-hero-mark{
+ background:linear-gradient(145deg,#fff3bd,#e7a200)!important;border:2px solid var(--ouro-200)!important;
+ border-radius:28px!important;box-shadow:0 8px 22px rgba(10,2,36,.25)!important
+}
+#dashboardApp .overview-hero-mark span{color:var(--roxo-800)!important}
+#dashboardApp .overview-hero-mark small{color:var(--roxo-800)!important}
+#dashboardApp .status-dot{background:#ffe269!important;box-shadow:0 0 0 4px rgba(255,226,105,.2)!important}
+#dashboardApp .menu-welcome,#dashboardApp .menu-promo-card{border-radius:18px!important;box-shadow:0 8px 22px rgba(42,11,120,.1)!important}
+#dashboardApp .menu-welcome{background:linear-gradient(125deg,#2a0b78,#4811be)!important;border:1px solid rgba(205,185,255,.35)!important}
+#dashboardApp .menu-brandmark{background:linear-gradient(180deg,#fff3bd,#e7a200)!important;color:var(--roxo-800)!important;border-radius:14px!important}
+#dashboardApp .menu-usercard{background:#fff!important;border:1px solid var(--lilas-100)!important;border-radius:14px!important}
+#dashboardApp .menu-useravatar{background:var(--lilas-100)!important;color:var(--roxo-800)!important}
+#dashboardApp .menu-userinfo strong{color:var(--tinta)!important}
+#dashboardApp .menu-userinfo span{color:#78649f!important}
+#dashboardApp .menu-online{background:var(--lilas-100)!important;color:var(--roxo-800)!important;border-radius:20px!important}
+#dashboardApp .menu-promo-card{background:linear-gradient(125deg,#2a0b78,#150440)!important;border:1px solid #9352f7!important}
+#dashboardApp .menu-promo-card h2,#dashboardApp .menu-promo-card p,#dashboardApp .menu-promo-card small{color:#fff!important}
+#dashboardApp .menu-promo-card .menu-promo-top{color:var(--ouro-200)!important}
+#dashboardApp .menu-upgrade{background:linear-gradient(180deg,#fff3bd,#ffe269)!important;color:var(--roxo-800)!important;border-radius:11px!important}
+#dashboardApp .menu-shortcuts-head h2{color:var(--tinta)!important}
+#dashboardApp .menu-shortcuts-head p{color:#78649f!important}
+#dashboardApp .menu-shortcut{
+ background:#fff!important;border:1px solid var(--lilas-100)!important;color:var(--roxo-800)!important;
+ border-radius:15px!important;box-shadow:0 4px 14px rgba(42,11,120,.05)!important;
+ transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease!important
+}
+#dashboardApp .menu-shortcut:hover{transform:translateY(-3px)!important;border-color:var(--roxo-300)!important;box-shadow:0 10px 22px rgba(42,11,120,.12)!important}
+#dashboardApp .shortcut-icon{background:var(--lilas-100)!important;color:var(--roxo-500)!important;border-radius:13px!important}
+#dashboardApp .menu-shortcut small{color:#9583b7!important}
+#dashboardApp .menu-shortcut>b{color:#a18acb!important}
+#dashboardApp .profile-tabs button.active,#dashboardApp [data-profile-tab].active{background:var(--lilas-100)!important;color:var(--roxo-800)!important;border-color:var(--roxo-300)!important}
+#dashboardApp .profile-event{border-color:var(--lilas-100)!important}
+#dashboardApp a{color:var(--roxo-600)}
+#dashboardApp button,#dashboardApp .card,#dashboardApp .menu-shortcut{transition:background .2s ease,border-color .2s ease,box-shadow .2s ease,transform .2s ease}
+#dashboardApp .nav-menu-button{
+ background:linear-gradient(180deg,rgba(255,243,189,.17),rgba(255,226,105,.08))!important;
+ border:1px solid rgba(255,226,105,.55)!important;border-radius:11px!important;
+ box-shadow:0 4px 12px rgba(10,2,36,.2)!important
+}
+#dashboardApp .nav-menu-button span{background:var(--ouro-200)!important}
+#dashboardApp .side.nav-open #nav{
+ background:linear-gradient(180deg,var(--roxo-800),var(--roxo-950))!important;
+ border:1px solid rgba(205,185,255,.35)!important;border-radius:14px!important
+}
+#dashboardApp .side.nav-open #nav .nav-group-title{color:var(--lilas-200)!important}
+.mobile-bottom-nav{
+ background:linear-gradient(180deg,#2a0b78 0%,#1d0752 100%)!important;
+ border-top:1px solid rgba(255,226,105,.42)!important;
+ box-shadow:0 -8px 25px rgba(21,4,64,.25)!important
+}
+.mobile-bottom-nav button{
+ color:var(--lilas-100)!important;font-family:var(--eb-text)!important;
+ transition:background .2s ease,color .2s ease,transform .2s ease!important
+}
+.mobile-bottom-nav button .bottom-ico{font-family:var(--eb-text)!important}
+.mobile-bottom-nav button.active{
+ background:linear-gradient(180deg,#fff3bd 0%,#ffe269 48%,#f5b90c 100%)!important;
+ color:var(--roxo-900)!important;box-shadow:0 3px 0 var(--ouro-700),0 5px 12px rgba(10,2,36,.2),inset 0 1px 0 #fff!important
+}
+.mobile-bottom-nav button:active{transform:translateY(2px)!important}
+@media(max-width:600px){
+ #dashboardApp .side{background:linear-gradient(180deg,var(--roxo-800),var(--roxo-950))!important}
+ #dashboardApp .side .brand{border-bottom:1px solid rgba(205,185,255,.2)!important}
+ #dashboardApp .side.nav-open #nav{background:linear-gradient(180deg,var(--roxo-800),var(--roxo-950))!important}
+ #dashboardApp .content{padding-bottom:calc(100px + env(safe-area-inset-bottom))!important}
+}
+@media(prefers-reduced-motion:no-preference){
+ #dashboardApp .page:not(.hidden){animation:ebPageIn .38s cubic-bezier(.2,.75,.25,1) both}
+ #dashboardApp .overview-hero{animation:ebHeroIn .62s cubic-bezier(.2,.75,.25,1) both}
+ #dashboardApp .card{animation:ebCardIn .42s ease-out both}
+ #dashboardApp .btn.primary{transition:transform .12s ease,filter .15s ease,box-shadow .12s ease!important}
+}
+@keyframes ebPageIn{from{opacity:0;translate:0 10px}to{opacity:1;translate:0 0}}
+@keyframes ebHeroIn{from{opacity:0;scale:1.025;translate:0 8px}to{opacity:1;scale:1;translate:0 0}}
+@keyframes ebCardIn{from{opacity:0;translate:0 7px}to{opacity:1;translate:0 0}}
+@media(prefers-reduced-motion:reduce){
+ #dashboardApp *,#mobileBottomNav *{animation:none!important;transition:none!important}
+}
+</style>
 </head>
 <body>
 <div id="publicHome" class="public-home hidden">
